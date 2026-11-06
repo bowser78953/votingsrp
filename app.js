@@ -205,7 +205,7 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
     const el = elections[cur], names = el.candidates, gray = true;
     const tally = tallies()[cur] || {};
     document.getElementById("mtitle").textContent = el.title + (gray ? "" : "");
-    document.getElementById("legend").innerHTML = names.map(n => '<span><i style="background:' + (colors[n] || "#888") + '"></i>' + esc(n) + "</span>").join("") + '<span><i style="background:' + "#fff" + '"></i>No votes</span>';
+    document.getElementById("legend").innerHTML = names.map(n => '<span><i style="background:' + (colors[n] || "#888") + '"></i>' + esc(n) + "</span>").join("") + '<span><i style="background:' + "#9aa0a6" + '"></i>No votes</span>';
     let total = 0, out = gray ? "" : '<image href="map.jpg" x="0" y="0" width="847" height="767"></image>';
     D.forEach(d => {
       const t = tally[d[0] + "|" + d[1]] || {};
