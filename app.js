@@ -1,5 +1,16 @@
 const SITE = window.SRP_DATA || {};
 
+// Bumping voteRound in data.js clears every visitor's saved vote and tally the next time they visit.
+(function voteReset() {
+  const r = String(SITE.voteRound || 0);
+  if (localStorage.getItem("srp_round") === null) { localStorage.setItem("srp_round", r); return; }
+  if (localStorage.getItem("srp_round") !== r) {
+    localStorage.removeItem("srp_voted");
+    localStorage.removeItem("srp_tally");
+    localStorage.setItem("srp_round", r);
+  }
+})();
+
 (function maintenance() {
   if (!SITE.siteOff || /admin\.html$/i.test(location.pathname) || sessionStorage.getItem("srp_admin")) return;
   document.body.innerHTML = '<div class="offline"><img src="logo.png" alt=""><h1>Site Temporarily Offline</h1><p>Springfield Roleplay Government Voting is currently closed. Please check back later.</p><a class="ownerlink" href="admin.html">Owner Login</a></div>';
@@ -154,6 +165,7 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
 })();
 
 (function liveMap() {
+  if (SITE.showMap === false) { const m = document.getElementById("mapbox"); if (m) m.remove(); return; }
   const svg = document.getElementById("map");
   if (!svg) return;
   const D = [

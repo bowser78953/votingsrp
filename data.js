@@ -31,7 +31,10 @@ window.SRP_DATA = {
   ],
   "registrationOpen": true,
   "votingOpen": true,
-  "siteOnline": false,
+  "siteOff": false,
+  "showMap": true,
+  "voteRound": 0,
+  "votingUrl": "",
   "ballot": [
     {
       "title": "President",
@@ -43,7 +46,7 @@ window.SRP_DATA = {
     }
   ],
   "ballotTitle": "TEST Presidential Election",
-  "electionOpens": "2026-11-12 18:00",
+  "electionOpens": "N/A",
   "colors": {
     "Bowser": "#d93025",
     "Wedgie": "#1a73e8"
