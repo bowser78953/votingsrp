@@ -25,8 +25,11 @@
       <input id="name" name="name" required>
       <label for="discord">Discord username</label>
       <input id="discord" name="discord" required>
-      <label for="chamber">Which election?</label>
-      <select id="chamber" name="chamber"><option>SRP Senate</option><option>SRP House of Rep</option><option>Both</option></select>
+      <label for="county">County</label>
+      <select id="county" name="county" required><option value="">Select your county</option></select>
+      <label for="district">District</label>
+      <select id="district" name="district" required disabled><option value="">Select a county first</option></select>
+      <p id="regsummary" class="notice" style="display:none"></p>
       <label for="notes">Notes (optional)</label>
       <textarea id="notes" name="notes" rows="3"></textarea>
       <p><button class="btn blue" type="submit">Submit Registration</button></p>
