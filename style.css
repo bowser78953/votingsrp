@@ -239,3 +239,5 @@ input,select,textarea{border-radius:3px!important}
 .principle .p4{font-size:.75rem;color:#666;letter-spacing:.08em}
 .principle hr{border:0;border-top:1px solid #b8923a;margin:12px 0}
 @media(max-width:700px){.toc{columns:1}.policy-meta div{flex-direction:column;gap:0}}
+
+.agree{display:flex;gap:10px;align-items:center;font-weight:bold;font-size:1.05rem}.agree input{width:20px;height:20px}

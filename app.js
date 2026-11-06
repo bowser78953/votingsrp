@@ -82,9 +82,28 @@ const COUNTIES = {
   "Springfield": 2
 };
 
+const POLICY_OK = localStorage.getItem("srp_policy") === "1";
+const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You must read the Election Rules &amp; Policies and tick "I have read" at the bottom before you can register or vote.</p><a class="btn blue" href="policies.html#agree">Read the Policies</a></div>';
+
+(function policyAgree() {
+  const cb = document.getElementById("policyAgree");
+  if (!cb) return;
+  cb.checked = POLICY_OK;
+  const msg = document.getElementById("policyMsg");
+  const show = () => { msg.textContent = cb.checked ? "Thank you. You can now register and vote." : ""; };
+  show();
+  cb.addEventListener("change", () => {
+    if (cb.checked) localStorage.setItem("srp_policy", "1"); else localStorage.removeItem("srp_policy");
+    show();
+  });
+})();
+
 (function status() {
   const box = document.getElementById("votebox");
-  if (box) {
+  if (box && !POLICY_OK) {
+    box.className = "card closed";
+    box.innerHTML = POLICY_MSG;
+  } else if (box) {
     if (SITE.votingOpen && SITE.votingUrl) {
       box.innerHTML = '<h2>Voting is OPEN</h2><p>Click below to open your ballot.</p><a class="btn blue" target="_blank" rel="noopener" href="' + SITE.votingUrl + '">Open Ballot</a>';
     } else if (SITE.votingOpen) {
@@ -223,6 +242,10 @@ const COUNTIES = {
 (function registerForm() {
   const f = document.getElementById("regform");
   if (!f) return;
+  if (!POLICY_OK) {
+    f.parentElement.innerHTML = POLICY_MSG;
+    return;
+  }
   if (!SITE.registrationOpen) {
     f.parentElement.innerHTML = '<div class="closed"><h2>Registration is currently CLOSED</h2><p>Check back soon. Registration will open before the next election.</p></div>';
     return;
