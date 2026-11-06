@@ -37,6 +37,7 @@
 
 const pages = [
   ["index.html", "Home Page"],
+  ["policies.html", "Policies"],
   ["senate.html", "SRP Senate"],
   ["house.html", "SRP House of Rep"],
   ["live.html", "Live Election Broadcast", "live"],
