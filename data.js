@@ -37,16 +37,8 @@ window.SRP_DATA = {
       "title": "President",
       "pick": 1,
       "candidates": [
-        "A",
-        "B"
-      ]
-    },
-    {
-      "title": "Gov",
-      "pick": 1,
-      "candidates": [
-        "C",
-        "D"
+        "Bowser",
+        "Wedgie"
       ]
     }
   ],
