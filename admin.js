@@ -18,11 +18,15 @@
     $("who").textContent = session.user;
     $("role").textContent = session.role;
     $("adminstab").classList.toggle("hidden", session.role !== "owner");
-    ["announcement", "registerFormUrl", "liveStreamUrl", "contactEmail"].forEach(k => $(k).value = data[k] || "");
-    $("f_senators").value = (data.senators || []).join("\n");
-    $("f_representatives").value = (data.representatives || []).join("\n");
+    ["announcement", "registerFormUrl", "liveStreamUrl", "contactEmail", "votingUrl"].forEach(k => $(k).value = data[k] || "");
+    ["registrationOpen", "votingOpen"].forEach(k => $(k).checked = !!data[k]);
+    flagText();
     renderAdmins();
     renderOut();
+  }
+  function flagText() {
+    $("regState").textContent = data.registrationOpen ? "OPEN" : "CLOSED";
+    $("voteState").textContent = data.votingOpen ? "OPEN" : "CLOSED";
   }
 
   $("loginform").addEventListener("submit", async e => {
@@ -48,10 +52,8 @@
     if (t === "publish") renderOut();
   });
 
-  ["announcement", "registerFormUrl", "liveStreamUrl", "contactEmail"].forEach(k => $(k).addEventListener("input", () => { data[k] = $(k).value.trim(); save(); }));
-  const lines = v => v.split("\n").map(s => s.trim()).filter(Boolean);
-  $("f_senators").addEventListener("input", () => { data.senators = lines($("f_senators").value); save(); });
-  $("f_representatives").addEventListener("input", () => { data.representatives = lines($("f_representatives").value); save(); });
+  ["announcement", "registerFormUrl", "liveStreamUrl", "contactEmail", "votingUrl"].forEach(k => $(k).addEventListener("input", () => { data[k] = $(k).value.trim(); save(); }));
+  ["registrationOpen", "votingOpen"].forEach(k => $(k).addEventListener("change", () => { data[k] = $(k).checked; flagText(); save(); }));
 
   function renderAdmins() {
     const t = $("adminlist");

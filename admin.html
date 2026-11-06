@@ -30,10 +30,19 @@
       <p>Signed in as <b id="who"></b> (<span id="role"></span>) <button class="btn blue" id="logout" style="padding:6px 16px;margin-left:10px">Sign Out</button></p>
       <div class="tabs" id="tabs">
         <button data-t="settings" class="on">Settings</button>
-        <button data-t="people">Senators &amp; Reps</button>
         <button data-t="admins" id="adminstab">Admin Accounts</button>
         <button data-t="publish">Publish</button>
       </div>
+    </section>
+
+    <section class="card" data-p="settings">
+      <h3>Registration &amp; Voting</h3>
+      <div class="switches">
+        <label class="switch"><input type="checkbox" id="registrationOpen"><span class="slider"></span><span class="swtext"><b>Registration</b><small id="regState"></small></span></label>
+        <label class="switch"><input type="checkbox" id="votingOpen"><span class="slider"></span><span class="swtext"><b>Voting</b><small id="voteState"></small></span></label>
+      </div>
+      <label for="votingUrl">Voting ballot link (shown on the Vote page when voting is open)</label>
+      <input id="votingUrl" placeholder="https://forms.gle/...">
     </section>
 
     <section class="card" data-p="settings">
@@ -46,14 +55,6 @@
       <input id="liveStreamUrl" placeholder="https://www.youtube.com/embed/VIDEO_ID">
       <label for="contactEmail">Registration email</label>
       <input id="contactEmail" type="email" placeholder="you@example.com">
-    </section>
-
-    <section class="card hidden" data-p="people">
-      <h3>Senators &amp; Representatives</h3>
-      <label for="f_senators">Senators (one name per line)</label>
-      <textarea id="f_senators" rows="6"></textarea>
-      <label for="f_representatives">Representatives (one name per line)</label>
-      <textarea id="f_representatives" rows="6"></textarea>
     </section>
 
     <section class="card hidden" data-p="admins">

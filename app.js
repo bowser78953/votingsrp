@@ -35,6 +35,7 @@ const pages = [
   ["senate.html", "SRP Senate"],
   ["house.html", "SRP House of Rep"],
   ["live.html", "Live Election Broadcast", "live"],
+  ["vote.html", "Vote"],
   ["register.html", "Register", "cta"]
 ];
 
@@ -75,9 +76,33 @@ const COUNTIES = {
   "Springfield": 2
 };
 
+(function status() {
+  const hero = document.querySelector(".hero:not(.small)");
+  if (hero) {
+    const d = document.createElement("div");
+    d.innerHTML = '<span class="badge ' + (SITE.registrationOpen ? "on" : "off") + '">REGISTRATION ' + (SITE.registrationOpen ? "OPEN" : "CLOSED") + '</span><span class="badge ' + (SITE.votingOpen ? "on" : "off") + '">VOTING ' + (SITE.votingOpen ? "OPEN" : "CLOSED") + "</span>";
+    hero.insertBefore(d, hero.firstChild);
+  }
+  const box = document.getElementById("votebox");
+  if (box) {
+    if (SITE.votingOpen && SITE.votingUrl) {
+      box.innerHTML = '<h2>Voting is OPEN</h2><p>Click below to open your ballot.</p><a class="btn blue" target="_blank" rel="noopener" href="' + SITE.votingUrl + '">Open Ballot</a>';
+    } else if (SITE.votingOpen) {
+      box.innerHTML = '<h2>Voting is OPEN</h2><p>The ballot link will be posted here shortly.</p>';
+    } else {
+      box.className = "card closed";
+      box.innerHTML = "<h2>Voting is currently CLOSED</h2><p>Check back on election day. Make sure you are registered first.</p>";
+    }
+  }
+})();
+
 (function registerForm() {
   const f = document.getElementById("regform");
   if (!f) return;
+  if (!SITE.registrationOpen) {
+    f.parentElement.innerHTML = '<div class="closed"><h2>Registration is currently CLOSED</h2><p>Check back soon. Registration will open before the next election.</p></div>';
+    return;
+  }
   const county = f.elements.county, district = f.elements.district, summary = document.getElementById("regsummary");
   Object.keys(COUNTIES).forEach(c => county.add(new Option(c, c)));
   const update = () => {
