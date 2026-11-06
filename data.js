@@ -3,6 +3,7 @@ window.SRP_DATA = {
   votingUrl: "",
   registrationOpen: true,
   ballotTitle: "TEST Presidential Election",
+  colors: { Bowser: "#d93025", Wedgie: "#1a73e8" },
   ballot: [
     { title: "President", pick: 1, candidates: ["Bowser", "Wedgie"] }
   ],
