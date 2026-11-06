@@ -1,7 +1,7 @@
 window.SRP_DATA = {
   "registerFormUrl": "",
   "liveStreamUrl": "",
-  "contactEmail": "bbowsersrp@gmail.com",
+  "contactEmail": "owner",
   "announcement": "Election Date TBD",
   "senators": [
     "Springfield: @walker103444",
@@ -38,11 +38,14 @@ window.SRP_DATA = {
   "registrationOpen": false,
   "votingOpen": false,
   "siteOff": false,
-  "showMap": false,
+  "showMap": true,
   "voteRound": 2,
   "votingUrl": "",
   "ballot": [],
   "ballotTitle": "",
   "electionOpens": "2026-11-6 01:05",
-  "colors": {}
+  "colors": {},
+  "electionSchedule": {},
+  "candidateProfiles": [],
+  "officialResultsUrl": ""
 };
