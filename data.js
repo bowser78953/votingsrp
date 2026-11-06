@@ -59,6 +59,6 @@ window.SRP_DATA = {
     "Bowser": "#d93025",
     "Wedgie": "#1a73e8",
     "Hunt": "#0b5cc9",
-    "Red": "d00b0b"
+    "Red": "#d00b0b"
   }
 };
