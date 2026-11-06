@@ -27,6 +27,12 @@ window.SRP_DATA = {
       "role": "owner",
       "salt": "e985d5afbdeb98d8",
       "hash": "33d924c99bbc6644026c992e86d933c4b64b6487edd7c007ba09303b3344f922"
+    },
+    {
+      "user": "Wedgie",
+      "role": "admin",
+      "salt": "33fc47060b4c80eb",
+      "hash": "081b9096cd1a0c6f176319f326a147eba47710410e12cf1dab4bd7f93188901a"
     }
   ],
   "registrationOpen": false,
