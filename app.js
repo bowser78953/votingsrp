@@ -202,23 +202,23 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
   box.appendChild(tip);
 
   const draw = () => {
-    const el = elections[cur], names = el.candidates, gray = /gr[ae]y|^\s*(type\s*)?(2|two)\s*$/i.test(String(el.map || ""));
+    const el = elections[cur], names = el.candidates;
     const tally = tallies()[cur] || {};
-    document.getElementById("mtitle").textContent = el.title + (gray ? "" : "");
+    document.getElementById("mtitle").textContent = el.title;
     document.getElementById("legend").innerHTML = names.map(n => '<span><i style="background:' + (colors[n] || "#888") + '"></i>' + esc(n) + "</span>").join("") + '<span><i style="background:' + "#fff" + '"></i>No votes</span>';
-    let total = 0, out = gray ? "" : '<image href="map.jpg" x="0" y="0" width="847" height="767"></image>';
+    let total = 0, out = '<image href="map.jpg" x="0" y="0" width="847" height="767"></image>';
     D.forEach(d => {
       const t = tally[d[0] + "|" + d[1]] || {};
       const e = Object.entries(t).sort((a, b) => b[1] - a[1]);
       const tie = e.length > 1 && e[0][1] === e[1][1];
       const won = e.length && !tie;
-      const fill = won ? (colors[e[0][0]] || "#888") : (gray ? "#ffffff" : "#000");
-      const op = won ? (gray ? 1 : 0.62) : (gray ? 1 : 0.0);
+      const fill = won ? (colors[e[0][0]] || "#888") : "#000";
+      const op = won ? 0.62 : 0.0;
       e.forEach(x => total += x[1]);
       const pts = d[3].split(" ").map(p => p.split(",").map(Number));
       const cx = pts.reduce((s, p) => s + p[0], 0) / pts.length, cy = pts.reduce((s, p) => s + p[1], 0) / pts.length;
-      const txt = gray ? (won ? "#fff" : "#333") : "#fff";
-      out += '<g class="dist" data-k="' + d[0] + "|" + d[1] + '" data-n="' + d[0] + " District " + d[1] + '"><polygon points="' + d[3] + '" fill="' + fill + '" fill-opacity="' + op + '" stroke="' + "#222" + '" stroke-width="2"></polygon><text x="' + cx + '" y="' + cy + '" text-anchor="middle" font-size="24" font-weight="700" fill="' + txt + '" ' + (gray ? "" : 'stroke="#000" stroke-width="4" paint-order="stroke" ') + 'pointer-events="none">' + d[2].split(" ")[0] + '<tspan x="' + cx + '" dy="26">' + d[2].split(" ")[1] + "</tspan></text></g>";
+      const txt = "#fff";
+      out += '<g class="dist" data-k="' + d[0] + "|" + d[1] + '" data-n="' + d[0] + " District " + d[1] + '"><polygon points="' + d[3] + '" fill="' + fill + '" fill-opacity="' + op + '" stroke="' + "#222" + '" stroke-width="2"></polygon><text x="' + cx + '" y="' + cy + '" text-anchor="middle" font-size="24" font-weight="700" fill="' + txt + '" ' + 'stroke="#000" stroke-width="4" paint-order="stroke" ' + 'pointer-events="none">' + d[2].split(" ")[0] + '<tspan x="' + cx + '" dy="26">' + d[2].split(" ")[1] + "</tspan></text></g>";
     });
     svg.innerHTML = out;
     document.getElementById("maptotal").textContent = total + " vote" + (total === 1 ? "" : "s") + " counted";

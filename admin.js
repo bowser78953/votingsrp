@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   const $ = id => document.getElementById(id);
   const DRAFT = "srp_draft";
   let data = Object.assign(JSON.parse(JSON.stringify(window.SRP_DATA)), JSON.parse(localStorage.getItem(DRAFT) || "{}"));
@@ -117,7 +117,7 @@
   function fillLists() {
     $("electionOpens").value = data.electionOpens || "";
     $("ballotTitle").value = data.ballotTitle || "";
-    $("ballotText").value = (data.ballot || []).map(b => b.title + " | " + (b.pick || 1) + " | " + b.candidates.join(", ") + " | " + (b.map === "gray" ? "gray" : "picture")).join("\n");
+    $("ballotText").value = (data.ballot || []).map(b => b.title + " | " + (b.pick || 1) + " | " + b.candidates.join(", ")).join("\n");
     $("colorsText").value = Object.entries(data.colors || {}).map(([k, v]) => k + ": " + v).join("\n");
     $("senatorsText").value = (data.senators || []).join("\n");
     $("repsText").value = (data.representatives || []).join("\n");
@@ -128,7 +128,7 @@
   $("ballotText").addEventListener("input", () => {
     data.ballot = lines($("ballotText").value).map(l => {
       const p = l.split("|").map(x => x.trim());
-      return { title: p[0], pick: parseInt(p[1], 10) || 1, candidates: (p[2] || "").split(",").map(x => x.trim()).filter(Boolean), map: /gr[ae]y|^(type\s*)?(2|two)$/i.test(p[3] || "") ? "gray" : "picture" };
+      return { title: p[0], pick: parseInt(p[1], 10) || 1, candidates: (p[2] || "").split(",").map(x => x.trim()).filter(Boolean), map: "picture" };
     });
     save();
   });
