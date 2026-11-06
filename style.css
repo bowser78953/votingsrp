@@ -241,6 +241,21 @@ input,select,textarea{border-radius:3px!important}
 @media(max-width:700px){.toc{columns:1}.policy-meta div{flex-direction:column;gap:0}}
 
 .agree{display:flex;gap:10px;align-items:center;font-weight:bold;font-size:1.05rem}.agree input{width:20px;height:20px}
+.ghost-dark{border-color:var(--navy);color:var(--navy)}
+.election-status{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:18px 0}
+.election-status>div{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;background:#f3f6fc;border:1px solid #dbe5f7;border-radius:10px}
+.election-state{font-size:.82rem;letter-spacing:.08em;font-weight:800}
+.election-state.state-open{color:#18743c}
+.election-state.state-closed{color:#58647b}
+.election-schedule{font-weight:700;color:var(--navy)}
+.election-actions{display:flex;flex-wrap:wrap;gap:8px}
+.election-actions .btn{margin:0}
+.election-office{padding:16px 0;border-top:1px solid #dbe1ec}
+.election-office:first-child{border-top:0}
+.election-office h3{margin:0 0 6px;color:var(--navy)}
+.election-office p{margin:0 0 8px}
+.candidate-list,.election-guidance{margin:8px 0 0;padding-left:22px}
+.candidate-list li,.election-guidance li{padding:3px 0;line-height:1.6}
 
 /* Map slideshow */
 .mapnav{display:flex;align-items:center;justify-content:center;gap:16px}

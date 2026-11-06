@@ -49,6 +49,7 @@ const SITE = window.SRP_DATA || {};
 
 const pages = [
   ["index.html", "Home Page"],
+  ["election-info.html", "Election Info"],
   ["policies.html", "Policies"],
   ["senate.html", "SRP Senate"],
   ["house.html", "SRP House of Rep"],
@@ -68,6 +69,46 @@ const pages = [
     html += '<a href="' + href + '" class="' + (active + extra).trim() + '">' + label + "</a>";
   });
   nav.innerHTML = html;
+})();
+
+(function electionInfo() {
+  const root = document.getElementById("electionOffices");
+  if (!root) return;
+
+  const setStatus = (id, open) => {
+    const el = document.getElementById(id);
+    el.textContent = open ? "OPEN" : "CLOSED";
+    el.className = "election-state " + (open ? "state-open" : "state-closed");
+  };
+  setStatus("registrationStatus", SITE.registrationOpen === true);
+  setStatus("votingStatus", SITE.votingOpen === true);
+
+  const schedule = document.getElementById("electionSchedule");
+  const opening = String(SITE.electionOpens || "").trim();
+  schedule.textContent = opening && !/^n\/?a$/i.test(opening)
+    ? "Opening date saved in site settings: " + opening + ". Check official announcements for updates."
+    : "No election opening date has been announced.";
+
+  const elections = (SITE.ballot || []).filter(e => e && e.title && Array.isArray(e.candidates) && e.candidates.length);
+  document.getElementById("noPublishedBallot").classList.toggle("hidden", elections.length > 0);
+  elections.forEach(election => {
+    const section = document.createElement("section");
+    section.className = "election-office";
+    const heading = document.createElement("h3");
+    heading.textContent = election.title;
+    const details = document.createElement("p");
+    const pick = Number.isInteger(Number(election.pick)) && Number(election.pick) > 0 ? Number(election.pick) : 1;
+    details.textContent = "Select " + pick + (pick === 1 ? " candidate" : " candidates") + " when voting is open.";
+    const candidates = document.createElement("ul");
+    candidates.className = "candidate-list";
+    [...election.candidates].sort((a, b) => String(a).localeCompare(String(b), undefined, { sensitivity: "base" })).forEach(name => {
+      const item = document.createElement("li");
+      item.textContent = name;
+      candidates.appendChild(item);
+    });
+    section.append(heading, details, candidates);
+    root.appendChild(section);
+  });
 })();
 
 (function reveal() {

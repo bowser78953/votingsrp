@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Election Information | Springfield Roleplay Government Voting</title>
+<link rel="icon" href="logo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <img src="logo.png" alt="Springfield Government logo">
+  <h1><small>Official Site</small>Springfield Roleplay Government Voting</h1>
+</header>
+<nav></nav>
+<section class="hero small">
+  <h2>Election Information Center</h2>
+  <p>Published election dates, ballot details, and neutral voting guidance.</p>
+</section>
+<main>
+  <section class="card gold" aria-labelledby="election-status-heading">
+    <h2 id="election-status-heading">Election Status</h2>
+    <div class="election-status" aria-live="polite">
+      <div><span>Registration</span><strong id="registrationStatus"></strong></div>
+      <div><span>Voting</span><strong id="votingStatus"></strong></div>
+    </div>
+    <p id="electionSchedule" class="election-schedule"></p>
+    <div class="election-actions">
+      <a class="btn blue" href="register.html">Registration Information</a>
+      <a class="btn ghost-dark" href="vote.html">Voting Information</a>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="published-ballot-heading">
+    <h2 id="published-ballot-heading">Published Ballot</h2>
+    <p>Every listed candidate is presented by name and in alphabetical order, without endorsements or campaign claims.</p>
+    <div id="electionOffices" class="election-offices"></div>
+    <p id="noPublishedBallot" class="notice hidden">No election ballot has been published yet.</p>
+  </section>
+
+  <section class="card" aria-labelledby="voter-guidance-heading">
+    <h2 id="voter-guidance-heading">Fair and Informed Participation</h2>
+    <ul class="election-guidance">
+      <li>Make your own voting decision without pressure or intimidation.</li>
+      <li>Review candidates based on their qualifications, experience, conduct, and ability to serve.</li>
+      <li>Submit only the ballot you are authorized to cast. A submitted vote is final.</li>
+      <li>Real-world political parties, figures, endorsements, and propaganda are not part of SRP elections.</li>
+    </ul>
+    <p><a class="more" href="policies.html#s7">Read voter responsibilities and the full Election Rules &amp; Policies &rarr;</a></p>
+  </section>
+
+  <section class="card notice" aria-labelledby="results-heading">
+    <h2 id="results-heading">Official Results</h2>
+    <p>Election Officials must verify ballots before results are certified. Only authorized officials may announce official results. This page does not display vote totals or certify outcomes.</p>
+    <p><a class="more" href="policies.html#s11">Read the election integrity and result-verification rules &rarr;</a></p>
+  </section>
+</main>
+<footer>&copy; Springfield Roleplay Government Voting</footer>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
