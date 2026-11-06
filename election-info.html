@@ -45,22 +45,43 @@
 
   <section class="card" aria-labelledby="candidate-application-heading">
     <h2 id="candidate-application-heading">Candidate Application</h2>
-    <p>Applications are accepted only while candidate registration is open. Election Officials must review eligibility before a candidate is approved. Submitting an application does not make you a candidate.</p>
+    <p>Share your interest in an SRP position and suggestions for setting up the election. Election Officials must review eligibility before a candidate is approved. Submitting an inquiry does not make you a candidate.</p>
     <div id="candidateApplicationStatus" class="notice hidden"></div>
-    <form id="candidateApplication" class="candidate-application">
-      <label for="candidateName">In-game username</label>
-      <input id="candidateName" name="name" required maxlength="80">
-      <label for="candidateOffice">Office you are applying for</label>
-      <input id="candidateOffice" name="office" required maxlength="100">
-      <label for="candidateExperience">Relevant SRP experience and qualifications</label>
-      <textarea id="candidateExperience" name="experience" rows="4" required maxlength="1200"></textarea>
-      <label for="candidateStatement">Proposed SRP campaign statement</label>
-      <textarea id="candidateStatement" name="statement" rows="5" required maxlength="1600"></textarea>
-      <p class="notice">Keep statements respectful, truthful, and about SRP. Real-world political content, personal attacks, fabricated claims, endorsements, promises of rewards, and private information are prohibited. Do not include passwords or sensitive personal information.</p>
-      <label class="candidate-policy-check"><input id="candidatePolicy" type="checkbox" required> I have read and agree to follow the <a href="policies.html#s4">Election Rules &amp; Policies</a>.</label>
-      <button class="btn blue" type="submit">Prepare Application Email</button>
-      <p id="candidateApplicationMessage" class="form-message" aria-live="polite"></p>
-    </form>
+    <p><button class="btn blue" id="openCandidateApplication" type="button">Open Application &amp; Election Planning Form</button></p>
+    <p class="form-message">The form opens a pre-addressed email draft to bbowsersrp@gmail.com. Review it and press Send in your email app; this website cannot send or save it.</p>
+    <dialog id="candidateApplicationDialog" class="candidate-dialog" aria-labelledby="candidateApplicationDialogTitle">
+      <div class="candidate-dialog-header">
+        <h2 id="candidateApplicationDialogTitle">Candidate &amp; Election Planning Form</h2>
+        <button class="candidate-dialog-close" id="closeCandidateApplication" type="button" aria-label="Close form">&times;</button>
+      </div>
+      <p>Candidate registration is open only during its announced period. If it is closed, this email is an inquiry for election planning, not an official application.</p>
+      <form id="candidateApplication" class="candidate-application">
+        <label for="candidateOffice">What position are you applying for?</label>
+        <select id="candidateOffice" name="office" required>
+          <option value="">Select a position</option>
+          <option>President</option>
+          <option>Governor</option>
+          <option>Senator</option>
+          <option>Representative</option>
+          <option>Other / not listed</option>
+        </select>
+        <label for="candidateName">In-game username</label>
+        <input id="candidateName" name="name" required maxlength="80" autocomplete="nickname">
+        <label for="candidateExperience">What SRP experience or qualifications would you bring?</label>
+        <textarea id="candidateExperience" name="experience" rows="4" required maxlength="1200"></textarea>
+        <label for="candidateGoals">What would you hope to work on in this position?</label>
+        <textarea id="candidateGoals" name="goals" rows="4" required maxlength="1200"></textarea>
+        <label for="electionSuggestions">What suggestions do you have for setting up the election? (offices, schedule, or other details)</label>
+        <textarea id="electionSuggestions" name="suggestions" rows="4" maxlength="1200"></textarea>
+        <p class="notice">Keep responses respectful, truthful, and about SRP. Real-world political content, personal attacks, fabricated claims, endorsements, promises of rewards, and private information are prohibited. Do not include passwords or sensitive personal information.</p>
+        <label class="candidate-policy-check"><input id="candidatePolicy" name="policy" type="checkbox" required> I have read and agree to follow the <a href="policies.html#s4" target="_blank" rel="noopener noreferrer">Election Rules &amp; Policies</a>.</label>
+        <div class="candidate-dialog-actions">
+          <button class="btn ghost-dark" id="cancelCandidateApplication" type="button">Cancel</button>
+          <button class="btn blue" type="submit">Prepare Email</button>
+        </div>
+        <p id="candidateApplicationMessage" class="form-message" aria-live="polite"></p>
+      </form>
+    </dialog>
   </section>
 
   <section class="card" aria-labelledby="voter-guidance-heading">

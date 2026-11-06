@@ -159,41 +159,51 @@ const pages = [
 
   const application = document.getElementById("candidateApplication");
   const applicationStatus = document.getElementById("candidateApplicationStatus");
-  const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(SITE.contactEmail || "")) ? SITE.contactEmail : "";
-  if (SITE.registrationOpen !== true || !email) {
-    application.classList.add("hidden");
-    applicationStatus.textContent = SITE.registrationOpen !== true
-      ? "Candidate registration is closed."
-      : "Candidate application email is not configured. Contact election administration through its official channel.";
+  const applicationDialog = document.getElementById("candidateApplicationDialog");
+  const applicationMessage = document.getElementById("candidateApplicationMessage");
+  const closeApplicationDialog = () => applicationDialog.close();
+  document.getElementById("openCandidateApplication").addEventListener("click", () => applicationDialog.showModal());
+  document.getElementById("closeCandidateApplication").addEventListener("click", closeApplicationDialog);
+  document.getElementById("cancelCandidateApplication").addEventListener("click", closeApplicationDialog);
+  applicationDialog.addEventListener("click", event => {
+    if (event.target === applicationDialog) closeApplicationDialog();
+  });
+  if (SITE.registrationOpen !== true) {
+    applicationStatus.textContent = "Candidate registration is closed. You can still send an election-planning inquiry; it will not be treated as an official candidate application.";
     applicationStatus.classList.remove("hidden");
-  } else {
-    application.addEventListener("submit", event => {
-      event.preventDefault();
-      const fields = new FormData(application);
-      const name = String(fields.get("name") || "").trim();
-      const office = String(fields.get("office") || "").trim();
-      const experience = String(fields.get("experience") || "").trim();
-      const statement = String(fields.get("statement") || "").trim();
-      if (!name || !office || !experience || !statement) return;
-      const subject = "SRP Candidate Application - " + office;
-      const body = [
-        "In-game username: " + name,
-        "Office: " + office,
-        "",
-        "Relevant SRP experience and qualifications:",
-        experience,
-        "",
-        "Proposed SRP campaign statement:",
-        statement,
-        "",
-        "I have read and agree to follow the SRP Election Rules & Policies.",
-        "I understand this application is not approval to run. Election Officials must review eligibility and approve any public candidate profile."
-      ].join("\n");
-      document.getElementById("candidateApplicationMessage").textContent =
-        "Your email app should open. Send the draft to submit your application; nothing is sent or saved by this website.";
-      window.location.href = "mailto:" + email + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-    });
   }
+  application.addEventListener("submit", event => {
+    event.preventDefault();
+    if (!application.reportValidity()) return;
+    const fields = new FormData(application);
+    const name = String(fields.get("name") || "").trim();
+    const office = String(fields.get("office") || "").trim();
+    const experience = String(fields.get("experience") || "").trim();
+    const goals = String(fields.get("goals") || "").trim();
+    const suggestions = String(fields.get("suggestions") || "").trim();
+    if (!name || !office || !experience || !goals) return;
+    const subject = (SITE.registrationOpen === true ? "SRP Candidate Application - " : "SRP Election Planning Inquiry - ") + office;
+    const body = [
+      "In-game username: " + name,
+      "Position of interest: " + office,
+      "",
+      "SRP experience or qualifications:",
+      experience,
+      "",
+      "What I hope to work on:",
+      goals,
+      "",
+      "Election setup suggestions:",
+      suggestions || "None provided",
+      "",
+      "I have read and agree to follow the SRP Election Rules & Policies.",
+      SITE.registrationOpen === true
+        ? "I understand this application is not approval to run. Election Officials must review eligibility."
+        : "I understand candidate registration is closed and this is an election-planning inquiry, not an official application."
+    ].join("\n");
+    applicationMessage.textContent = "Your email app should open a draft addressed to bbowsersrp@gmail.com. Review it and press Send; this website does not send or save the form.";
+    window.location.href = "mailto:bbowsersrp@gmail.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+  });
 
   const resultsStatus = document.getElementById("officialResultsStatus");
   const resultsUrl = httpsUrl(SITE.officialResultsUrl);
