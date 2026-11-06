@@ -7,6 +7,7 @@ window.SRP_DATA = {
   ballot: [
     { title: "President", pick: 1, candidates: ["Bowser", "Wedgie"] }
   ],
+  siteOnline: true,
   votingOpen: true,
   liveStreamUrl: "",
   contactEmail: "",

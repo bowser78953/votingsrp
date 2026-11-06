@@ -1,5 +1,10 @@
 const SITE = window.SRP_DATA || {};
 
+(function maintenance() {
+  if (SITE.siteOnline !== false || /admin\.html$/i.test(location.pathname)) return;
+  document.body.innerHTML = '<div class="offline"><img src="logo.png" alt=""><h1>Site Temporarily Offline</h1><p>Springfield Roleplay Government Voting is currently closed. Please check back later.</p></div>';
+  throw new Error("site offline");
+})();
 (function extras() {
   const h = document.querySelector("header");
   if (h) {

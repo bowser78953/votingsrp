@@ -20,6 +20,7 @@
     $("adminstab").classList.toggle("hidden", session.role !== "owner");
     ["announcement", "registerFormUrl", "liveStreamUrl", "contactEmail", "votingUrl"].forEach(k => $(k).value = data[k] || "");
     ["registrationOpen", "votingOpen"].forEach(k => $(k).checked = !!data[k]);
+    $("siteOnline").checked = data.siteOnline !== false;
     flagText();
     renderAdmins();
     renderOut();
@@ -27,6 +28,7 @@
   function flagText() {
     $("regState").textContent = data.registrationOpen ? "OPEN" : "CLOSED";
     $("voteState").textContent = data.votingOpen ? "OPEN" : "CLOSED";
+    $("siteState").textContent = data.siteOnline !== false ? "ONLINE" : "OFFLINE";
   }
 
   $("loginform").addEventListener("submit", async e => {
@@ -54,6 +56,7 @@
 
   ["announcement", "registerFormUrl", "liveStreamUrl", "contactEmail", "votingUrl"].forEach(k => $(k).addEventListener("input", () => { data[k] = $(k).value.trim(); save(); }));
   ["registrationOpen", "votingOpen"].forEach(k => $(k).addEventListener("change", () => { data[k] = $(k).checked; flagText(); save(); }));
+  $("siteOnline").addEventListener("change", () => { data.siteOnline = $("siteOnline").checked; flagText(); save(); });
 
   function renderAdmins() {
     const t = $("adminlist");
