@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Register | Springfield Roleplay Government Voting</title>
+<link rel="icon" href="logo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <img src="logo.png" alt="Springfield Government logo">
+  <h1><small>Official Site</small>Springfield Roleplay Government Voting</h1>
+</header>
+<nav></nav>
+<section class="hero small">
+  <h2>Register to Vote</h2>
+  <p>Sign up so your voice is counted in the next SRP election.</p>
+</section>
+<main>
+  <section class="card gold reveal">
+    <h2>Voter Registration</h2>
+    <form id="regform">
+      <label for="name">In-game username</label>
+      <input id="name" name="name" required>
+      <label for="discord">Discord username</label>
+      <input id="discord" name="discord" required>
+      <label for="chamber">Which election?</label>
+      <select id="chamber" name="chamber"><option>SRP Senate</option><option>SRP House of Rep</option><option>Both</option></select>
+      <label for="notes">Notes (optional)</label>
+      <textarea id="notes" name="notes" rows="3"></textarea>
+      <p><button class="btn blue" type="submit">Submit Registration</button></p>
+    </form>
+    <div class="ok" id="ok"></div>
+  </section>
+</main>
+<footer>&copy; Springfield Roleplay Government Voting</footer>
+<script src="app.js"></script>
+</body>
+</html>
