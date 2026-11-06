@@ -58,6 +58,26 @@
       <input id="contactEmail" type="email" placeholder="you@example.com">
     </section>
 
+    <section class="card" data-p="settings">
+      <h3>Election</h3>
+      <label for="electionOpens">Countdown until elections open (YYYY-MM-DD HH:MM, Eastern time; empty hides it)</label>
+      <input id="electionOpens" placeholder="2026-11-12 18:00">
+      <label for="ballotTitle">Ballot title</label>
+      <input id="ballotTitle" placeholder="2026 General Election">
+      <label for="ballotText">Ballot positions, one per line: Position | how many to pick | Candidate, Candidate</label>
+      <textarea class="code" id="ballotText" style="height:110px" placeholder="President | 1 | Bowser, Wedgie"></textarea>
+      <label for="colorsText">Candidate colors, one per line: Name: #hexcolor</label>
+      <textarea class="code" id="colorsText" style="height:80px" placeholder="Bowser: #d93025"></textarea>
+    </section>
+
+    <section class="card" data-p="settings">
+      <h3>Senators &amp; Representatives</h3>
+      <label for="senatorsText">Senators, one per line</label>
+      <textarea class="code" id="senatorsText" style="height:130px"></textarea>
+      <label for="repsText">Representatives, one per line</label>
+      <textarea class="code" id="repsText" style="height:130px"></textarea>
+    </section>
+
     <section class="card hidden" data-p="admins">
       <h3>Admin Accounts</h3>
       <table class="admins" id="adminlist"></table>
@@ -71,12 +91,13 @@
 
     <section class="card hidden" data-p="publish">
       <h3>Publish Changes</h3>
-      <p>Changes are only saved when you publish them. This site has no server, so do this:</p>
-      <ol>
-        <li>Click <b>Download data.js</b>.</li>
-        <li>Upload it to the <code>votingsrp</code> repo on GitHub, replacing the old <code>data.js</code>.</li>
-        <li>Wait a minute or two for the site to update.</li>
-      </ol>
+      <p>Changes only go live when you publish. Paste your GitHub token once and the button below publishes straight from here (the site updates in 1-2 minutes).</p>
+      <label for="ghToken">GitHub token (needs Contents: read &amp; write on the votingsrp repo; stays in this browser only)</label>
+      <input id="ghToken" type="password" placeholder="github_pat_...">
+      <p><button class="btn blue" id="pub">Publish to Live Site</button> <button class="btn ghost" style="color:#b00020;border-color:#b00020" id="discard">Discard my draft</button></p>
+      <div id="pubmsg" class="warn hidden"></div>
+      <h3 style="margin-top:20px">Manual option</h3>
+      <p>Or download <code>data.js</code> and upload it to the repo on GitHub.</p>
       <p><button class="btn blue" id="dl">Download data.js</button> <button class="btn ghost" style="color:var(--blue);border-color:var(--blue)" id="copy">Copy to clipboard</button></p>
       <textarea class="code" id="out" readonly></textarea>
     </section>

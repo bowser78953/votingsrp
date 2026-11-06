@@ -102,5 +102,59 @@
   });
   $("copy").addEventListener("click", () => { navigator.clipboard.writeText(fileText()); alert("Copied."); });
 
+  const lines = s => s.split("\n").map(x => x.trim()).filter(Boolean);
+  function fillLists() {
+    $("electionOpens").value = data.electionOpens || "";
+    $("ballotTitle").value = data.ballotTitle || "";
+    $("ballotText").value = (data.ballot || []).map(b => b.title + " | " + (b.pick || 1) + " | " + b.candidates.join(", ")).join("\n");
+    $("colorsText").value = Object.entries(data.colors || {}).map(([k, v]) => k + ": " + v).join("\n");
+    $("senatorsText").value = (data.senators || []).join("\n");
+    $("repsText").value = (data.representatives || []).join("\n");
+    $("ghToken").value = localStorage.getItem("srp_gh") || "";
+  }
+  fillLists();
+  ["electionOpens", "ballotTitle"].forEach(k => $(k).addEventListener("input", () => { data[k] = $(k).value.trim(); save(); }));
+  $("ballotText").addEventListener("input", () => {
+    data.ballot = lines($("ballotText").value).map(l => {
+      const p = l.split("|").map(x => x.trim());
+      return { title: p[0], pick: parseInt(p[1], 10) || 1, candidates: (p[2] || "").split(",").map(x => x.trim()).filter(Boolean) };
+    });
+    save();
+  });
+  $("colorsText").addEventListener("input", () => {
+    data.colors = {};
+    lines($("colorsText").value).forEach(l => { const i = l.lastIndexOf(":"); if (i > 0) data.colors[l.slice(0, i).trim()] = l.slice(i + 1).trim(); });
+    save();
+  });
+  $("senatorsText").addEventListener("input", () => { data.senators = lines($("senatorsText").value); save(); });
+  $("repsText").addEventListener("input", () => { data.representatives = lines($("repsText").value); save(); });
+  $("ghToken").addEventListener("input", () => localStorage.setItem("srp_gh", $("ghToken").value.trim()));
+
+  $("discard").addEventListener("click", () => {
+    if (!confirm("Throw away unpublished changes and reload the live settings?")) return;
+    localStorage.removeItem(DRAFT); localStorage.removeItem(DRAFT + "_admins");
+    location.reload();
+  });
+
+  const msg = (t, bad) => { const m = $("pubmsg"); m.textContent = t; m.classList.remove("hidden"); m.style.background = bad ? "" : "#e6f4ea"; };
+  $("pub").addEventListener("click", async () => {
+    const token = $("ghToken").value.trim();
+    if (!token) { msg("Paste your GitHub token first.", true); return; }
+    if (!confirm("Publish these changes to the live site?")) return;
+    const url = "https://api.github.com/repos/bowser78953/votingsrp/contents/data.js";
+    const h = { Authorization: "Bearer " + token, Accept: "application/vnd.github+json" };
+    try {
+      msg("Publishing...");
+      const cur = await fetch(url, { headers: h });
+      if (!cur.ok) throw new Error("Could not read data.js (" + cur.status + "). Check the token.");
+      const sha = (await cur.json()).sha;
+      const bytes = new TextEncoder().encode(fileText());
+      let bin = ""; bytes.forEach(b => bin += String.fromCharCode(b));
+      const res = await fetch(url, { method: "PUT", headers: h, body: JSON.stringify({ message: "Update data.js from admin panel", content: btoa(bin), sha, branch: "main" }) });
+      if (!res.ok) throw new Error("Publish failed (" + res.status + "). The token needs Contents: read & write.");
+      msg("Published! The live site updates in 1-2 minutes.");
+    } catch (err) { msg(err.message, true); }
+  });
+
   show();
 })();
