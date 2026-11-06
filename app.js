@@ -90,26 +90,37 @@ const COUNTIES = {
     } else if (SITE.votingOpen) {
       box.className = "card";
       const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-      const pos = (SITE.ballot || []).map((p, i) => '<fieldset class="pos"><legend>' + esc(p.title) + ' <em>(vote for ' + (p.pick === 1 ? "one" : p.pick) + ')</em></legend>' +
-        p.candidates.map(c => '<label><input type="' + (p.pick === 1 ? "radio" : "checkbox") + '" name="p' + i + '" value="' + esc(c) + '"> ' + esc(c) + "</label>").join("") + "</fieldset>").join("");
-      box.innerHTML = '<div class="paper"><h2>Official Ballot</h2><p class="rules">Please vote for each position. Vote only for the number of candidates allowed for that position. Votes for more than the allowed number will not count.</p>' +
-        '<label class="who">Discord username <input id="voter" required></label><form id="ballotform"><div class="cols">' + pos + '</div><button class="btn blue" type="submit">Submit Ballot</button></form><div id="receipt"></div></div>';
-      document.getElementById("ballotform").addEventListener("submit", e => {
-        e.preventDefault();
-        const who = document.getElementById("voter").value.trim();
-        if (!who) { alert("Enter your Discord username."); return; }
-        const lines = [];
-        for (let i = 0; i < SITE.ballot.length; i++) {
-          const p = SITE.ballot[i];
-          const picked = [...document.querySelectorAll('input[name="p' + i + '"]:checked')].map(x => x.value);
-          if (!picked.length) { alert("Please vote for: " + p.title); return; }
-          if (picked.length > p.pick) { alert("Too many choices for: " + p.title); return; }
-          lines.push(p.title + ": " + picked.join(", "));
-        }
-        const text = "Voter: " + who + "\n" + lines.join("\n");
-        document.getElementById("receipt").innerHTML = '<div class="closed"><h3>Your ballot</h3><pre>' + esc(text) + "</pre></div>";
-        if (SITE.contactEmail) location.href = "mailto:" + SITE.contactEmail + "?subject=" + encodeURIComponent("SRP Ballot - " + who) + "&body=" + encodeURIComponent(text);
-      });
+      const reg = JSON.parse(localStorage.getItem("srp_reg") || "null");
+      const done = JSON.parse(localStorage.getItem("srp_voted") || "null");
+      const thanks = () => '<div class="thanks"><div class="check">&#10003;</div><h2>Thanks for voting!</h2><p>Your vote has been submitted and cannot be changed.</p></div>';
+      if (done) {
+        box.innerHTML = thanks();
+      } else if (!reg) {
+        box.className = "card closed";
+        box.innerHTML = '<h2>You must register to vote</h2><p>Register first, then come back here to cast your ballot.</p><a class="btn blue" href="register.html">Register Now</a>';
+      } else {
+        const pos = (SITE.ballot || []).map((p, i) => '<fieldset class="pos"><legend>' + esc(p.title) + ' <em>(vote for ' + (p.pick === 1 ? "one" : p.pick) + ')</em></legend>' +
+          p.candidates.map(c => '<label class="opt"><input type="' + (p.pick === 1 ? "radio" : "checkbox") + '" name="p' + i + '" value="' + esc(c) + '"><span>' + esc(c) + "</span></label>").join("") + "</fieldset>").join("");
+        box.innerHTML = '<div class="paper"><h2>' + esc(SITE.ballotTitle || "Official Ballot") + '</h2><p class="rules">Voting as <b>' + esc(reg.discord || reg.name) + "</b> (" + esc(reg.county) + " District " + esc(reg.district) + '). Choose one candidate. <b>Once you submit, you cannot change your vote.</b></p>' +
+          '<form id="ballotform"><div class="cols">' + pos + '</div><button class="btn blue" type="submit">Submit Vote</button></form></div>';
+        document.getElementById("ballotform").addEventListener("submit", e => {
+          e.preventDefault();
+          const lines = [];
+          for (let i = 0; i < SITE.ballot.length; i++) {
+            const p = SITE.ballot[i];
+            const picked = [...document.querySelectorAll('input[name="p' + i + '"]:checked')].map(x => x.value);
+            if (!picked.length) { alert("Please vote for: " + p.title); return; }
+            if (picked.length > p.pick) { alert("Too many choices for: " + p.title); return; }
+            lines.push(p.title + ": " + picked.join(", "));
+          }
+          if (!confirm("Submit your vote? You cannot change it afterwards.")) return;
+          const text = "Voter: " + (reg.discord || reg.name) + "\n" + lines.join("\n");
+          localStorage.setItem("srp_voted", JSON.stringify({ at: Date.now(), lines }));
+          box.className = "card";
+          box.innerHTML = thanks();
+          if (SITE.contactEmail) location.href = "mailto:" + SITE.contactEmail + "?subject=" + encodeURIComponent("SRP Ballot - " + (reg.discord || reg.name)) + "&body=" + encodeURIComponent(text);
+        });
+      }
     } else {
       box.className = "card closed";
       box.innerHTML = "<h2>Voting is currently CLOSED</h2><p>Check back on election day. Make sure you are registered first.</p>";
@@ -150,7 +161,11 @@ const COUNTIES = {
     const d = new FormData(f);
     const body = "Username: " + d.get("name") + "\nDiscord: " + d.get("discord") + "\nCounty: " + d.get("county") + "\nDistrict: " + d.get("district") + "\nNotes: " + d.get("notes");
     const ok = document.getElementById("ok");
-    if (SITE.contactEmail) {
+    localStorage.setItem("srp_reg", JSON.stringify({ name: d.get("name"), discord: d.get("discord"), county: d.get("county"), district: d.get("district") }));
+    if (!SITE.contactEmail) {
+      f.style.display = "none";
+      ok.innerHTML = "You're registered! You can now <a href='vote.html'><b>go vote</b></a>.";
+    } else if (SITE.contactEmail) {
       location.href = "mailto:" + SITE.contactEmail + "?subject=" + encodeURIComponent("SRP Voter Registration") + "&body=" + encodeURIComponent(body);
       ok.textContent = "Your email app should open with your registration. Send it to finish registering.";
       f.reset();

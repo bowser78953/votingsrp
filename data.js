@@ -2,10 +2,9 @@ window.SRP_DATA = {
   registerFormUrl: "",
   votingUrl: "",
   registrationOpen: true,
+  ballotTitle: "TEST Presidential Election",
   ballot: [
-    { title: "Senator", pick: 1, candidates: ["Candidate A", "Candidate B", "Candidate C"] },
-    { title: "Representative", pick: 1, candidates: ["Candidate A", "Candidate B", "Candidate C"] },
-    { title: "Proposition 1", pick: 1, candidates: ["Yes", "No"] }
+    { title: "President", pick: 1, candidates: ["Bowser", "Wedgie"] }
   ],
   votingOpen: true,
   liveStreamUrl: "",
