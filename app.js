@@ -6,7 +6,10 @@ const SITE = window.SRP_DATA || {};
     const a = document.createElement("a");
     a.href = "admin.html";
     a.className = "adminlink";
-    a.textContent = "\uD83D\uDD12 Admin";
+    a.setAttribute("aria-label", "Admin");
+    const s = document.createElement("span");
+    s.textContent = "ADMIN";
+    a.appendChild(s);
     h.appendChild(a);
   }
   if (SITE.announcement && h) {
