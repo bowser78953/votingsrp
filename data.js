@@ -7,7 +7,7 @@
   ballot: [
     { title: "President", pick: 1, candidates: ["Bowser", "Wedgie"] }
   ],
-  siteOff: false,
+  siteOff: true,
   votingOpen: true,
   liveStreamUrl: "",
   contactEmail: "bbowsersrp@gmail.com",
