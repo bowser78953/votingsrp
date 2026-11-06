@@ -2,12 +2,24 @@ window.SRP_DATA = {
   "registerFormUrl": "",
   "liveStreamUrl": "",
   "contactEmail": "bbowsersrp@gmail.com",
-  "announcement": "DEAD",
+  "announcement": "",
   "senators": [
-    "Test"
+    "Springfield: @walker103444",
+    "River City: @Deancena9",
+    "Agriculture: @Demonfood12",
+    "Fairview: @Romanreins77271",
+    "Industrial: @lyaadkhan",
+    "River City Housing: @Erixonq",
+    "Bayside: @legendx1982"
   ],
   "representatives": [
-    "Test"
+    "Springfield: @vipvishnukvk_17",
+    "River City: @drift9682",
+    "Agriculture: @kxkgy",
+    "Fairview: @Tiny",
+    "Industrial: @GTA5FGGG",
+    "River City Housing: Enrolment in progress",
+    "Bayside: @dkozimor"
   ],
   "admins": [
     {
@@ -19,5 +31,29 @@ window.SRP_DATA = {
   ],
   "registrationOpen": true,
   "votingOpen": true,
-  "siteOnline": false
+  "siteOnline": false,
+  "ballot": [
+    {
+      "title": "President",
+      "pick": 1,
+      "candidates": [
+        "A",
+        "B"
+      ]
+    },
+    {
+      "title": "Gov",
+      "pick": 1,
+      "candidates": [
+        "C",
+        "D"
+      ]
+    }
+  ],
+  "ballotTitle": "TEST Presidential Election",
+  "electionOpens": "2026-11-12 18:00",
+  "colors": {
+    "Bowser": "#d93025",
+    "Wedgie": "#1a73e8"
+  }
 };
