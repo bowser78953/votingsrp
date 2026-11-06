@@ -31,7 +31,7 @@ window.SRP_DATA = {
   ],
   "registrationOpen": true,
   "votingOpen": true,
-  "siteOff": true,
+  "siteOff": false,
   "showMap": true,
   "voteRound": 1,
   "votingUrl": "",
