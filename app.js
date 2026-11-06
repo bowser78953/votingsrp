@@ -34,7 +34,6 @@ const pages = [
   ["index.html", "Home Page"],
   ["senate.html", "SRP Senate"],
   ["house.html", "SRP House of Rep"],
-  ["index.html", "Main Page", "main"],
   ["live.html", "Live Election Broadcast", "live"],
   ["register.html", "Register", "cta"]
 ];
