@@ -241,3 +241,15 @@ input,select,textarea{border-radius:3px!important}
 @media(max-width:700px){.toc{columns:1}.policy-meta div{flex-direction:column;gap:0}}
 
 .agree{display:flex;gap:10px;align-items:center;font-weight:bold;font-size:1.05rem}.agree input{width:20px;height:20px}
+
+/* Map slideshow */
+.mapnav{display:flex;align-items:center;justify-content:center;gap:16px}
+.mapnav h2{margin:0;text-align:center}
+.mapnav button{background:var(--deep);color:#fff;border:0;width:38px;height:38px;font-size:1.6rem;line-height:1;cursor:pointer}
+.mapnav button:hover{background:var(--gold)}
+.mapnav.single button{display:none}
+.mdots{display:flex;justify-content:center;gap:8px;margin:10px 0 0}
+.mdots:empty{display:none}
+.mdots button{width:12px;height:12px;border-radius:50%;border:1px solid var(--deep);background:#fff;padding:0;cursor:pointer}
+.mdots button.on{background:var(--deep)}
+.legend{justify-content:center}

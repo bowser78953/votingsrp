@@ -7,6 +7,7 @@ const SITE = window.SRP_DATA || {};
   if (stored !== r) {
     localStorage.removeItem("srp_voted");
     localStorage.removeItem("srp_tally");
+    localStorage.removeItem("srp_tally2");
   }
   localStorage.setItem("srp_round", r);
 })();
@@ -135,23 +136,26 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
           '<form id="ballotform"><div class="cols">' + pos + '</div><button class="btn blue" type="submit">Cast My Vote</button></form></div>';
         document.getElementById("ballotform").addEventListener("submit", e => {
           e.preventDefault();
-          const lines = [];
+          const lines = [], picks = [];
           for (let i = 0; i < SITE.ballot.length; i++) {
             const p = SITE.ballot[i];
             const picked = [...document.querySelectorAll('input[name="p' + i + '"]:checked')].map(x => x.value);
             if (!picked.length) { alert("Please vote for: " + p.title); return; }
             if (picked.length > p.pick) { alert("Too many choices for: " + p.title); return; }
+            picks.push(picked);
             lines.push(p.title + ": " + picked.join(", "));
           }
           if (!confirm("Submit your vote? You cannot change it afterwards.")) return;
           const text = "Voter: " + (reg.discord || reg.name) + "\n" + lines.join("\n");
           localStorage.setItem("srp_voted", JSON.stringify({ at: Date.now(), lines }));
-          const pres = document.querySelector('input[name="p0"]:checked').value;
-          const tally = JSON.parse(localStorage.getItem("srp_tally") || "{}");
+          const tally = JSON.parse(localStorage.getItem("srp_tally2") || "{}");
           const key = reg.county + "|" + reg.district;
-          tally[key] = tally[key] || {};
-          tally[key][pres] = (tally[key][pres] || 0) + 1;
-          localStorage.setItem("srp_tally", JSON.stringify(tally));
+          picks.forEach((list, i) => {
+            tally[i] = tally[i] || {};
+            tally[i][key] = tally[i][key] || {};
+            list.forEach(c => { tally[i][key][c] = (tally[i][key][c] || 0) + 1; });
+          });
+          localStorage.setItem("srp_tally2", JSON.stringify(tally));
           box.className = "card";
           box.innerHTML = thanks();
           if (SITE.contactEmail) location.href = "mailto:" + SITE.contactEmail + "?subject=" + encodeURIComponent("SRP Ballot - " + (reg.discord || reg.name)) + "&body=" + encodeURIComponent(text);
@@ -165,9 +169,11 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
 })();
 
 (function liveMap() {
-  if (SITE.showMap === false) { const m = document.getElementById("mapbox"); if (m) m.remove(); return; }
+  const box = document.getElementById("mapbox");
+  if (!box) return;
+  const elections = (SITE.ballot || []).filter(p => p.candidates && p.candidates.length);
+  if (SITE.showMap === false || !elections.length) { box.remove(); return; }
   const svg = document.getElementById("map");
-  if (!svg) return;
   const D = [
     ["Springfield", 2, "SF D2", "290,10 610,42 610,262 402,153 258,72"],
     ["Springfield", 1, "SF D1", "610,42 697,167 697,262 725,297 610,262"],
@@ -187,40 +193,66 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
     ["Bayside", 2, "BYS D2", "368,638 745,638 847,760 847,767 368,767"]
   ];
   const colors = SITE.colors || {};
-  const names = ((SITE.ballot || [])[0] || { candidates: [] }).candidates;
-  document.getElementById("legend").innerHTML = names.map(n => '<span><i style="background:' + (colors[n] || "#888") + '"></i>' + n + "</span>").join("") + '<span><i style="background:#dfe6f3"></i>No votes</span>';
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const tallies = () => JSON.parse(localStorage.getItem("srp_tally2") || "{}");
+  let cur = 0, timer;
+  const tip = document.createElement("div");
+  tip.className = "maptip";
+  box.style.position = "relative";
+  box.appendChild(tip);
+
   const draw = () => {
-    const tally = JSON.parse(localStorage.getItem("srp_tally") || "{}");
-    let total = 0, out = "";
+    const el = elections[cur], names = el.candidates, gray = el.map === "gray";
+    const tally = tallies()[cur] || {};
+    document.getElementById("mtitle").textContent = el.title + (gray ? "" : "");
+    document.getElementById("legend").innerHTML = names.map(n => '<span><i style="background:' + (colors[n] || "#888") + '"></i>' + esc(n) + "</span>").join("") + '<span><i style="background:' + (gray ? "#c9c9c9" : "#fff") + '"></i>No votes</span>';
+    let total = 0, out = gray ? "" : '<image href="map.jpg" x="0" y="0" width="847" height="767"></image>';
     D.forEach(d => {
       const t = tally[d[0] + "|" + d[1]] || {};
       const e = Object.entries(t).sort((a, b) => b[1] - a[1]);
       const tie = e.length > 1 && e[0][1] === e[1][1];
-      const fill = e.length && !tie ? (colors[e[0][0]] || "#888") : "#dfe6f3";
+      const won = e.length && !tie;
+      const fill = won ? (colors[e[0][0]] || "#888") : (gray ? "#c9c9c9" : "#000");
+      const op = won ? (gray ? 1 : 0.62) : (gray ? 1 : 0.0);
       e.forEach(x => total += x[1]);
       const pts = d[3].split(" ").map(p => p.split(",").map(Number));
       const cx = pts.reduce((s, p) => s + p[0], 0) / pts.length, cy = pts.reduce((s, p) => s + p[1], 0) / pts.length;
-      out += '<g class="dist" data-k="' + d[0] + "|" + d[1] + '" data-n="' + d[0] + " District " + d[1] + '"><polygon points="' + d[3] + '" fill="' + fill + '" stroke="#222" stroke-width="2"></polygon><text x="' + cx + '" y="' + cy + '" text-anchor="middle" font-size="24" font-weight="700" fill="' + (e.length && !tie ? "#fff" : "#1b2a4a") + '" pointer-events="none">' + d[2].split(" ")[0] + '<tspan x="' + cx + '" dy="26">' + d[2].split(" ")[1] + "</tspan></text></g>";
+      const txt = gray ? (won ? "#fff" : "#333") : "#fff";
+      out += '<g class="dist" data-k="' + d[0] + "|" + d[1] + '" data-n="' + d[0] + " District " + d[1] + '"><polygon points="' + d[3] + '" fill="' + fill + '" fill-opacity="' + op + '" stroke="' + (gray ? "#555" : "#000") + '" stroke-width="2"></polygon><text x="' + cx + '" y="' + cy + '" text-anchor="middle" font-size="24" font-weight="700" fill="' + txt + '" ' + (gray ? "" : 'stroke="#000" stroke-width="4" paint-order="stroke" ') + 'pointer-events="none">' + d[2].split(" ")[0] + '<tspan x="' + cx + '" dy="26">' + d[2].split(" ")[1] + "</tspan></text></g>";
     });
     svg.innerHTML = out;
     document.getElementById("maptotal").textContent = total + " vote" + (total === 1 ? "" : "s") + " counted";
+    document.querySelectorAll("#mdots button").forEach((b, i) => b.classList.toggle("on", i === cur));
   };
-  const box = document.getElementById("mapbox"), tip = document.createElement("div");
-  tip.className = "maptip";
-  box.style.position = "relative";
-  box.appendChild(tip);
+
+  const go = i => { cur = (i + elections.length) % elections.length; draw(); };
+  const nav = box.querySelector(".mapnav"), dots = document.getElementById("mdots");
+  if (elections.length > 1) {
+    dots.innerHTML = elections.map((e, i) => '<button type="button" aria-label="' + esc(e.title) + '"></button>').join("");
+    dots.addEventListener("click", ev => { const i = [...dots.children].indexOf(ev.target); if (i >= 0) go(i); });
+    document.getElementById("mprev").onclick = () => go(cur - 1);
+    document.getElementById("mnext").onclick = () => go(cur + 1);
+    const start = () => { clearInterval(timer); timer = setInterval(() => go(cur + 1), 8000); };
+    box.addEventListener("mouseenter", () => clearInterval(timer));
+    box.addEventListener("mouseleave", start);
+    start();
+  } else {
+    nav.classList.add("single");
+  }
+
   svg.addEventListener("mousemove", ev => {
     const g = ev.target.closest(".dist");
     if (!g) { tip.style.display = "none"; return; }
-    const t = (JSON.parse(localStorage.getItem("srp_tally") || "{}"))[g.dataset.k] || {};
+    const names = elections[cur].candidates;
+    const t = (tallies()[cur] || {})[g.dataset.k] || {};
     const sum = Object.values(t).reduce((a, b) => a + b, 0);
     const rows = names.map(n => ({ n, v: t[n] || 0 })).sort((a, b) => b.v - a.v);
-    let h = "<b>" + g.dataset.n + "</b>";
+    let h = "<b>" + g.dataset.n + "</b><div class=\"tl\">" + esc(elections[cur].title) + "</div>";
     if (!sum) h += '<div class="tl">No votes yet</div>';
     else {
-      const lead = rows[0].v === rows[1].v ? "Tied" : rows[0].n + " leading";
-      h += '<div class="tl">' + lead + " &middot; " + sum + " vote" + (sum === 1 ? "" : "s") + "</div>";
-      h += rows.map(r => '<div class="tr"><i style="background:' + (colors[r.n] || "#888") + '"></i>' + r.n + "<span>" + Math.round(r.v / sum * 100) + "% (" + r.v + ")</span></div>").join("");
+      const lead = rows.length > 1 && rows[0].v === rows[1].v ? "Tied" : rows[0].n + " leading";
+      h += '<div class="tl">' + esc(lead) + " &middot; " + sum + " vote" + (sum === 1 ? "" : "s") + "</div>";
+      h += rows.map(r => '<div class="tr"><i style="background:' + (colors[r.n] || "#888") + '"></i>' + esc(r.n) + "<span>" + Math.round(r.v / sum * 100) + "% (" + r.v + ")</span></div>").join("");
     }
     tip.innerHTML = h;
     tip.style.display = "block";

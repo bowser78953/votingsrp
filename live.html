@@ -22,9 +22,10 @@
     <div class="offair"><h2><span class="dot"></span>Currently Off Air</h2><p>No election is being broadcast right now. Check back on election day.</p></div>
   </div>
   <section class="card" id="mapbox">
-    <h2>Live Results Map</h2>
+    <div class="mapnav"><button type="button" id="mprev" aria-label="Previous map">&#8249;</button><h2 id="mtitle">Live Results Map</h2><button type="button" id="mnext" aria-label="Next map">&#8250;</button></div>
     <div id="legend" class="legend"></div>
     <svg id="map" viewBox="0 0 847 767" role="img" aria-label="District results map"></svg>
+    <div id="mdots" class="mdots"></div>
     <p id="maptotal" class="muted"></p>
   </section>
 </main>
