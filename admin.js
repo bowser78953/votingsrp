@@ -10,7 +10,8 @@
   const sha = async s => Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)))).map(b => b.toString(16).padStart(2, "0")).join("");
   const rand = () => Array.from(crypto.getRandomValues(new Uint8Array(8))).map(b => b.toString(16).padStart(2, "0")).join("");
   const save = () => { localStorage.setItem(DRAFT, JSON.stringify(data)); localStorage.setItem(DRAFT + "_admins", JSON.stringify(data.admins)); renderOut(); };
-  let session = JSON.parse(sessionStorage.getItem("srp_admin") || "null");
+  let session = null;
+  const isOwner = () => !!session && session.role === "owner";
 
   function show() {
     $("login").classList.toggle("hidden", !!session);
@@ -19,6 +20,9 @@
     $("who").textContent = session.user;
     $("role").textContent = session.role;
     $("adminstab").classList.toggle("hidden", session.role !== "owner");
+    $("publishtab").classList.toggle("hidden", !isOwner());
+    document.querySelector('[data-p="publish"]').classList.toggle("hidden", !isOwner());
+    $("ghToken").value = isOwner() ? localStorage.getItem("srp_gh") || "" : "";
     ["announcement", "registerFormUrl", "liveStreamUrl", "contactEmail", "votingUrl"].forEach(k => $(k).value = data[k] || "");
     ["registrationOpen", "votingOpen"].forEach(k => $(k).checked = !!data[k]);
     $("siteOnline").checked = !data.siteOff;
@@ -38,21 +42,21 @@
   $("loginform").addEventListener("submit", async e => {
     e.preventDefault();
     const u = $("u").value.trim().toLowerCase();
-    const a = window.SRP_DATA.admins.concat(data.admins).find(x => x.user.toLowerCase() === u);
+    const a = window.SRP_DATA.admins.find(x => x.user.toLowerCase() === u);
     const ok = a && (await sha(a.salt + $("p").value)) === a.hash;
     $("loginerr").classList.toggle("hidden", !!ok);
     if (!ok) return;
     session = { user: a.user, role: a.role };
-    sessionStorage.setItem("srp_admin", JSON.stringify(session));
     $("p").value = "";
     show();
   });
 
-  $("logout").addEventListener("click", () => { sessionStorage.removeItem("srp_admin"); session = null; show(); });
+  $("logout").addEventListener("click", () => { session = null; show(); });
 
   $("tabs").addEventListener("click", e => {
     const t = e.target.dataset.t;
     if (!t) return;
+    if (t === "publish" && !isOwner()) return;
     document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b === e.target));
     document.querySelectorAll("[data-p]").forEach(p => p.classList.toggle("hidden", p.dataset.p !== t));
     if (t === "publish") renderOut();
@@ -106,12 +110,16 @@
   function renderOut() { $("out").value = fileText(); }
 
   $("dl").addEventListener("click", () => {
+    if (!isOwner()) { alert("Only the owner can publish changes."); return; }
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([fileText()], { type: "text/javascript" }));
     a.download = "data.js";
     a.click();
   });
-  $("copy").addEventListener("click", () => { navigator.clipboard.writeText(fileText()); alert("Copied."); });
+  $("copy").addEventListener("click", () => {
+    if (!isOwner()) { alert("Only the owner can publish changes."); return; }
+    navigator.clipboard.writeText(fileText()).then(() => alert("Copied.")).catch(err => alert("Could not copy: " + err.message));
+  });
 
   const lines = s => s.split("\n").map(x => x.trim()).filter(Boolean);
   function fillLists() {
@@ -121,7 +129,7 @@
     $("colorsText").value = Object.entries(data.colors || {}).map(([k, v]) => k + ": " + v).join("\n");
     $("senatorsText").value = (data.senators || []).join("\n");
     $("repsText").value = (data.representatives || []).join("\n");
-    $("ghToken").value = localStorage.getItem("srp_gh") || "";
+    $("ghToken").value = isOwner() ? localStorage.getItem("srp_gh") || "" : "";
   }
   fillLists();
   ["electionOpens", "ballotTitle"].forEach(k => $(k).addEventListener("input", () => { data[k] = $(k).value.trim(); save(); }));
@@ -139,7 +147,9 @@
   });
   $("senatorsText").addEventListener("input", () => { data.senators = lines($("senatorsText").value); save(); });
   $("repsText").addEventListener("input", () => { data.representatives = lines($("repsText").value); save(); });
-  $("ghToken").addEventListener("input", () => localStorage.setItem("srp_gh", $("ghToken").value.trim()));
+  $("ghToken").addEventListener("input", () => {
+    if (isOwner()) localStorage.setItem("srp_gh", $("ghToken").value.trim());
+  });
 
   $("discard").addEventListener("click", () => {
     if (!confirm("Throw away unpublished changes and reload the live settings?")) return;
@@ -149,6 +159,7 @@
 
   const msg = (t, bad) => { const m = $("pubmsg"); m.textContent = t; m.classList.remove("hidden"); m.style.background = bad ? "" : "#e6f4ea"; };
   $("pub").addEventListener("click", async () => {
+    if (!isOwner()) { alert("Only the owner can publish changes."); return; }
     const token = $("ghToken").value.trim();
     if (!token) { msg("Paste your GitHub token first.", true); return; }
     if (!confirm("Publish these changes to the live site?")) return;
