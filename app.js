@@ -201,13 +201,22 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
   box.style.position = "relative";
   box.appendChild(tip);
 
+  const allVotes = tally => { const t = {}; Object.values(tally).forEach(o => Object.entries(o).forEach(([k, v]) => t[k] = (t[k] || 0) + v)); return t; };
+
   const draw = () => {
     const el = elections[cur], names = el.candidates, gray = /gr[ae]y|^\s*(type\s*)?(2|two)\s*$/i.test(String(el.map || ""));
     const tally = tallies()[cur] || {};
     document.getElementById("mtitle").textContent = el.title + (gray ? "" : "");
     document.getElementById("legend").innerHTML = names.map(n => '<span><i style="background:' + (colors[n] || "#888") + '"></i>' + esc(n) + "</span>").join("") + '<span><i style="background:' + "#fff" + '"></i>No votes</span>';
     let total = 0, out = gray ? "" : '<image href="map.jpg" x="0" y="0" width="847" height="767"></image>';
-    D.forEach(d => {
+    const OUTLINE = "290,10 610,42 697,167 697,262 725,297 720,370 745,638 847,760 847,767 368,767 0,755 131,718 141,638 133,505 120,402 102,262 102,148 200,42 258,72";
+    if (gray) {
+      const t = allVotes(tally);
+      const e = Object.entries(t).sort((a, b) => b[1] - a[1]);
+      const won = e.length && !(e.length > 1 && e[0][1] === e[1][1]);
+      e.forEach(x => total += x[1]);
+      out += '<g class="dist" data-k="ALL" data-n="Congressional District"><polygon points="' + OUTLINE + '" fill="' + (won ? (colors[e[0][0]] || "#888") : "#ffffff") + '" stroke="#222" stroke-width="3"></polygon><text x="420" y="390" text-anchor="middle" font-size="40" font-weight="700" fill="' + (won ? "#fff" : "#222") + '" pointer-events="none">Congressional<tspan x="420" dy="46">District</tspan></text></g>';
+    } else D.forEach(d => {
       const t = tally[d[0] + "|" + d[1]] || {};
       const e = Object.entries(t).sort((a, b) => b[1] - a[1]);
       const tie = e.length > 1 && e[0][1] === e[1][1];
@@ -244,7 +253,7 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
     const g = ev.target.closest(".dist");
     if (!g) { tip.style.display = "none"; return; }
     const names = elections[cur].candidates;
-    const t = (tallies()[cur] || {})[g.dataset.k] || {};
+    const t = g.dataset.k === "ALL" ? allVotes(tallies()[cur] || {}) : (tallies()[cur] || {})[g.dataset.k] || {};
     const sum = Object.values(t).reduce((a, b) => a + b, 0);
     const rows = names.map(n => ({ n, v: t[n] || 0 })).sort((a, b) => b.v - a.v);
     let h = "<b>" + g.dataset.n + "</b><div class=\"tl\">" + esc(elections[cur].title) + "</div>";
