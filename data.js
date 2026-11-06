@@ -31,7 +31,7 @@ window.SRP_DATA = {
   ],
   "registrationOpen": true,
   "votingOpen": true,
-  "siteOff": false,
+  "siteOff": true,
   "showMap": true,
   "voteRound": 1,
   "votingUrl": "",
@@ -42,8 +42,7 @@ window.SRP_DATA = {
       "candidates": [
         "Bowser",
         "Wedgie"
-      ],
-      "map": "picture"
+      ]
     },
     {
       "title": "Governor",
@@ -51,8 +50,7 @@ window.SRP_DATA = {
       "candidates": [
         "Hunt",
         "Red"
-      ],
-      "map": "gray"
+      ]
     }
   ],
   "ballotTitle": "TEST Presidential Election",
