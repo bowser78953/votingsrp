@@ -312,7 +312,7 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
   const box = document.getElementById("mapbox");
   if (!box) return;
   const elections = (SITE.ballot || []).filter(p => p.candidates && p.candidates.length);
-  if (SITE.showMap === false || !elections.length) { box.remove(); return; }
+  if (SITE.showMap === false) { box.remove(); return; }
   const svg = document.getElementById("map");
   const D = [
     ["Springfield", 2, "SF D2", "290,10 610,42 610,262 402,153 258,72"],
@@ -344,6 +344,22 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
   const isBig = (el, i) => /big|district|^\s*(type\s*)?(2|two)\s*$/i.test(String(el.map || "")) || (!el.map && i === 1);
   const colors = SITE.colors || {};
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  if (!elections.length) {
+    document.getElementById("mtitle").textContent = "District Map — No Ballot Published";
+    document.getElementById("legend").innerHTML = '<span><i style="background:#d3d7dc"></i>No votes</span>';
+    document.getElementById("map").innerHTML = D.map(d => {
+      const points = d[3].split(" ").map(p => p.split(",").map(Number));
+      const cx = points.reduce((sum, p) => sum + p[0], 0) / points.length;
+      const cy = points.reduce((sum, p) => sum + p[1], 0) / points.length;
+      const [area, district] = d[2].split(" ");
+      return '<g><polygon points="' + d[3] + '" fill="#d3d7dc" stroke="#222" stroke-width="2"></polygon>' +
+        '<text x="' + cx + '" y="' + cy + '" text-anchor="middle" font-size="24" font-weight="700" fill="#222" pointer-events="none">' +
+        esc(area) + '<tspan x="' + cx + '" dy="26">' + esc(district) + "</tspan></text></g>";
+    }).join("");
+    document.querySelector(".mapnav").classList.add("single");
+    document.getElementById("maptotal").textContent = "No ballot data is published. Districts are shown in gray as a blank preview; no results are displayed.";
+    return;
+  }
   const tallies = () => JSON.parse(localStorage.getItem("srp_tally2") || "{}");
   let cur = 0, timer;
   const tip = document.createElement("div");
