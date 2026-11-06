@@ -41,7 +41,16 @@ window.SRP_DATA = {
   "showMap": true,
   "voteRound": 2,
   "votingUrl": "",
-  "ballot": [],
+  "ballot": [
+    {
+      "title": "Mayor of River City",
+      "pick": 1,
+      "candidates": [
+        "Hunt",
+        "Bowser"
+      ]
+    }
+  ],
   "ballotTitle": "",
   "electionOpens": "2026-11-6 01:05",
   "colors": {},
