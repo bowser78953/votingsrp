@@ -112,3 +112,5 @@ footer { background:var(--deep); color:#9fb3e6; text-align:center; padding:24px;
 #votebox:has(.paper){background:none;box-shadow:none;border:0;padding:0}#votebox:has(.paper)::before{display:none}
 
 .offline{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;background:linear-gradient(160deg,#071638,#1e4fa8);color:#fff}.offline img{width:110px;margin-bottom:18px}.offline h1{margin:0 0 10px}.offline p{opacity:.85;max-width:420px}
+
+.ownerlink{margin-top:28px;color:#fff;border:1px solid #fff6;border-radius:999px;padding:8px 18px;text-decoration:none;font-size:.85rem;opacity:.8}.ownerlink:hover{opacity:1;background:#fff2}
