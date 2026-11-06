@@ -26,7 +26,7 @@ window.SRP_DATA = {
       "user": "owner",
       "role": "owner",
       "salt": "e985d5afbdeb98d8",
-      "hash": "00abd988473cbfca27a8a561ab426f5ec381b466210726122a28ede11235ada2"
+      "hash": "33d924c99bbc6644026c992e86d933c4b64b6487edd7c007ba09303b3344f922"
     }
   ],
   "registrationOpen": true,

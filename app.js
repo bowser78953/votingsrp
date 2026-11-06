@@ -192,6 +192,16 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
     ["Bayside", 1, "BYS D1", "141,638 368,638 368,767 0,755 131,718"],
     ["Bayside", 2, "BYS D2", "368,638 745,638 847,760 847,767 368,767"]
   ];
+  const B = [
+    ["Springfield", "Springfield", "290,10 610,42 697,167 697,262 725,297 610,262 478,178 402,153 258,72", 497, 98],
+    ["Fairview Congressional", "Fairview", "200,42 258,72 402,153 417,230 412,300 380,358 102,262 102,148", 237, 162],
+    ["Agriculture", "Agriculture", "402,153 478,178 610,262 725,297 720,370 745,638 610,638 578,436 527,370 380,358 412,300 417,230", 592, 318],
+    ["River City Housing", "River City Housing", "102,262 380,358 358,420 365,505 133,505 120,402", 245, 392],
+    ["River City", "River City", "133,505 365,505 368,638 141,638", 250, 563],
+    ["Industrial", "Industrial", "380,358 527,370 578,436 610,638 368,638 365,505 353,448 358,420", 473, 443],
+    ["Bayside", "Bayside", "141,638 745,638 847,760 847,767 368,767 0,755 131,718", 430, 676]
+  ];
+  const isBig = (el, i) => /big|district|^\s*(type\s*)?(2|two)\s*$/i.test(String(el.map || "")) || (!el.map && i === 1);
   const colors = SITE.colors || {};
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const tallies = () => JSON.parse(localStorage.getItem("srp_tally2") || "{}");
@@ -220,6 +230,17 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
       const txt = gray ? ("#fff") : "#fff";
       out += '<g class="dist" data-k="' + d[0] + "|" + d[1] + '" data-n="' + d[0] + " District " + d[1] + '"><polygon points="' + d[3] + '" fill="' + fill + '" fill-opacity="' + op + '" stroke="' + "#222" + '" stroke-width="2"></polygon><text x="' + cx + '" y="' + cy + '" text-anchor="middle" font-size="24" font-weight="700" fill="' + txt + '" ' + (gray ? "" : 'stroke="#000" stroke-width="4" paint-order="stroke" ') + 'pointer-events="none">' + d[2].split(" ")[0] + '<tspan x="' + cx + '" dy="26">' + d[2].split(" ")[1] + "</tspan></text></g>";
     });
+    if (isBig(el, cur)) {
+      out = ""; total = 0;
+      B.forEach(b => {
+        const t = {};
+        Object.keys(tally).filter(k => k.split("|")[0] === b[0]).forEach(k => Object.entries(tally[k]).forEach(([n, v]) => t[n] = (t[n] || 0) + v));
+        const e = Object.entries(t).sort((x, y) => y[1] - x[1]);
+        const won = e.length && !(e.length > 1 && e[0][1] === e[1][1]);
+        e.forEach(x => total += x[1]);
+        out += '<g class="dist" data-k="' + b[0] + '" data-n="' + b[1] + ' District"><polygon points="' + b[2] + '" fill="' + (won ? (colors[e[0][0]] || "#888") : "#9aa0a6") + '" stroke="#222" stroke-width="2"></polygon><text x="' + b[3] + '" y="' + b[4] + '" text-anchor="middle" font-size="22" font-weight="700" fill="#fff" stroke="#000" stroke-width="4" paint-order="stroke" pointer-events="none">' + b[1] + '<tspan x="' + b[3] + '" dy="25">District</tspan></text></g>';
+      });
+    }
     svg.innerHTML = out;
     document.getElementById("maptotal").textContent = total + " vote" + (total === 1 ? "" : "s") + " counted";
     document.querySelectorAll("#mdots button").forEach((b, i) => b.classList.toggle("on", i === cur));
@@ -244,7 +265,12 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
     const g = ev.target.closest(".dist");
     if (!g) { tip.style.display = "none"; return; }
     const names = elections[cur].candidates;
-    const t = (tallies()[cur] || {})[g.dataset.k] || {};
+    const all = tallies()[cur] || {};
+    let t = all[g.dataset.k] || {};
+    if (isBig(elections[cur], cur)) {
+      t = {};
+      Object.keys(all).filter(k => k.split("|")[0] === g.dataset.k).forEach(k => Object.entries(all[k]).forEach(([n, v]) => t[n] = (t[n] || 0) + v));
+    }
     const sum = Object.values(t).reduce((a, b) => a + b, 0);
     const rows = names.map(n => ({ n, v: t[n] || 0 })).sort((a, b) => b.v - a.v);
     let h = "<b>" + g.dataset.n + "</b><div class=\"tl\">" + esc(elections[cur].title) + "</div>";
