@@ -2,7 +2,7 @@ window.SRP_DATA = {
   "registerFormUrl": "",
   "liveStreamUrl": "",
   "contactEmail": "bbowsersrp@gmail.com",
-  "announcement": "",
+  "announcement": "Election Date TBD",
   "senators": [
     "Springfield: @walker103444",
     "River City: @Deancena9",
@@ -26,39 +26,17 @@ window.SRP_DATA = {
       "user": "owner",
       "role": "owner",
       "salt": "e985d5afbdeb98d8",
-      "hash": "33d924c99bbc6644026c992e86d933c4b64b6487edd7c007ba09303b3344f922"
+      "hash": "00abd988473cbfca27a8a561ab426f5ec381b466210726122a28ede11235ada2"
     }
   ],
-  "registrationOpen": true,
-  "votingOpen": true,
-  "siteOff": false,
-  "showMap": true,
-  "voteRound": 1,
+  "registrationOpen": false,
+  "votingOpen": false,
+  "siteOff": true,
+  "showMap": false,
+  "voteRound": 2,
   "votingUrl": "",
-  "ballot": [
-    {
-      "title": "President",
-      "pick": 1,
-      "candidates": [
-        "Bowser",
-        "Wedgie"
-      ]
-    },
-    {
-      "title": "Governor",
-      "pick": 2,
-      "candidates": [
-        "Hunt",
-        "Red"
-      ]
-    }
-  ],
-  "ballotTitle": "TEST Presidential Election",
+  "ballot": [],
+  "ballotTitle": "",
   "electionOpens": "2026-11-12 18:00",
-  "colors": {
-    "Bowser": "#d93025",
-    "Wedgie": "#1a73e8",
-    "Hunt": "#0b5cc9",
-    "Red": "#d00b0b"
-  }
+  "colors": {}
 };
