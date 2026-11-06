@@ -82,12 +82,6 @@ const COUNTIES = {
 };
 
 (function status() {
-  const hero = document.querySelector(".hero:not(.small)");
-  if (hero) {
-    const d = document.createElement("div");
-    d.innerHTML = '<span class="badge ' + (SITE.registrationOpen ? "on" : "off") + '">REGISTRATION ' + (SITE.registrationOpen ? "OPEN" : "CLOSED") + '</span><span class="badge ' + (SITE.votingOpen ? "on" : "off") + '">VOTING ' + (SITE.votingOpen ? "OPEN" : "CLOSED") + "</span>";
-    hero.insertBefore(d, hero.firstChild);
-  }
   const box = document.getElementById("votebox");
   if (box) {
     if (SITE.votingOpen && SITE.votingUrl) {
