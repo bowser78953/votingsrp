@@ -208,6 +208,23 @@ const COUNTIES = {
   setInterval(() => { if (tip.style.display !== "block") draw(); }, 3000);
 })();
 
+(function countdown() {
+  const el = document.getElementById("countdown");
+  if (!el || !SITE.electionOpens) return;
+  const m = SITE.electionOpens.match(/(\d{4})-(\d\d)-(\d\d)[ T](\d\d):(\d\d)/);
+  if (!m) return;
+  const tz = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], 12)).toLocaleString("en-US", { timeZone: "America/New_York", timeZoneName: "short" }).includes("EDT") ? 4 : 5;
+  const target = Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4] + tz, +m[5]);
+  const tick = () => {
+    let s = Math.floor((target - Date.now()) / 1000);
+    if (s <= 0) { el.innerHTML = '<div class="cd-open">Elections are now open!</div>'; return false; }
+    const p = (n, l) => '<div><b>' + String(n).padStart(2, "0") + "</b><span>" + l + "</span></div>";
+    el.innerHTML = '<div class="cd-title">Elections open in</div><div class="cd-row">' + p(Math.floor(s / 86400), "Days") + p(Math.floor(s % 86400 / 3600), "Hours") + p(Math.floor(s % 3600 / 60), "Minutes") + p(s % 60, "Seconds") + "</div>";
+    return true;
+  };
+  if (tick()) { const t = setInterval(() => { if (!tick()) clearInterval(t); }, 1000); }
+})();
+
 (function registerForm() {
   const f = document.getElementById("regform");
   if (!f) return;

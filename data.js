@@ -8,6 +8,8 @@
     { title: "President", pick: 1, candidates: ["Bowser", "Wedgie"] }
   ],
   siteOff: true,
+  // Countdown on the home page. Format: "YYYY-MM-DD HH:MM" (Eastern time). Use "" to hide it.
+  electionOpens: "2026-11-12 18:00",
   votingOpen: true,
   liveStreamUrl: "",
   contactEmail: "bbowsersrp@gmail.com",
