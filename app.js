@@ -88,7 +88,28 @@ const COUNTIES = {
     if (SITE.votingOpen && SITE.votingUrl) {
       box.innerHTML = '<h2>Voting is OPEN</h2><p>Click below to open your ballot.</p><a class="btn blue" target="_blank" rel="noopener" href="' + SITE.votingUrl + '">Open Ballot</a>';
     } else if (SITE.votingOpen) {
-      box.innerHTML = '<h2>Voting is OPEN</h2><p>The ballot link will be posted here shortly.</p>';
+      box.className = "card";
+      const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+      const pos = (SITE.ballot || []).map((p, i) => '<fieldset class="pos"><legend>' + esc(p.title) + ' <em>(vote for ' + (p.pick === 1 ? "one" : p.pick) + ')</em></legend>' +
+        p.candidates.map(c => '<label><input type="' + (p.pick === 1 ? "radio" : "checkbox") + '" name="p' + i + '" value="' + esc(c) + '"> ' + esc(c) + "</label>").join("") + "</fieldset>").join("");
+      box.innerHTML = '<div class="paper"><h2>Official Ballot</h2><p class="rules">Please vote for each position. Vote only for the number of candidates allowed for that position. Votes for more than the allowed number will not count.</p>' +
+        '<label class="who">Discord username <input id="voter" required></label><form id="ballotform"><div class="cols">' + pos + '</div><button class="btn blue" type="submit">Submit Ballot</button></form><div id="receipt"></div></div>';
+      document.getElementById("ballotform").addEventListener("submit", e => {
+        e.preventDefault();
+        const who = document.getElementById("voter").value.trim();
+        if (!who) { alert("Enter your Discord username."); return; }
+        const lines = [];
+        for (let i = 0; i < SITE.ballot.length; i++) {
+          const p = SITE.ballot[i];
+          const picked = [...document.querySelectorAll('input[name="p' + i + '"]:checked')].map(x => x.value);
+          if (!picked.length) { alert("Please vote for: " + p.title); return; }
+          if (picked.length > p.pick) { alert("Too many choices for: " + p.title); return; }
+          lines.push(p.title + ": " + picked.join(", "));
+        }
+        const text = "Voter: " + who + "\n" + lines.join("\n");
+        document.getElementById("receipt").innerHTML = '<div class="closed"><h3>Your ballot</h3><pre>' + esc(text) + "</pre></div>";
+        if (SITE.contactEmail) location.href = "mailto:" + SITE.contactEmail + "?subject=" + encodeURIComponent("SRP Ballot - " + who) + "&body=" + encodeURIComponent(text);
+      });
     } else {
       box.className = "card closed";
       box.innerHTML = "<h2>Voting is currently CLOSED</h2><p>Check back on election day. Make sure you are registered first.</p>";

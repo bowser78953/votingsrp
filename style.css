@@ -100,3 +100,5 @@ footer { background:var(--deep); color:#9fb3e6; text-align:center; padding:24px;
   nav a.cta { border-radius:0; margin:0; text-align:center; }
   .card { padding:20px; }
 }
+
+.paper{background:#fffef8;border:2px solid #222;padding:24px;font-family:'Times New Roman',serif;color:#111}.paper h2{text-align:center;text-transform:uppercase;margin:0 0 8px}.paper .rules{font-style:italic;text-align:center;border-bottom:2px solid #222;padding-bottom:12px}.paper .who{display:block;margin:12px 0;font-weight:bold}.paper .who input{padding:6px;border:1px solid #222;margin-left:6px}.paper .cols{columns:2 280px;column-gap:32px}.paper fieldset.pos{break-inside:avoid;border:0;border-top:2px solid #222;margin:0 0 18px;padding:8px 0}.paper legend{font-weight:bold;font-size:1.1rem;padding:0 6px}.paper legend em{font-weight:normal;font-size:.9rem}.paper fieldset label{display:block;padding:4px 0;cursor:pointer}.paper pre{white-space:pre-wrap}

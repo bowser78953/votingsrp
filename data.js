@@ -1,7 +1,12 @@
 window.SRP_DATA = {
   registerFormUrl: "",
   votingUrl: "",
-  registrationOpen: false,
+  registrationOpen: true,
+  ballot: [
+    { title: "Senator", pick: 1, candidates: ["Candidate A", "Candidate B", "Candidate C"] },
+    { title: "Representative", pick: 1, candidates: ["Candidate A", "Candidate B", "Candidate C"] },
+    { title: "Proposition 1", pick: 1, candidates: ["Yes", "No"] }
+  ],
   votingOpen: true,
   liveStreamUrl: "",
   contactEmail: "",
