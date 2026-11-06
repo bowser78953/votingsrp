@@ -347,7 +347,9 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
   if (!elections.length) {
     document.getElementById("mtitle").textContent = "District Map — No Ballot Published";
     document.getElementById("legend").innerHTML = '<span><i style="background:#d3d7dc"></i>No votes</span>';
-    document.getElementById("map").innerHTML = D.map(d => {
+    const emptyMap = document.getElementById("map");
+    emptyMap.setAttribute("aria-label", "Blank district map preview; no ballot published");
+    emptyMap.innerHTML = D.map(d => {
       const points = d[3].split(" ").map(p => p.split(",").map(Number));
       const cx = points.reduce((sum, p) => sum + p[0], 0) / points.length;
       const cy = points.reduce((sum, p) => sum + p[1], 0) / points.length;
