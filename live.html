@@ -15,16 +15,17 @@
 <nav></nav>
 <section class="hero small">
   <h2>Live Election Broadcast</h2>
-  <p>Watch SRP election results as they happen.</p>
+  <p>Find official result notices after verification. The district map is a browser-local preview only.</p>
 </section>
 <main>
   <div id="stream">
     <div class="offair"><h2><span class="dot"></span>Currently Off Air</h2><p>No election is being broadcast right now. Check back on election day.</p></div>
   </div>
+  <p class="notice results-disclaimer">The map is a browser-local preview, not a shared or verified count. Only results published in an official SRP announcement after verification are certified.</p>
   <section class="card" id="mapbox">
-    <div class="mapnav"><button type="button" id="mprev" aria-label="Previous map">&#8249;</button><h2 id="mtitle">Live Results Map</h2><button type="button" id="mnext" aria-label="Next map">&#8250;</button></div>
+    <div class="mapnav"><button type="button" id="mprev" aria-label="Previous map">&#8249;</button><h2 id="mtitle">Local Results Preview</h2><button type="button" id="mnext" aria-label="Next map">&#8250;</button></div>
     <div id="legend" class="legend"></div>
-    <svg id="map" viewBox="0 0 847 767" role="img" aria-label="District results map"></svg>
+    <svg id="map" viewBox="0 0 847 767" role="img" aria-label="Unofficial local preview of district results"></svg>
     <div id="mdots" class="mdots"></div>
     <p id="maptotal" class="muted"></p>
   </section>

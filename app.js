@@ -1,4 +1,24 @@
 const SITE = window.SRP_DATA || {};
+const httpsUrl = value => {
+  try {
+    const url = new URL(String(value || ""));
+    return url.protocol === "https:" ? url.href : "";
+  } catch {
+    return "";
+  }
+};
+const easternDate = value => {
+  const match = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})$/.exec(String(value || "").trim());
+  if (!match) return null;
+  const [, y, m, d, h, min] = match;
+  const check = new Date(Date.UTC(+y, +m - 1, +d));
+  if (+m < 1 || +m > 12 || +d < 1 || +d > 31 || +h > 23 || +min > 59 ||
+      check.getUTCFullYear() !== +y || check.getUTCMonth() !== +m - 1 || check.getUTCDate() !== +d) return null;
+  const noon = new Date(Date.UTC(+y, +m - 1, +d, 12));
+  const zone = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", timeZoneName: "short" }).format(noon);
+  const offset = zone.includes("EDT") ? 4 : 5;
+  return new Date(Date.UTC(+y, +m - 1, +d, +h + offset, +min));
+};
 
 // Bumping voteRound in data.js clears every visitor's saved vote and tally the next time they visit.
 (function voteReset() {
@@ -75,19 +95,119 @@ const pages = [
   const root = document.getElementById("electionOffices");
   if (!root) return;
 
-  const setStatus = (id, open) => {
-    const el = document.getElementById(id);
-    el.textContent = open ? "OPEN" : "CLOSED";
-    el.className = "election-state " + (open ? "state-open" : "state-closed");
-  };
-  setStatus("registrationStatus", SITE.registrationOpen === true);
-  setStatus("votingStatus", SITE.votingOpen === true);
+  const schedule = Object.assign({ votingOpens: SITE.electionOpens }, SITE.electionSchedule || {});
+  const timeline = document.getElementById("electionTimeline");
+  const campaignStart = easternDate(schedule.campaigningOpens);
+  const campaignEnd = easternDate(schedule.campaigningCloses);
+  const campaignActive = SITE.campaignOpen === true && campaignStart && campaignEnd &&
+    campaignStart <= new Date() && new Date() <= campaignEnd;
+  const contactEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(SITE.contactEmail || ""));
+  const registrationAvailable = !!httpsUrl(SITE.registerFormUrl) || contactEmail;
+  const votingAvailable = !!httpsUrl(SITE.votingUrl);
+  const phases = [
+    { title: "Voter registration", active: SITE.registrationOpen === true, available: registrationAvailable, start: schedule.registrationOpens, end: schedule.registrationCloses },
+    { title: "Candidate registration", active: SITE.registrationOpen === true, available: contactEmail, start: schedule.registrationOpens, end: schedule.registrationCloses },
+    { title: "Candidate campaigning", active: !!campaignActive, available: true, start: schedule.campaigningOpens, end: schedule.campaigningCloses },
+    { title: "Voting", active: SITE.votingOpen === true, available: votingAvailable, start: schedule.votingOpens, end: schedule.votingCloses }
+  ];
+  phases.forEach(phase => {
+    const row = document.createElement("div");
+    row.className = "timeline-row";
+    const title = document.createElement("strong");
+    title.textContent = phase.title;
+    const state = document.createElement("span");
+    const status = !phase.active ? "CLOSED" : phase.available ? "OPEN" : "UNAVAILABLE";
+    state.className = "election-state " + (status === "OPEN" ? "state-open" : status === "CLOSED" ? "state-closed" : "state-warning");
+    state.textContent = status;
+    const dates = document.createElement("span");
+    dates.className = "timeline-dates";
+    dates.textContent = phase.start || phase.end
+      ? (phase.start || "Not announced") + " to " + (phase.end || "Not announced") + " (Eastern)"
+      : "Dates not announced";
+    row.append(title, state, dates);
+    timeline.appendChild(row);
+  });
 
-  const schedule = document.getElementById("electionSchedule");
-  const opening = String(SITE.electionOpens || "").trim();
-  schedule.textContent = opening && !/^n\/?a$/i.test(opening)
-    ? "Opening date saved in site settings: " + opening + ". Check official announcements for updates."
-    : "No election opening date has been announced.";
+  if (SITE.announcement) {
+    const announcement = document.getElementById("officialAnnouncement");
+    announcement.textContent = "Official announcement: " + SITE.announcement;
+    announcement.classList.remove("hidden");
+  }
+
+  const profilesRoot = document.getElementById("candidateProfiles");
+  const profiles = Array.isArray(SITE.candidateProfiles) ? SITE.candidateProfiles : [];
+  const visibleProfiles = campaignActive ? profiles.filter(profile => profile && profile.name && profile.office) : [];
+  document.getElementById("noCandidateProfiles").classList.toggle("hidden", visibleProfiles.length > 0);
+  visibleProfiles.slice().sort((a, b) => String(a.office).localeCompare(String(b.office)) || String(a.name).localeCompare(String(b.name))).forEach(profile => {
+    const card = document.createElement("article");
+    card.className = "candidate-profile";
+    const heading = document.createElement("h3");
+    heading.textContent = profile.name + " — " + profile.office;
+    card.appendChild(heading);
+    [["Experience and qualifications", profile.experience], ["SRP campaign statement", profile.statement]].forEach(([label, value]) => {
+      if (!value) return;
+      const section = document.createElement("div");
+      const subheading = document.createElement("h4");
+      subheading.textContent = label;
+      const text = document.createElement("p");
+      text.textContent = value;
+      section.append(subheading, text);
+      card.appendChild(section);
+    });
+    profilesRoot.appendChild(card);
+  });
+
+  const application = document.getElementById("candidateApplication");
+  const applicationStatus = document.getElementById("candidateApplicationStatus");
+  const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(SITE.contactEmail || "")) ? SITE.contactEmail : "";
+  if (SITE.registrationOpen !== true || !email) {
+    application.classList.add("hidden");
+    applicationStatus.textContent = SITE.registrationOpen !== true
+      ? "Candidate registration is closed."
+      : "Candidate application email is not configured. Contact election administration through its official channel.";
+    applicationStatus.classList.remove("hidden");
+  } else {
+    application.addEventListener("submit", event => {
+      event.preventDefault();
+      const fields = new FormData(application);
+      const name = String(fields.get("name") || "").trim();
+      const office = String(fields.get("office") || "").trim();
+      const experience = String(fields.get("experience") || "").trim();
+      const statement = String(fields.get("statement") || "").trim();
+      if (!name || !office || !experience || !statement) return;
+      const subject = "SRP Candidate Application - " + office;
+      const body = [
+        "In-game username: " + name,
+        "Office: " + office,
+        "",
+        "Relevant SRP experience and qualifications:",
+        experience,
+        "",
+        "Proposed SRP campaign statement:",
+        statement,
+        "",
+        "I have read and agree to follow the SRP Election Rules & Policies.",
+        "I understand this application is not approval to run. Election Officials must review eligibility and approve any public candidate profile."
+      ].join("\n");
+      document.getElementById("candidateApplicationMessage").textContent =
+        "Your email app should open. Send the draft to submit your application; nothing is sent or saved by this website.";
+      window.location.href = "mailto:" + email + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    });
+  }
+
+  const resultsStatus = document.getElementById("officialResultsStatus");
+  const resultsUrl = httpsUrl(SITE.officialResultsUrl);
+  if (resultsUrl) {
+    resultsStatus.textContent = "Certified result notice:";
+    const link = document.createElement("a");
+    link.href = resultsUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Open the official election announcement";
+    resultsStatus.append(" ", link);
+  } else {
+    resultsStatus.textContent = "No certified result announcement has been linked. Results belong in an official SRP channel only after ballot verification.";
+  }
 
   const elections = (SITE.ballot || []).filter(e => e && e.title && Array.isArray(e.candidates) && e.candidates.length);
   document.getElementById("noPublishedBallot").classList.toggle("hidden", elections.length > 0);
@@ -120,9 +240,16 @@ const pages = [
 (function liveEmbed() {
   const box = document.getElementById("stream");
   if (!box) return;
-  if (SITE.liveStreamUrl) {
-    box.innerHTML = '<div class="video"><iframe src="' + SITE.liveStreamUrl + '" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe></div>';
-  }
+  const streamUrl = httpsUrl(SITE.liveStreamUrl);
+  if (!streamUrl) return;
+  const wrapper = document.createElement("div");
+  wrapper.className = "video";
+  const iframe = document.createElement("iframe");
+  iframe.src = streamUrl;
+  iframe.allowFullscreen = true;
+  iframe.allow = "autoplay; encrypted-media; picture-in-picture";
+  wrapper.appendChild(iframe);
+  box.replaceChildren(wrapper);
 })();
 
 const COUNTIES = {
@@ -157,51 +284,23 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
     box.className = "card closed";
     box.innerHTML = POLICY_MSG;
   } else if (box) {
-    if (SITE.votingOpen && SITE.votingUrl) {
-      box.innerHTML = '<h2>Voting is OPEN</h2><p>Click below to open your ballot.</p><a class="btn blue" target="_blank" rel="noopener" href="' + SITE.votingUrl + '">Open Ballot</a>';
-    } else if (SITE.votingOpen) {
+    const ballotUrl = httpsUrl(SITE.votingUrl);
+    if (SITE.votingOpen && ballotUrl) {
       box.className = "card";
-      const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-      const reg = JSON.parse(localStorage.getItem("srp_reg") || "null");
-      const done = JSON.parse(localStorage.getItem("srp_voted") || "null");
-      const thanks = () => '<div class="thanks"><div class="check">&#10003;</div><h2>Thanks for voting!</h2><p>Your vote has been submitted and cannot be changed.</p></div>';
-      if (done) {
-        box.innerHTML = thanks();
-      } else if (!reg) {
-        box.className = "card closed";
-        box.innerHTML = '<h2>You must register to vote</h2><p>Register first, then come back here to cast your ballot.</p><a class="btn blue" href="register.html">Register Now</a>';
-      } else {
-        const pos = (SITE.ballot || []).map((p, i) => '<fieldset class="pos"><legend>' + esc(p.title) + ' <em>(vote for ' + (p.pick === 1 ? "one" : p.pick) + ')</em></legend>' +
-          p.candidates.map(c => '<label class="opt" style="border-left:8px solid ' + ((SITE.colors || {})[c] || "#888") + '"><input type="' + (p.pick === 1 ? "radio" : "checkbox") + '" name="p' + i + '" value="' + esc(c) + '"><span>' + esc(c) + "</span></label>").join("") + "</fieldset>").join("");
-        box.innerHTML = '<div class="paper"><div class="phead"><img src="logo.png" alt=""><div><small>Springfield Roleplay Government</small><h2>' + esc(SITE.ballotTitle || "Official Ballot") + '</h2></div></div><div class="voter">Voting as <b>' + esc(reg.discord || reg.name) + "</b> &middot; " + esc(reg.county) + " District " + esc(reg.district) + '</div><p class="rules">Select <b>one</b> candidate for each office. <b>Once you submit, your vote is final and cannot be changed.</b></p>' +
-          '<form id="ballotform"><div class="cols">' + pos + '</div><button class="btn blue" type="submit">Cast My Vote</button></form></div>';
-        document.getElementById("ballotform").addEventListener("submit", e => {
-          e.preventDefault();
-          const lines = [], picks = [];
-          for (let i = 0; i < SITE.ballot.length; i++) {
-            const p = SITE.ballot[i];
-            const picked = [...document.querySelectorAll('input[name="p' + i + '"]:checked')].map(x => x.value);
-            if (!picked.length) { alert("Please vote for: " + p.title); return; }
-            if (picked.length > p.pick) { alert("Too many choices for: " + p.title); return; }
-            picks.push(picked);
-            lines.push(p.title + ": " + picked.join(", "));
-          }
-          if (!confirm("Submit your vote? You cannot change it afterwards.")) return;
-          const text = "Voter: " + (reg.discord || reg.name) + "\n" + lines.join("\n");
-          localStorage.setItem("srp_voted", JSON.stringify({ at: Date.now(), lines }));
-          const tally = JSON.parse(localStorage.getItem("srp_tally2") || "{}");
-          const key = reg.county + "|" + reg.district;
-          picks.forEach((list, i) => {
-            tally[i] = tally[i] || {};
-            tally[i][key] = tally[i][key] || {};
-            list.forEach(c => { tally[i][key][c] = (tally[i][key][c] || 0) + 1; });
-          });
-          localStorage.setItem("srp_tally2", JSON.stringify(tally));
-          box.className = "card";
-          box.innerHTML = thanks();
-          if (SITE.contactEmail) location.href = "mailto:" + SITE.contactEmail + "?subject=" + encodeURIComponent("SRP Ballot - " + (reg.discord || reg.name)) + "&body=" + encodeURIComponent(text);
-        });
-      }
+      const heading = document.createElement("h2");
+      heading.textContent = "Voting is OPEN";
+      const message = document.createElement("p");
+      message.textContent = "Use the official ballot. This site does not store or email your vote.";
+      const link = document.createElement("a");
+      link.className = "btn blue";
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.href = ballotUrl;
+      link.textContent = "Open Official Ballot";
+      box.replaceChildren(heading, message, link);
+    } else if (SITE.votingOpen) {
+      box.className = "card closed";
+      box.innerHTML = '<h2>Official ballot not available</h2><p>Voting is marked open, but election administration has not published a secure official ballot link. No vote can be submitted on this static website.</p><a class="more" href="election-info.html">Check election announcements</a>';
     } else {
       box.className = "card closed";
       box.innerHTML = "<h2>Voting is currently CLOSED</h2><p>Check back on election day. Make sure you are registered first.</p>";
@@ -255,7 +354,7 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
   const draw = () => {
     const el = elections[cur], names = el.candidates, gray = true;
     const tally = tallies()[cur] || {};
-    document.getElementById("mtitle").textContent = el.title + (gray ? "" : "");
+    document.getElementById("mtitle").textContent = el.title + " — Local Preview";
     document.getElementById("legend").innerHTML = names.map(n => '<span><i style="background:' + (colors[n] || "#888") + '"></i>' + esc(n) + "</span>").join("") + '<span><i style="background:' + "#d3d7dc" + '"></i>No votes</span>';
     let total = 0, out = gray ? "" : '<image href="map.jpg" x="0" y="0" width="847" height="767"></image>';
     D.forEach(d => {
@@ -283,7 +382,7 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
       });
     }
     svg.innerHTML = out;
-    document.getElementById("maptotal").textContent = total + " vote" + (total === 1 ? "" : "s") + " counted";
+    document.getElementById("maptotal").textContent = "Local browser preview: " + total + " vote" + (total === 1 ? "" : "s") + " on this device; not an official count.";
     document.querySelectorAll("#mdots button").forEach((b, i) => b.classList.toggle("on", i === cur));
   };
 
@@ -335,13 +434,11 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
 
 (function countdown() {
   const el = document.getElementById("countdown");
-  if (!el || !SITE.electionOpens) return;
-  const m = SITE.electionOpens.match(/(\d{4})-(\d\d)-(\d\d)[ T](\d\d):(\d\d)/);
-  if (!m) return;
-  const tz = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], 12)).toLocaleString("en-US", { timeZone: "America/New_York", timeZoneName: "short" }).includes("EDT") ? 4 : 5;
-  const target = Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4] + tz, +m[5]);
+  const opens = (SITE.electionSchedule || {}).votingOpens || SITE.electionOpens;
+  const target = easternDate(opens);
+  if (!el || !target) return;
   const tick = () => {
-    let s = Math.floor((target - Date.now()) / 1000);
+    let s = Math.floor((target.getTime() - Date.now()) / 1000);
     if (s <= 0) { el.innerHTML = '<div class="cd-open">Elections are now open!</div>'; return false; }
     const p = (n, l) => '<div><b>' + String(n).padStart(2, "0") + "</b><span>" + l + "</span></div>";
     el.innerHTML = '<div class="cd-title">Elections open in</div><div class="cd-row">' + p(Math.floor(s / 86400), "Days") + p(Math.floor(s % 86400 / 3600), "Hours") + p(Math.floor(s % 3600 / 60), "Minutes") + p(s % 60, "Seconds") + "</div>";
@@ -378,8 +475,25 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
     summary.textContent = "You will be registered in " + county.value + " County, District " + district.value + ".";
     summary.style.display = "block";
   });
-  if (SITE.registerFormUrl) {
-    f.outerHTML = '<p>Click below to register.</p><a class="btn blue" href="' + SITE.registerFormUrl + '" target="_blank" rel="noopener">Open Registration Form</a>';
+  const registrationUrl = httpsUrl(SITE.registerFormUrl);
+  if (registrationUrl) {
+    const message = document.createElement("p");
+    message.textContent = "Complete the official registration form. Your eligibility is not confirmed until election officials review it.";
+    const link = document.createElement("a");
+    link.className = "btn blue";
+    link.href = registrationUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Open Official Registration Form";
+    f.replaceWith(message, link);
+    return;
+  }
+  const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(SITE.contactEmail || "")) ? SITE.contactEmail : "";
+  if (!email) {
+    f.replaceWith(Object.assign(document.createElement("p"), {
+      className: "notice",
+      textContent: "No official registration method is configured. Contact election administration through its designated official channel."
+    }));
     return;
   }
   f.addEventListener("submit", e => {
@@ -387,17 +501,9 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
     const d = new FormData(f);
     const body = "Username: " + d.get("name") + "\nDiscord: " + d.get("discord") + "\nCounty: " + d.get("county") + "\nDistrict: " + d.get("district") + "\nNotes: " + d.get("notes");
     const ok = document.getElementById("ok");
-    localStorage.setItem("srp_reg", JSON.stringify({ name: d.get("name"), discord: d.get("discord"), county: d.get("county"), district: d.get("district") }));
-    if (!SITE.contactEmail) {
-      f.style.display = "none";
-      ok.innerHTML = "You're registered! You can now <a href='vote.html'><b>go vote</b></a>.";
-    } else if (SITE.contactEmail) {
-      location.href = "mailto:" + SITE.contactEmail + "?subject=" + encodeURIComponent("SRP Voter Registration") + "&body=" + encodeURIComponent(body);
-      ok.textContent = "Your email app should open with your registration. Send it to finish registering.";
-      f.reset();
-    } else {
-      ok.textContent = "Registration isn't open yet. Please check back soon.";
-    }
+    location.href = "mailto:" + email + "?subject=" + encodeURIComponent("SRP Voter Registration Request") + "&body=" + encodeURIComponent(body);
+    ok.textContent = "If your email app opens, send the draft to submit your request. This website does not save it; wait for election officials to confirm your eligibility.";
+    f.reset();
     ok.style.display = "block";
   });
 })();

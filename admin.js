@@ -2,6 +2,9 @@
   const $ = id => document.getElementById(id);
   const DRAFT = "srp_draft";
   let data = Object.assign(JSON.parse(JSON.stringify(window.SRP_DATA)), JSON.parse(localStorage.getItem(DRAFT) || "{}"));
+  data.electionSchedule = data.electionSchedule || {};
+  data.candidateProfiles = Array.isArray(data.candidateProfiles) ? data.candidateProfiles : [];
+  data.officialResultsUrl = data.officialResultsUrl || "";
   delete data.siteOnline;
   // The live admin list always comes from the published data.js, so removed admins can't linger in a draft.
   data.admins = JSON.parse(JSON.stringify(window.SRP_DATA.admins));
@@ -27,6 +30,7 @@
     ["registrationOpen", "votingOpen"].forEach(k => $(k).checked = !!data[k]);
     $("siteOnline").checked = !data.siteOff;
     $("showMap").checked = data.showMap !== false;
+    $("campaignOpen").checked = data.campaignOpen === true;
     $("roundInfo").textContent = "Vote round: " + (data.voteRound || 0);
     flagText();
     renderAdmins();
@@ -37,6 +41,15 @@
     $("voteState").textContent = data.votingOpen ? "OPEN" : "CLOSED";
     $("siteState").textContent = !data.siteOff ? "ONLINE" : "OFFLINE";
     $("mapState").textContent = data.showMap !== false ? "SHOWN" : "HIDDEN";
+    const campaignStart = easternDate(data.electionSchedule.campaigningOpens);
+    const campaignEnd = easternDate(data.electionSchedule.campaigningCloses);
+    const campaignActive = data.campaignOpen && campaignStart && campaignEnd &&
+      campaignStart <= new Date() && new Date() <= campaignEnd;
+    $("campaignState").textContent = campaignActive ? "OPEN" : "CLOSED";
+    $("workflowProfiles").textContent = data.candidateProfiles.length;
+    $("workflowCampaign").textContent = campaignActive ? "OPEN" : "CLOSED";
+    $("workflowBallot").textContent = data.votingUrl && httpsUrl(data.votingUrl) ? "LINKED" : "MISSING";
+    $("workflowResults").textContent = data.officialResultsUrl && httpsUrl(data.officialResultsUrl) ? "LINKED" : "NOT POSTED";
   }
 
   $("loginform").addEventListener("submit", async e => {
@@ -62,14 +75,26 @@
     if (t === "publish") renderOut();
   });
 
-  ["announcement", "registerFormUrl", "liveStreamUrl", "contactEmail", "votingUrl"].forEach(k => $(k).addEventListener("input", () => { data[k] = $(k).value.trim(); save(); }));
+  ["announcement", "registerFormUrl", "liveStreamUrl", "contactEmail", "votingUrl"].forEach(k => $(k).addEventListener("input", () => { data[k] = $(k).value.trim(); flagText(); save(); }));
   ["registrationOpen", "votingOpen"].forEach(k => $(k).addEventListener("change", () => { data[k] = $(k).checked; flagText(); save(); }));
   $("siteOnline").addEventListener("change", () => { data.siteOff = !$("siteOnline").checked; flagText(); save(); });
   $("showMap").addEventListener("change", () => { data.showMap = $("showMap").checked; flagText(); save(); });
+  $("campaignOpen").addEventListener("change", () => {
+    const start = easternDate(data.electionSchedule.campaigningOpens);
+    const end = easternDate(data.electionSchedule.campaigningCloses);
+    if ($("campaignOpen").checked && (!start || !end || start >= end)) {
+      $("campaignOpen").checked = false;
+      alert("Set valid campaign opening and closing times before enabling candidate statements.");
+      return;
+    }
+    data.campaignOpen = $("campaignOpen").checked;
+    flagText();
+    save();
+  });
   $("resetVotes").addEventListener("click", () => {
-    if (!confirm("Reset ALL votes? Everyone can vote again and the map clears. This takes effect after you publish.")) return;
+    if (!confirm("Clear browser-local map previews when these settings are published? This does not reset or change votes on an official ballot service.")) return;
     data.voteRound = (data.voteRound || 0) + 1;
-    $("roundInfo").textContent = "Vote round: " + data.voteRound + " (publish to apply)";
+    $("roundInfo").textContent = "Preview round: " + data.voteRound + " (publish to apply)";
     save();
   });
 
@@ -123,16 +148,36 @@
 
   const lines = s => s.split("\n").map(x => x.trim()).filter(Boolean);
   function fillLists() {
-    $("electionOpens").value = data.electionOpens || "";
+    $("registrationOpens").value = data.electionSchedule.registrationOpens || "";
+    $("registrationCloses").value = data.electionSchedule.registrationCloses || "";
+    $("campaigningOpens").value = data.electionSchedule.campaigningOpens || "";
+    $("campaigningCloses").value = data.electionSchedule.campaigningCloses || "";
+    $("electionOpens").value = data.electionSchedule.votingOpens || data.electionOpens || "";
+    $("votingCloses").value = data.electionSchedule.votingCloses || "";
     $("ballotTitle").value = data.ballotTitle || "";
     $("ballotText").value = (data.ballot || []).map(b => b.title + " | " + (b.pick || 1) + " | " + b.candidates.join(", ") + (b.map ? " | " + (b.map === "districts" ? "2" : "1") : "")).join("\n");
     $("colorsText").value = Object.entries(data.colors || {}).map(([k, v]) => k + ": " + v).join("\n");
+    $("candidateProfilesText").value = data.candidateProfiles.map(p => [p.name, p.office, p.experience, p.statement].join(" | ")).join("\n");
+    $("officialResultsUrl").value = data.officialResultsUrl;
     $("senatorsText").value = (data.senators || []).join("\n");
     $("repsText").value = (data.representatives || []).join("\n");
     $("ghToken").value = isOwner() ? localStorage.getItem("srp_gh") || "" : "";
   }
   fillLists();
-  ["electionOpens", "ballotTitle"].forEach(k => $(k).addEventListener("input", () => { data[k] = $(k).value.trim(); save(); }));
+  ["registrationOpens", "registrationCloses", "campaigningOpens", "campaigningCloses", "votingCloses"].forEach(id => {
+    $(id).addEventListener("input", () => {
+      data.electionSchedule[id] = $(id).value.trim();
+      flagText();
+      save();
+    });
+  });
+  $("electionOpens").addEventListener("input", () => {
+    data.electionSchedule.votingOpens = $("electionOpens").value.trim();
+    data.electionOpens = data.electionSchedule.votingOpens;
+    flagText();
+    save();
+  });
+  $("ballotTitle").addEventListener("input", () => { data.ballotTitle = $("ballotTitle").value.trim(); save(); });
   $("ballotText").addEventListener("input", () => {
     data.ballot = lines($("ballotText").value).map(l => {
       const p = l.split("|").map(x => x.trim());
@@ -143,6 +188,36 @@
   $("colorsText").addEventListener("input", () => {
     data.colors = {};
     lines($("colorsText").value).forEach(l => { const i = l.lastIndexOf(":"); if (i > 0) data.colors[l.slice(0, i).trim()] = l.slice(i + 1).trim(); });
+    save();
+  });
+  $("candidateProfilesText").addEventListener("input", () => {
+    const profiles = [];
+    for (const line of lines($("candidateProfilesText").value)) {
+      const fields = line.split("|").map(value => value.trim());
+      if (fields.length !== 4 || fields.some(value => !value)) {
+        $("candidateProfilesError").textContent = "Each non-empty line needs exactly four filled fields separated by |. Nothing was saved until corrected.";
+        $("candidateProfilesError").classList.remove("hidden");
+        return;
+      }
+      profiles.push({ name: fields[0], office: fields[1], experience: fields[2], statement: fields[3] });
+    }
+    $("candidateProfilesError").textContent = "";
+    $("candidateProfilesError").classList.add("hidden");
+    data.candidateProfiles = profiles;
+    flagText();
+    save();
+  });
+  $("officialResultsUrl").addEventListener("input", () => {
+    const value = $("officialResultsUrl").value.trim();
+    if (value && !httpsUrl(value)) {
+      $("officialResultsUrlError").textContent = "Use a valid HTTPS link to the official certified-results announcement.";
+      $("officialResultsUrlError").classList.remove("hidden");
+      return;
+    }
+    $("officialResultsUrlError").textContent = "";
+    $("officialResultsUrlError").classList.add("hidden");
+    data.officialResultsUrl = value;
+    flagText();
     save();
   });
   $("senatorsText").addEventListener("input", () => { data.senators = lines($("senatorsText").value); save(); });

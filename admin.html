@@ -36,6 +36,17 @@
     </section>
 
     <section class="card" data-p="settings">
+      <h3>Election Workflow Dashboard</h3>
+      <div class="election-status">
+        <div><span>Candidate profiles configured</span><strong id="workflowProfiles"></strong></div>
+        <div><span>Campaign statements</span><strong id="workflowCampaign"></strong></div>
+        <div><span>Official voting link</span><strong id="workflowBallot"></strong></div>
+        <div><span>Certified results notice</span><strong id="workflowResults"></strong></div>
+      </div>
+      <p>Applications are reviewed manually. Publish candidate profiles only after eligibility and policy review; link results only after officials verify and certify them. This static panel does not create audit logs or verify voters.</p>
+    </section>
+
+    <section class="card" data-p="settings">
       <h3>Registration &amp; Voting</h3>
       <div class="switches">
         <label class="switch"><input type="checkbox" id="siteOnline"><span class="slider"></span><span class="swtext"><b>Entire Site</b><small id="siteState"></small></span></label>
@@ -43,8 +54,9 @@
         <label class="switch"><input type="checkbox" id="votingOpen"><span class="slider"></span><span class="swtext"><b>Voting</b><small id="voteState"></small></span></label>
         <label class="switch"><input type="checkbox" id="showMap"><span class="slider"></span><span class="swtext"><b>Results Map</b><small id="mapState"></small></span></label>
       </div>
-      <p><button class="btn ghost" style="color:#b00020;border-color:#b00020" id="resetVotes" type="button">Reset All Votes</button> <small id="roundInfo"></small></p>
-      <label for="votingUrl">Voting ballot link (shown on the Vote page when voting is open)</label>
+      <p><button class="btn ghost" style="color:#b00020;border-color:#b00020" id="resetVotes" type="button">Reset Local Map Previews</button> <small id="roundInfo"></small></p>
+      <p>This clears only browser-local preview data when published. It cannot reset or change votes submitted to an official ballot service.</p>
+      <label for="votingUrl">Official external ballot link (HTTPS only; required before voting can start)</label>
       <input id="votingUrl" placeholder="https://forms.gle/...">
     </section>
 
@@ -62,14 +74,29 @@
 
     <section class="card" data-p="settings">
       <h3>Election</h3>
-      <label for="electionOpens">Countdown until elections open (YYYY-MM-DD HH:MM, Eastern time; empty hides it)</label>
-      <input id="electionOpens" placeholder="2026-11-12 18:00">
+      <p>Publish each phase's official times in Eastern time. Candidate statements are hidden unless the campaign switch is on and the current time falls inside the published campaign window.</p>
+      <div class="schedule-fields">
+        <label for="registrationOpens">Registration opens</label><input id="registrationOpens" placeholder="YYYY-MM-DD HH:MM">
+        <label for="registrationCloses">Registration closes</label><input id="registrationCloses" placeholder="YYYY-MM-DD HH:MM">
+        <label for="campaigningOpens">Campaigning opens</label><input id="campaigningOpens" placeholder="YYYY-MM-DD HH:MM">
+        <label for="campaigningCloses">Campaigning closes</label><input id="campaigningCloses" placeholder="YYYY-MM-DD HH:MM">
+        <label for="electionOpens">Voting opens (also drives the countdown)</label><input id="electionOpens" placeholder="YYYY-MM-DD HH:MM">
+        <label for="votingCloses">Voting closes</label><input id="votingCloses" placeholder="YYYY-MM-DD HH:MM">
+      </div>
+      <label class="switch"><input type="checkbox" id="campaignOpen"><span class="slider"></span><span class="swtext"><b>Campaign Statements</b><small id="campaignState">CLOSED</small></span></label>
       <label for="ballotTitle">Ballot title</label>
       <input id="ballotTitle" placeholder="2026 General Election">
       <label for="ballotText">Elections, one per line: Title | how many to pick | Candidate, Candidate | map 1 or 2 (optional)</label>
       <textarea class="code" id="ballotText" style="height:110px" placeholder="President | 1 | Bowser, Wedgie | picture"></textarea>
       <label for="colorsText">Candidate colors, one per line: Name: #hexcolor</label>
       <textarea class="code" id="colorsText" style="height:80px" placeholder="Bowser: #d93025"></textarea>
+      <label for="candidateProfilesText">Owner-approved candidate profiles, one per line: Name | Office | SRP experience/qualifications | SRP campaign statement</label>
+      <textarea class="code" id="candidateProfilesText" style="height:150px" placeholder="Name | Office | Relevant SRP experience | SRP-focused proposal"></textarea>
+      <p id="candidateProfilesError" class="warn hidden" role="alert"></p>
+      <p>Review and approve each profile manually before publishing. Statements must follow the Election Rules &amp; Policies. Profiles are public only during the scheduled campaign window.</p>
+      <label for="officialResultsUrl">Certified official results announcement URL (HTTPS only; leave blank until results are verified)</label>
+      <input id="officialResultsUrl" type="url" placeholder="https://...">
+      <p id="officialResultsUrlError" class="warn hidden" role="alert"></p>
     </section>
 
     <section class="card" data-p="settings">

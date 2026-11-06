@@ -20,11 +20,8 @@
 <main>
   <section class="card gold" aria-labelledby="election-status-heading">
     <h2 id="election-status-heading">Election Status</h2>
-    <div class="election-status" aria-live="polite">
-      <div><span>Registration</span><strong id="registrationStatus"></strong></div>
-      <div><span>Voting</span><strong id="votingStatus"></strong></div>
-    </div>
-    <p id="electionSchedule" class="election-schedule"></p>
+    <p id="officialAnnouncement" class="notice hidden"></p>
+    <div id="electionTimeline" class="election-timeline" aria-live="polite"></div>
     <div class="election-actions">
       <a class="btn blue" href="register.html">Registration Information</a>
       <a class="btn ghost-dark" href="vote.html">Voting Information</a>
@@ -38,6 +35,34 @@
     <p id="noPublishedBallot" class="notice hidden">No election ballot has been published yet.</p>
   </section>
 
+  <section class="card" aria-labelledby="candidate-profiles-heading">
+    <h2 id="candidate-profiles-heading">Approved Candidate Statements</h2>
+    <p>Statements submitted by candidates and published by election administration. They appear only during the official campaign period.</p>
+    <div id="candidateProfiles"></div>
+    <p id="noCandidateProfiles" class="notice hidden">No approved candidate statements are published for the current campaign period.</p>
+    <p><a class="more" href="policies.html#s5">Campaign rules and candidate responsibilities &rarr;</a></p>
+  </section>
+
+  <section class="card" aria-labelledby="candidate-application-heading">
+    <h2 id="candidate-application-heading">Candidate Application</h2>
+    <p>Applications are accepted only while candidate registration is open. Election Officials must review eligibility before a candidate is approved. Submitting an application does not make you a candidate.</p>
+    <div id="candidateApplicationStatus" class="notice hidden"></div>
+    <form id="candidateApplication" class="candidate-application">
+      <label for="candidateName">In-game username</label>
+      <input id="candidateName" name="name" required maxlength="80">
+      <label for="candidateOffice">Office you are applying for</label>
+      <input id="candidateOffice" name="office" required maxlength="100">
+      <label for="candidateExperience">Relevant SRP experience and qualifications</label>
+      <textarea id="candidateExperience" name="experience" rows="4" required maxlength="1200"></textarea>
+      <label for="candidateStatement">Proposed SRP campaign statement</label>
+      <textarea id="candidateStatement" name="statement" rows="5" required maxlength="1600"></textarea>
+      <p class="notice">Keep statements respectful, truthful, and about SRP. Real-world political content, personal attacks, fabricated claims, endorsements, promises of rewards, and private information are prohibited. Do not include passwords or sensitive personal information.</p>
+      <label class="candidate-policy-check"><input id="candidatePolicy" type="checkbox" required> I have read and agree to follow the <a href="policies.html#s4">Election Rules &amp; Policies</a>.</label>
+      <button class="btn blue" type="submit">Prepare Application Email</button>
+      <p id="candidateApplicationMessage" class="form-message" aria-live="polite"></p>
+    </form>
+  </section>
+
   <section class="card" aria-labelledby="voter-guidance-heading">
     <h2 id="voter-guidance-heading">Fair and Informed Participation</h2>
     <ul class="election-guidance">
@@ -45,14 +70,23 @@
       <li>Review candidates based on their qualifications, experience, conduct, and ability to serve.</li>
       <li>Submit only the ballot you are authorized to cast. A submitted vote is final.</li>
       <li>Real-world political parties, figures, endorsements, and propaganda are not part of SRP elections.</li>
+      <li>Your registration and eligibility must be confirmed through the official election process; this website cannot verify them.</li>
     </ul>
     <p><a class="more" href="policies.html#s7">Read voter responsibilities and the full Election Rules &amp; Policies &rarr;</a></p>
   </section>
 
-  <section class="card notice" aria-labelledby="results-heading">
-    <h2 id="results-heading">Official Results</h2>
-    <p>Election Officials must verify ballots before results are certified. Only authorized officials may announce official results. This page does not display vote totals or certify outcomes.</p>
-    <p><a class="more" href="policies.html#s11">Read the election integrity and result-verification rules &rarr;</a></p>
+  <section class="card" aria-labelledby="transparency-heading">
+    <h2 id="transparency-heading">Transparency &amp; Official Records</h2>
+    <p>Official schedules, approved candidate materials, policy decisions, and certified results should be published without exposing private registration details or confidential ballots.</p>
+    <p id="officialResultsStatus" class="notice"></p>
+    <p><a class="more" href="policies.html#s8">How to report suspected election misconduct &rarr;</a></p>
+    <p><a class="more" href="policies.html#s10">Appeals process &rarr;</a></p>
+    <p><a class="more" href="policies.html#s11">Election integrity and result-verification rules &rarr;</a></p>
+  </section>
+
+  <section class="card notice" aria-labelledby="site-limits-heading">
+    <h2 id="site-limits-heading">Voting and Privacy Notice</h2>
+    <p>This is a static website. It cannot securely verify voter eligibility, prevent duplicate ballots across devices, or maintain a shared confidential vote count. When voting is open, use only the official ballot link published by election administration. Do not treat this site's local preview, browser storage, or a submitted email draft as an official vote or result.</p>
   </section>
 </main>
 <footer>&copy; Springfield Roleplay Government Voting</footer>

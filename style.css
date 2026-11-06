@@ -247,6 +247,7 @@ input,select,textarea{border-radius:3px!important}
 .election-state{font-size:.82rem;letter-spacing:.08em;font-weight:800}
 .election-state.state-open{color:#18743c}
 .election-state.state-closed{color:#58647b}
+.election-state.state-warning{color:#a44900}
 .election-schedule{font-weight:700;color:var(--navy)}
 .election-actions{display:flex;flex-wrap:wrap;gap:8px}
 .election-actions .btn{margin:0}
@@ -256,6 +257,23 @@ input,select,textarea{border-radius:3px!important}
 .election-office p{margin:0 0 8px}
 .candidate-list,.election-guidance{margin:8px 0 0;padding-left:22px}
 .candidate-list li,.election-guidance li{padding:3px 0;line-height:1.6}
+.election-timeline{display:grid;gap:8px;margin:18px 0}
+.timeline-row{display:grid;grid-template-columns:minmax(150px,1fr) auto minmax(190px,1.4fr);align-items:center;gap:12px;padding:12px 14px;background:#f3f6fc;border:1px solid #dbe5f7;border-radius:10px}
+.timeline-dates{font-size:.92rem;color:#4f5c73}
+.candidate-profile{padding:16px 0;border-top:1px solid #dbe1ec}
+.candidate-profile:first-child{border-top:0}
+.candidate-profile h3{margin:0 0 10px;color:var(--navy)}
+.candidate-profile h4{margin:10px 0 4px;color:#34425d}
+.candidate-profile p{overflow-wrap:anywhere}
+.candidate-application .notice{font-size:.95rem}
+.candidate-policy-check{display:flex!important;align-items:flex-start;gap:8px}
+.candidate-policy-check input{width:auto!important;margin-top:5px}
+.form-message{margin-top:10px;font-weight:600;color:var(--navy)}
+.schedule-fields{display:grid;grid-template-columns:minmax(170px,1fr) minmax(200px,1.5fr);align-items:center;gap:8px 16px}
+.schedule-fields label{margin:0!important}
+.schedule-fields input{margin:0}
+.results-disclaimer{max-width:1000px;margin:0 auto}
+@media(max-width:700px){.timeline-row{grid-template-columns:1fr auto}.timeline-dates{grid-column:1/-1}.schedule-fields{grid-template-columns:1fr;gap:4px}.schedule-fields input{margin-bottom:8px}}
 
 /* Map slideshow */
 .mapnav{display:flex;align-items:center;justify-content:center;gap:16px}
