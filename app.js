@@ -3,12 +3,12 @@ const SITE = window.SRP_DATA || {};
 // Bumping voteRound in data.js clears every visitor's saved vote and tally the next time they visit.
 (function voteReset() {
   const r = String(SITE.voteRound || 0);
-  if (localStorage.getItem("srp_round") === null) { localStorage.setItem("srp_round", r); return; }
-  if (localStorage.getItem("srp_round") !== r) {
+  const stored = localStorage.getItem("srp_round") || "0";
+  if (stored !== r) {
     localStorage.removeItem("srp_voted");
     localStorage.removeItem("srp_tally");
-    localStorage.setItem("srp_round", r);
   }
+  localStorage.setItem("srp_round", r);
 })();
 
 (function maintenance() {
