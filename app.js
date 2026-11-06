@@ -100,9 +100,9 @@ const COUNTIES = {
         box.innerHTML = '<h2>You must register to vote</h2><p>Register first, then come back here to cast your ballot.</p><a class="btn blue" href="register.html">Register Now</a>';
       } else {
         const pos = (SITE.ballot || []).map((p, i) => '<fieldset class="pos"><legend>' + esc(p.title) + ' <em>(vote for ' + (p.pick === 1 ? "one" : p.pick) + ')</em></legend>' +
-          p.candidates.map(c => '<label class="opt"><input type="' + (p.pick === 1 ? "radio" : "checkbox") + '" name="p' + i + '" value="' + esc(c) + '"><span>' + esc(c) + "</span></label>").join("") + "</fieldset>").join("");
-        box.innerHTML = '<div class="paper"><h2>' + esc(SITE.ballotTitle || "Official Ballot") + '</h2><p class="rules">Voting as <b>' + esc(reg.discord || reg.name) + "</b> (" + esc(reg.county) + " District " + esc(reg.district) + '). Choose one candidate. <b>Once you submit, you cannot change your vote.</b></p>' +
-          '<form id="ballotform"><div class="cols">' + pos + '</div><button class="btn blue" type="submit">Submit Vote</button></form></div>';
+          p.candidates.map(c => '<label class="opt" style="border-left:8px solid ' + ((SITE.colors || {})[c] || "#888") + '"><input type="' + (p.pick === 1 ? "radio" : "checkbox") + '" name="p' + i + '" value="' + esc(c) + '"><span>' + esc(c) + "</span></label>").join("") + "</fieldset>").join("");
+        box.innerHTML = '<div class="paper"><div class="phead"><img src="logo.png" alt=""><div><small>Springfield Roleplay Government</small><h2>' + esc(SITE.ballotTitle || "Official Ballot") + '</h2></div></div><div class="voter">Voting as <b>' + esc(reg.discord || reg.name) + "</b> &middot; " + esc(reg.county) + " District " + esc(reg.district) + '</div><p class="rules">Select <b>one</b> candidate for each office. <b>Once you submit, your vote is final and cannot be changed.</b></p>' +
+          '<form id="ballotform"><div class="cols">' + pos + '</div><button class="btn blue" type="submit">Cast My Vote</button></form></div>';
         document.getElementById("ballotform").addEventListener("submit", e => {
           e.preventDefault();
           const lines = [];
@@ -169,14 +169,38 @@ const COUNTIES = {
       e.forEach(x => total += x[1]);
       const pts = d[3].split(" ").map(p => p.split(",").map(Number));
       const cx = pts.reduce((s, p) => s + p[0], 0) / pts.length, cy = pts.reduce((s, p) => s + p[1], 0) / pts.length;
-      out += '<g><polygon points="' + d[3] + '" fill="' + fill + '" stroke="#222" stroke-width="2"><title>' + d[0] + " District " + d[1] + ": " + (e.map(x => x[0] + " " + x[1]).join(", ") || "no votes") + '</title></polygon><text x="' + cx + '" y="' + cy + '" text-anchor="middle" font-size="24" font-weight="700" fill="' + (e.length && !tie ? "#fff" : "#1b2a4a") + '">' + d[2].split(" ")[0] + '<tspan x="' + cx + '" dy="26">' + d[2].split(" ")[1] + "</tspan></text></g>";
+      out += '<g class="dist" data-k="' + d[0] + "|" + d[1] + '" data-n="' + d[0] + " District " + d[1] + '"><polygon points="' + d[3] + '" fill="' + fill + '" stroke="#222" stroke-width="2"></polygon><text x="' + cx + '" y="' + cy + '" text-anchor="middle" font-size="24" font-weight="700" fill="' + (e.length && !tie ? "#fff" : "#1b2a4a") + '" pointer-events="none">' + d[2].split(" ")[0] + '<tspan x="' + cx + '" dy="26">' + d[2].split(" ")[1] + "</tspan></text></g>";
     });
     svg.innerHTML = out;
     document.getElementById("maptotal").textContent = total + " vote" + (total === 1 ? "" : "s") + " counted";
   };
+  const box = document.getElementById("mapbox"), tip = document.createElement("div");
+  tip.className = "maptip";
+  box.style.position = "relative";
+  box.appendChild(tip);
+  svg.addEventListener("mousemove", ev => {
+    const g = ev.target.closest(".dist");
+    if (!g) { tip.style.display = "none"; return; }
+    const t = (JSON.parse(localStorage.getItem("srp_tally") || "{}"))[g.dataset.k] || {};
+    const sum = Object.values(t).reduce((a, b) => a + b, 0);
+    const rows = names.map(n => ({ n, v: t[n] || 0 })).sort((a, b) => b.v - a.v);
+    let h = "<b>" + g.dataset.n + "</b>";
+    if (!sum) h += '<div class="tl">No votes yet</div>';
+    else {
+      const lead = rows[0].v === rows[1].v ? "Tied" : rows[0].n + " leading";
+      h += '<div class="tl">' + lead + " &middot; " + sum + " vote" + (sum === 1 ? "" : "s") + "</div>";
+      h += rows.map(r => '<div class="tr"><i style="background:' + (colors[r.n] || "#888") + '"></i>' + r.n + "<span>" + Math.round(r.v / sum * 100) + "% (" + r.v + ")</span></div>").join("");
+    }
+    tip.innerHTML = h;
+    tip.style.display = "block";
+    const r = box.getBoundingClientRect();
+    tip.style.left = Math.min(ev.clientX - r.left + 16, r.width - 230) + "px";
+    tip.style.top = (ev.clientY - r.top + 16) + "px";
+  });
+  svg.addEventListener("mouseleave", () => { tip.style.display = "none"; });
   draw();
   window.addEventListener("storage", draw);
-  setInterval(draw, 3000);
+  setInterval(() => { if (tip.style.display !== "block") draw(); }, 3000);
 })();
 
 (function registerForm() {
