@@ -5,7 +5,7 @@
   delete data.siteOnline;
   // The live admin list always comes from the published data.js, so removed admins can't linger in a draft.
   data.admins = JSON.parse(JSON.stringify(window.SRP_DATA.admins));
-  if (localStorage.getItem(DRAFT + "_admins")) data.admins = JSON.parse(localStorage.getItem(DRAFT + "_admins"));
+  if (localStorage.getItem(DRAFT + "_admins")) data.admins = JSON.parse(localStorage.getItem(DRAFT + "_admins")).map(x => window.SRP_DATA.admins.find(y => y.user === x.user) || x);
 
   const sha = async s => Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)))).map(b => b.toString(16).padStart(2, "0")).join("");
   const rand = () => Array.from(crypto.getRandomValues(new Uint8Array(8))).map(b => b.toString(16).padStart(2, "0")).join("");
