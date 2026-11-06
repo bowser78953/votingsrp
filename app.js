@@ -1,4 +1,4 @@
-﻿const SITE = window.SRP_DATA || {};
+const SITE = window.SRP_DATA || {};
 
 (function maintenance() {
   if (!SITE.siteOff || /admin\.html$/i.test(location.pathname) || sessionStorage.getItem("srp_admin")) return;
@@ -83,7 +83,7 @@ const COUNTIES = {
 };
 
 const POLICY_OK = localStorage.getItem("srp_policy") === "1";
-const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You must read the Election Rules &amp; Policies and tick "I have read" at the bottom before you can register or vote.</p><a class="btn blue" href="policies.html#agree">Read the Policies</a></div>';
+const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You must read the Election Rules &amp; Policies and tick "I have read" at the bottom before you can register or vote.</p><a class="btn blue" href="policies.html">Read the Policies</a></div>';
 
 (function policyAgree() {
   const cb = document.getElementById("policyAgree");
