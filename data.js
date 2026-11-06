@@ -31,12 +31,12 @@ window.SRP_DATA = {
   ],
   "registrationOpen": false,
   "votingOpen": false,
-  "siteOff": true,
+  "siteOff": false,
   "showMap": false,
   "voteRound": 2,
   "votingUrl": "",
   "ballot": [],
   "ballotTitle": "",
-  "electionOpens": "2026-11-12 18:00",
+  "electionOpens": "2026-11-6 01:05",
   "colors": {}
 };
