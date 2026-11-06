@@ -18,8 +18,10 @@
   .dropdown-content { display: none; position: absolute; left: 0; top: 100%; min-width: 200px; background: #12326e; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
   .dropdown-content a { display: block; }
   .dropdown:hover .dropdown-content, .dropdown:focus-within .dropdown-content { display: block; }
-  main { flex: 1; display: flex; align-items: center; justify-content: center; }
-  main h2 { font-size: 3rem; }
+  main { flex: 1; max-width: 900px; width: 100%; margin: 0 auto; padding: 24px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px; }
+  .card { background: #f3f6fc; border: 1px solid #c5d3ee; border-left: 6px solid #1e4fa8; border-radius: 8px; padding: 16px 22px; }
+  .card h2 { margin: 0 0 8px; color: #12326e; font-size: 1.5rem; }
+  .card p { margin: 0; line-height: 1.6; }
 </style>
 </head>
 <body>
