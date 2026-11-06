@@ -2,7 +2,7 @@ window.SRP_DATA = {
   registerFormUrl: "",
   votingUrl: "",
   registrationOpen: false,
-  votingOpen: false,
+  votingOpen: true,
   liveStreamUrl: "",
   contactEmail: "",
   announcement: "",
