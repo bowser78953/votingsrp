@@ -128,7 +128,7 @@
   $("ballotText").addEventListener("input", () => {
     data.ballot = lines($("ballotText").value).map(l => {
       const p = l.split("|").map(x => x.trim());
-      return { title: p[0], pick: parseInt(p[1], 10) || 1, candidates: (p[2] || "").split(",").map(x => x.trim()).filter(Boolean), map: /gr[ae]y/i.test(p[3] || "") ? "gray" : "picture" };
+      return { title: p[0], pick: parseInt(p[1], 10) || 1, candidates: (p[2] || "").split(",").map(x => x.trim()).filter(Boolean), map: /gr[ae]y|^(type\s*)?(2|two)$/i.test(p[3] || "") ? "gray" : "picture" };
     });
     save();
   });

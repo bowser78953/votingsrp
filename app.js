@@ -202,7 +202,7 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
   box.appendChild(tip);
 
   const draw = () => {
-    const el = elections[cur], names = el.candidates, gray = el.map === "gray";
+    const el = elections[cur], names = el.candidates, gray = /gr[ae]y|^\s*(type\s*)?(2|two)\s*$/i.test(String(el.map || ""));
     const tally = tallies()[cur] || {};
     document.getElementById("mtitle").textContent = el.title + (gray ? "" : "");
     document.getElementById("legend").innerHTML = names.map(n => '<span><i style="background:' + (colors[n] || "#888") + '"></i>' + esc(n) + "</span>").join("") + '<span><i style="background:' + (gray ? "#c9c9c9" : "#fff") + '"></i>No votes</span>';

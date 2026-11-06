@@ -42,7 +42,8 @@ window.SRP_DATA = {
       "candidates": [
         "Bowser",
         "Wedgie"
-      ]
+      ],
+      "map": "picture"
     },
     {
       "title": "Governor",
@@ -50,7 +51,8 @@ window.SRP_DATA = {
       "candidates": [
         "Hunt",
         "Red"
-      ]
+      ],
+      "map": "gray"
     }
   ],
   "ballotTitle": "TEST Presidential Election",
