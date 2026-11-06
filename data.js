@@ -43,12 +43,22 @@ window.SRP_DATA = {
         "Bowser",
         "Wedgie"
       ]
+    },
+    {
+      "title": "Governor",
+      "pick": 2,
+      "candidates": [
+        "Hunt",
+        "Red"
+      ]
     }
   ],
   "ballotTitle": "TEST Presidential Election",
   "electionOpens": "2026-11-12 18:00",
   "colors": {
     "Bowser": "#d93025",
-    "Wedgie": "#1a73e8"
+    "Wedgie": "#1a73e8",
+    "Hunt": "#0b5cc9",
+    "Red": "d00b0b"
   }
 };
