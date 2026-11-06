@@ -3,7 +3,21 @@
 html { scroll-behavior:smooth; }
 body { margin:0; min-height:100vh; display:flex; flex-direction:column; font-family:"Segoe UI",system-ui,-apple-system,sans-serif; color:var(--ink); background:var(--bg); }
 
-header { background:linear-gradient(135deg,var(--blue),var(--blue2)); color:#fff; display:flex; align-items:center; gap:18px; padding:14px 32px; border-bottom:3px solid var(--gold); }
+header { position:relative; }
+.adminlink { margin-left:auto; color:#fff; text-decoration:none; font-weight:600; font-size:.9rem; padding:8px 16px; border:1.5px solid rgba(255,255,255,.7); border-radius:999px; transition:.2s; }
+.adminlink:hover { background:#fff; color:var(--blue); }
+.announce { background:var(--gold); color:var(--deep); text-align:center; font-weight:700; padding:10px 16px; }
+.tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:6px; }
+.tabs button { border:0; background:#dfe8fb; color:var(--navy); font:inherit; font-weight:600; padding:10px 18px; border-radius:999px; cursor:pointer; }
+.tabs button.on { background:var(--blue); color:#fff; }
+.warn { background:#fdecea; border:1px solid #f1a9a0; border-radius:10px; padding:12px 16px; }
+textarea.code { font-family:Consolas,monospace; font-size:.85rem; min-height:220px; }
+table.admins { width:100%; border-collapse:collapse; }
+table.admins td, table.admins th { text-align:left; padding:8px; border-bottom:1px solid #e1e8f7; }
+.hidden { display:none; }
+@media (max-width:700px) { .adminlink { padding:6px 10px; font-size:.8rem; } }
+header { background:linear-gradient(135deg,var(--blue),var(--blue2)); color:#fff; display:flex; align-items:center; gap:18px; padding:14px 32px; border-bottom:3px solid var(--gold); position:relative; }
+(135deg,var(--blue),var(--blue2)); color:#fff; display:flex; align-items:center; gap:18px; padding:14px 32px; border-bottom:3px solid var(--gold); }
 header img { height:72px; width:72px; object-fit:contain; filter:drop-shadow(0 3px 6px rgba(0,0,0,.4)); }
 header h1 { margin:0; font-size:1.8rem; letter-spacing:.3px; text-shadow:0 1px 3px rgba(0,0,0,.3); }
 header small { display:block; font-size:.85rem; font-weight:400; color:#cfdcff; letter-spacing:2px; text-transform:uppercase; }

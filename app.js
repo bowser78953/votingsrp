@@ -1,9 +1,31 @@
-/* Paste your links here. Leave empty until you have them. */
-const SITE = {
-  registerFormUrl: "",   // e.g. a Google Form link
-  liveStreamUrl: "",     // e.g. https://www.youtube.com/embed/VIDEO_ID  or  https://player.twitch.tv/?channel=NAME&parent=votingsrp.onrender.com
-  contactEmail: ""       // where registrations are emailed if no form link is set
-};
+const SITE = window.SRP_DATA || {};
+
+(function extras() {
+  const h = document.querySelector("header");
+  if (h) {
+    const a = document.createElement("a");
+    a.href = "admin.html";
+    a.className = "adminlink";
+    a.textContent = "\uD83D\uDD12 Admin";
+    h.appendChild(a);
+  }
+  if (SITE.announcement && h) {
+    const b = document.createElement("div");
+    b.className = "announce";
+    b.textContent = SITE.announcement;
+    h.after(b);
+  }
+  const fill = (id, list, empty) => {
+    const el = document.getElementById(id);
+    if (!el || !list || !list.length) return;
+    el.textContent = "";
+    const ul = document.createElement("ul");
+    list.forEach(n => { const li = document.createElement("li"); li.textContent = n; ul.appendChild(li); });
+    el.appendChild(ul);
+  };
+  fill("senators", SITE.senators);
+  fill("reps", SITE.representatives);
+})();
 
 const pages = [
   ["index.html", "Home Page"],
@@ -65,6 +87,7 @@ const COUNTIES = {
     summary.style.display = "none";
   };
   county.addEventListener("change", update);
+  f.addEventListener("reset", () => setTimeout(update));
   district.addEventListener("change", () => {
     if (!district.value) { summary.style.display = "none"; return; }
     summary.textContent = "You will be registered in " + county.value + " County, District " + district.value + ".";

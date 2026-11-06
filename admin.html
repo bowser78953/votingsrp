@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin | Springfield Roleplay Government Voting</title>
+<link rel="icon" href="logo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <img src="logo.png" alt="Springfield Government logo">
+  <h1><small>Official Site</small>Springfield Roleplay Government Voting</h1>
+</header>
+<nav></nav>
+<section class="hero small"><h2>Admin Panel</h2><p>Sign in to manage the site.</p></section>
+<main>
+  <section class="card" id="login">
+    <h2>Admin Sign In</h2>
+    <form id="loginform">
+      <label for="u">Username</label><input id="u" autocomplete="username" required>
+      <label for="p">Password</label><input id="p" type="password" autocomplete="current-password" required>
+      <p><button class="btn blue" type="submit">Sign In</button></p>
+      <div class="warn hidden" id="loginerr">Wrong username or password.</div>
+    </form>
+  </section>
+
+  <div id="panel" class="hidden">
+    <section class="card gold">
+      <p>Signed in as <b id="who"></b> (<span id="role"></span>) <button class="btn blue" id="logout" style="padding:6px 16px;margin-left:10px">Sign Out</button></p>
+      <div class="tabs" id="tabs">
+        <button data-t="settings" class="on">Settings</button>
+        <button data-t="people">Senators &amp; Reps</button>
+        <button data-t="admins" id="adminstab">Admin Accounts</button>
+        <button data-t="publish">Publish</button>
+      </div>
+    </section>
+
+    <section class="card" data-p="settings">
+      <h3>Site Settings</h3>
+      <label for="announcement">Banner announcement (shows at the top of every page)</label>
+      <input id="announcement" placeholder="e.g. Elections start Friday at 6 PM!">
+      <label for="registerFormUrl">Registration form link (optional)</label>
+      <input id="registerFormUrl" placeholder="https://forms.gle/...">
+      <label for="liveStreamUrl">Live stream embed link</label>
+      <input id="liveStreamUrl" placeholder="https://www.youtube.com/embed/VIDEO_ID">
+      <label for="contactEmail">Registration email</label>
+      <input id="contactEmail" type="email" placeholder="you@example.com">
+    </section>
+
+    <section class="card hidden" data-p="people">
+      <h3>Senators &amp; Representatives</h3>
+      <label for="f_senators">Senators (one name per line)</label>
+      <textarea id="f_senators" rows="6"></textarea>
+      <label for="f_representatives">Representatives (one name per line)</label>
+      <textarea id="f_representatives" rows="6"></textarea>
+    </section>
+
+    <section class="card hidden" data-p="admins">
+      <h3>Admin Accounts</h3>
+      <table class="admins" id="adminlist"></table>
+      <h3 style="margin-top:20px">Create a new admin</h3>
+      <form id="newadmin">
+        <label for="nu">Username</label><input id="nu" required>
+        <label for="np">Password</label><input id="np" required minlength="6">
+        <p><button class="btn blue" type="submit">Create Account</button></p>
+      </form>
+    </section>
+
+    <section class="card hidden" data-p="publish">
+      <h3>Publish Changes</h3>
+      <p>Changes are only saved when you publish them. This site has no server, so do this:</p>
+      <ol>
+        <li>Click <b>Download data.js</b>.</li>
+        <li>Upload it to the <code>votingsrp</code> repo on GitHub, replacing the old <code>data.js</code>.</li>
+        <li>Wait a minute or two for the site to update.</li>
+      </ol>
+      <p><button class="btn blue" id="dl">Download data.js</button> <button class="btn ghost" style="color:var(--blue);border-color:var(--blue)" id="copy">Copy to clipboard</button></p>
+      <textarea class="code" id="out" readonly></textarea>
+    </section>
+  </div>
+</main>
+<footer>&copy; Springfield Roleplay Government Voting</footer>
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
