@@ -2,7 +2,7 @@ window.SRP_DATA = {
   "registerFormUrl": "",
   "liveStreamUrl": "",
   "contactEmail": "owner",
-  "announcement": "Election Date TBD",
+  "announcement": "",
   "senators": [
     "Springfield: @walker103444",
     "River City: @Deancena9",
@@ -39,13 +39,79 @@ window.SRP_DATA = {
   "votingOpen": true,
   "siteOff": false,
   "showMap": true,
-  "voteRound": 4,
+  "voteRound": 5,
   "votingUrl": "",
   "ballot": [
     {
       "title": "Senator - Springfield",
       "office": "senate",
       "area": "Springfield",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "county"
+    },
+    {
+      "title": "Senator - River City",
+      "office": "senate",
+      "area": "River City",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "county"
+    },
+    {
+      "title": "Senator - River City Housing",
+      "office": "senate",
+      "area": "River City Housing",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "county"
+    },
+    {
+      "title": "Senator - Bayside",
+      "office": "senate",
+      "area": "Bayside",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "county"
+    },
+    {
+      "title": "Senator - Industrial",
+      "office": "senate",
+      "area": "Industrial",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "county"
+    },
+    {
+      "title": "Senator - Agriculture",
+      "office": "senate",
+      "area": "Agriculture",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "county"
+    },
+    {
+      "title": "Senator - Fairview Congressional",
+      "office": "senate",
+      "area": "Fairview Congressional",
       "pick": 1,
       "candidates": [
         "Bowser",
@@ -65,7 +131,172 @@ window.SRP_DATA = {
       "map": "district"
     },
     {
-      "title": "Mayor of Springfield",
+      "title": "Representative - Springfield District 2",
+      "office": "representative",
+      "area": "Springfield District 2",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "district"
+    },
+    {
+      "title": "Representative - Fairview Congressional District 1",
+      "office": "representative",
+      "area": "Fairview Congressional District 1",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "district"
+    },
+    {
+      "title": "Representative - Fairview Congressional District 2",
+      "office": "representative",
+      "area": "Fairview Congressional District 2",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "district"
+    },
+    {
+      "title": "Representative - Fairview Congressional District 3",
+      "office": "representative",
+      "area": "Fairview Congressional District 3",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "district"
+    },
+    {
+      "title": "Representative - River City Housing District 1",
+      "office": "representative",
+      "area": "River City Housing District 1",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "district"
+    },
+    {
+      "title": "Representative - River City Housing District 2",
+      "office": "representative",
+      "area": "River City Housing District 2",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "district"
+    },
+    {
+      "title": "Representative - River City District 1",
+      "office": "representative",
+      "area": "River City District 1",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "district"
+    },
+    {
+      "title": "Representative - River City District 2",
+      "office": "representative",
+      "area": "River City District 2",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "district"
+    },
+    {
+      "title": "Representative - Bayside District 1",
+      "office": "representative",
+      "area": "Bayside District 1",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "district"
+    },
+    {
+      "title": "Representative - Bayside District 2",
+      "office": "representative",
+      "area": "Bayside District 2",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "district"
+    },
+    {
+      "title": "Representative - Industrial District 1",
+      "office": "representative",
+      "area": "Industrial District 1",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "district"
+    },
+    {
+      "title": "Representative - Industrial District 2",
+      "office": "representative",
+      "area": "Industrial District 2",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "district"
+    },
+    {
+      "title": "Representative - Industrial District 3",
+      "office": "representative",
+      "area": "Industrial District 3",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "district"
+    },
+    {
+      "title": "Representative - Agriculture District 1",
+      "office": "representative",
+      "area": "Agriculture District 1",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "district"
+    },
+    {
+      "title": "Representative - Agriculture District 2",
+      "office": "representative",
+      "area": "Agriculture District 2",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "district"
+    },
+    {
+      "title": "Mayor of River City",
       "office": "mayor",
       "area": "Springfield",
       "pick": 1,
