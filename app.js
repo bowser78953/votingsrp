@@ -79,10 +79,10 @@ const usesCountyMap = (race, index = 0) => /^(county|counties|districts|big|2|tw
   const ballot = (SITE.ballot || []).filter(race => race && race.title && Array.isArray(race.candidates) && race.candidates.length);
 
   if (SITE.votingOpen) {
-    state.textContent = ballot.length ? "LOCAL PREVIEW OPEN" : "NO CONTESTS PUBLISHED";
+    state.textContent = ballot.length ? "BALLOT OPEN" : "NO CONTESTS PUBLISHED";
     message.textContent = ballot.length
-      ? "A local preview is available from the published races. Preview selections stay in your browser and are not official votes."
-      : "The local ballot preview is open, but no contests have been published yet.";
+      ? "The election ballot is open for published races. Review the contests for your registered area."
+      : "The ballot is open, but no contests have been published yet.";
   } else if (SITE.registrationOpen) {
     state.textContent = "REGISTRATION OPEN";
     message.textContent = "Voter registration is currently marked open. Eligibility must still be confirmed by election officials.";
@@ -154,7 +154,7 @@ const pages = [
     { title: "Voter registration", active: SITE.registrationOpen === true, available: registrationAvailable, start: schedule.registrationOpens, end: schedule.registrationCloses },
     { title: "Candidate registration", active: SITE.registrationOpen === true, available: contactEmail, start: schedule.registrationOpens, end: schedule.registrationCloses },
     { title: "Candidate campaigning", active: !!campaignActive, available: true, start: schedule.campaigningOpens, end: schedule.campaigningCloses },
-    { title: "Local ballot preview", active: SITE.votingOpen === true, available: votingAvailable, start: schedule.votingOpens, end: schedule.votingCloses }
+    { title: "Election ballot", active: SITE.votingOpen === true, available: votingAvailable, start: schedule.votingOpens, end: schedule.votingCloses }
   ];
   phases.forEach(phase => {
     const row = document.createElement("div");
@@ -343,36 +343,83 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
   const heading = document.createElement("h2");
   const message = document.createElement("p");
   const notice = document.createElement("p");
-  notice.className = "notice";
-  notice.textContent = "Local preview only: this browser-only ballot is not submitted to election officials, is not a real vote, and can be changed or bypassed. Use the official election process for your vote.";
+  notice.className = "ballot-disclosure";
+  notice.textContent = "Submission notice: This ballot is saved only in this browser. It is not sent to election officials and does not count as an official vote.";
   box.classList.add("ballot-card");
+  const renderBallotState = (kind, eyebrowText, titleText, descriptionText, showDisclosure = false) => {
+    const state = document.createElement("div");
+    state.className = "ballot-state ballot-state-" + kind;
+    state.setAttribute("role", kind === "submitted" ? "status" : "region");
+    state.setAttribute("aria-live", kind === "submitted" ? "polite" : "off");
+    const icon = document.createElement("span");
+    icon.className = "ballot-state-icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = kind === "submitted" ? "✓" : "!";
+    const copy = document.createElement("div");
+    copy.className = "ballot-state-copy";
+    const eyebrow = document.createElement("p");
+    eyebrow.className = "ballot-state-eyebrow";
+    eyebrow.textContent = eyebrowText;
+    const title = document.createElement("h2");
+    title.textContent = titleText;
+    const description = document.createElement("p");
+    description.textContent = descriptionText;
+    copy.append(eyebrow, title, description);
+    state.append(icon, copy);
+    const children = [state];
+    if (kind === "submitted") {
+      const actions = document.createElement("div");
+      actions.className = "ballot-state-actions";
+      const home = document.createElement("a");
+      home.className = "btn blue";
+      home.href = "index.html";
+      home.textContent = "Return to Home";
+      const information = document.createElement("a");
+      information.className = "ballot-state-link";
+      information.href = "election-info.html";
+      information.textContent = "Election information";
+      actions.append(home, information);
+      children.push(actions);
+    }
+    if (showDisclosure) children.push(notice);
+    box.replaceChildren(...children);
+  };
   if (!POLICY_OK) {
     box.className = "card closed";
     box.innerHTML = POLICY_MSG;
     return;
   }
   if (!SITE.votingOpen) {
-    box.className = "card closed";
-    heading.textContent = "Voting is currently CLOSED";
-    message.textContent = "Check back on election day. Make sure your registration is confirmed first.";
-    box.replaceChildren(heading, message);
+    renderBallotState("closed", "VOTING STATUS", "The ballot is not open",
+      "Check back during the published voting period. Complete registration before voting opens.");
     return;
   }
   let registration;
   try {
     registration = JSON.parse(localStorage.getItem("srp_reg") || "null");
   } catch (error) {
-    throw new Error("Could not read the local registration preview.", { cause: error });
+    throw new Error("Could not read the saved local registration.", { cause: error });
   }
   if (!registration || !registration.county || !registration.district) {
-    box.className = "card closed";
-    heading.textContent = "Register before opening the local preview";
-    message.textContent = "Complete the registration form, then return here to preview the contests for your selected area.";
+    box.className = "card ballot-card";
+    const state = document.createElement("div");
+    state.className = "ballot-state ballot-state-registration";
+    const copy = document.createElement("div");
+    copy.className = "ballot-state-copy";
+    const eyebrow = document.createElement("p");
+    eyebrow.className = "ballot-state-eyebrow";
+    eyebrow.textContent = "VOTER REGISTRATION";
+    heading.textContent = "Register to access your ballot";
+    message.textContent = "Complete registration to see the contests for your county and district.";
+    copy.append(eyebrow, heading, message);
+    state.appendChild(copy);
     const link = document.createElement("a");
     link.className = "btn blue";
+    link.classList.add("ballot-state-cta");
     link.href = "register.html";
     link.textContent = "Register Now";
-    box.replaceChildren(heading, message, notice, link);
+    state.appendChild(link);
+    box.replaceChildren(state, notice);
     return;
   }
   renderBallot();
@@ -397,38 +444,75 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
       });
     box.className = "card ballot-card";
     if (localStorage.getItem("srp_voted")) {
-      heading.textContent = "Local preview already recorded";
-      message.textContent = "A preview selection has already been saved in this browser for this election round.";
-      box.replaceChildren(heading, message, notice);
+      renderBallotState("submitted", "SUBMISSION SAVED ON THIS DEVICE", "Ballot submitted",
+        "Your selections are saved in this browser for this election round.", true);
       return;
     }
-    heading.textContent = SITE.ballotTitle || "Local Ballot Preview";
+    heading.textContent = SITE.ballotTitle || "Election Ballot";
     heading.className = "ballot-title";
     const ballotHeader = document.createElement("div");
     ballotHeader.className = "ballot-header";
     const eyebrow = document.createElement("p");
-    eyebrow.className = "form-eyebrow";
-    eyebrow.textContent = "LOCAL BALLOT PREVIEW";
+    eyebrow.className = "ballot-eyebrow";
+    eyebrow.textContent = "SPRINGFIELD ROLEPLAY GOVERNMENT";
     const subtitle = document.createElement("p");
     subtitle.className = "ballot-subtitle";
-    subtitle.textContent = "Select candidates for the contests in your registered area.";
+    subtitle.textContent = "Review each contest and make your selections carefully.";
     ballotHeader.append(eyebrow, heading, subtitle);
     const form = document.createElement("form");
     form.id = "localBallotForm";
     const voter = document.createElement("p");
-    voter.className = "voter";
-    voter.textContent = "Preview for " + registration.county + " County, District " + registration.district;
+    voter.className = "ballot-jurisdiction";
+    voter.textContent = "Voting area: " + registration.county + " County, District " + registration.district;
     const rules = document.createElement("p");
-    rules.className = "rules";
-    rules.textContent = "Choose the required number of candidates in each contest. Selections stay in this browser only.";
+    rules.className = "ballot-instructions";
+    rules.textContent = "Select the required number of candidates in every contest. You can review your choices before submitting.";
     form.append(voter, rules);
-    races.forEach(race => {
+    const progressWrap = document.createElement("div");
+    progressWrap.className = "ballot-progress-wrap";
+    const progressLabel = document.createElement("span");
+    progressLabel.className = "ballot-progress-label";
+    progressLabel.setAttribute("aria-live", "polite");
+    const progress = document.createElement("div");
+    progress.className = "ballot-progress";
+    progress.setAttribute("role", "progressbar");
+    progress.setAttribute("aria-label", "Completed ballot contests");
+    progress.setAttribute("aria-valuemin", "0");
+    progress.setAttribute("aria-valuemax", String(races.length));
+    const progressFill = document.createElement("span");
+    progress.appendChild(progressFill);
+    progressWrap.append(progressLabel, progress);
+    form.appendChild(progressWrap);
+    const error = document.createElement("p");
+    error.className = "ballot-error";
+    error.setAttribute("role", "alert");
+    error.hidden = true;
+    form.appendChild(error);
+    const updateProgress = () => {
+      const completed = races.filter(race => {
+        const pick = Number.isInteger(Number(race.pick)) && Number(race.pick) > 0 ? Number(race.pick) : 1;
+        return form.querySelectorAll('input[name="race-' + race.ballotIndex + '"]:checked').length === pick;
+      }).length;
+      progressLabel.textContent = completed + " of " + races.length + " contests complete";
+      progress.setAttribute("aria-valuenow", String(completed));
+      progressFill.style.width = (completed / races.length * 100) + "%";
+    };
+    races.forEach((race, raceIndex) => {
       const fieldset = document.createElement("fieldset");
-      fieldset.className = "pos";
+      fieldset.className = "ballot-contest";
       const legend = document.createElement("legend");
       const pick = Number.isInteger(Number(race.pick)) && Number(race.pick) > 0 ? Number(race.pick) : 1;
-      legend.textContent = race.title + " (choose " + pick + ")";
+      const contestNumber = document.createElement("span");
+      contestNumber.className = "contest-number";
+      contestNumber.textContent = String(raceIndex + 1).padStart(2, "0");
+      const contestTitle = document.createElement("span");
+      contestTitle.textContent = race.title;
+      legend.append(contestNumber, contestTitle);
       fieldset.appendChild(legend);
+      const requirement = document.createElement("p");
+      requirement.className = "contest-requirement";
+      requirement.textContent = "Select " + pick + " candidate" + (pick === 1 ? "" : "s");
+      fieldset.appendChild(requirement);
       race.candidates.forEach(candidate => {
         const label = document.createElement("label");
         label.className = "opt";
@@ -445,17 +529,26 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
       });
       form.appendChild(fieldset);
     });
+    form.addEventListener("change", () => {
+      error.hidden = true;
+      updateProgress();
+    });
     if (!races.length) {
       const empty = document.createElement("p");
-      empty.className = "notice";
-      empty.textContent = "No contests are published for your county and district.";
+      empty.className = "ballot-empty";
+      empty.textContent = "No contests have been published for your county and district.";
+      progressWrap.hidden = true;
       form.appendChild(empty);
     } else {
       const submit = document.createElement("button");
-      submit.className = "btn blue";
+      submit.className = "btn blue ballot-submit";
       submit.type = "submit";
-      submit.textContent = "Save Local Preview";
-      form.appendChild(submit);
+      submit.textContent = "Submit Ballot";
+      const actions = document.createElement("div");
+      actions.className = "ballot-actions";
+      actions.appendChild(submit);
+      form.appendChild(actions);
+      updateProgress();
       form.addEventListener("submit", event => {
         event.preventDefault();
         const selections = races.map(race => {
@@ -468,7 +561,11 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
         });
         const invalid = selections.find(selection => selection.candidates.length !== selection.pick);
         if (invalid) {
-          alert("Choose exactly " + invalid.pick + " candidate" + (invalid.pick === 1 ? "" : "s") + " for " + invalid.race.title + ".");
+          error.textContent = "Complete every contest before submitting. Select exactly " +
+            invalid.pick + " candidate" + (invalid.pick === 1 ? "" : "s") + " for " + invalid.race.title + ".";
+          error.hidden = false;
+          invalid.race && form.querySelector('input[name="race-' + invalid.race.ballotIndex + '"]')?.focus();
+          error.scrollIntoView({ behavior: "smooth", block: "center" });
           return;
         }
         const tally = JSON.parse(localStorage.getItem("srp_tally2") || "{}");
@@ -483,9 +580,8 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
         });
         localStorage.setItem("srp_tally2", JSON.stringify(tally));
         localStorage.setItem("srp_voted", JSON.stringify({ at: Date.now(), areaKey }));
-        heading.textContent = "Local preview saved";
-        message.textContent = "Your selections are saved only in this browser. They were not submitted to election officials and do not count as a vote.";
-        box.replaceChildren(heading, message, notice);
+        renderBallotState("submitted", "SUBMISSION SAVED ON THIS DEVICE", "Ballot submitted",
+          "Your selections are saved in this browser for this election round.", true);
       });
     }
     box.replaceChildren(ballotHeader, form, notice);

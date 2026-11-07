@@ -54,8 +54,8 @@
         <label class="switch"><input type="checkbox" id="votingOpen"><span class="slider"></span><span class="swtext"><b>Voting</b><small id="voteState"></small></span></label>
         <label class="switch"><input type="checkbox" id="showMap"><span class="slider"></span><span class="swtext"><b>Results Map</b><small id="mapState"></small></span></label>
       </div>
-      <p><button class="btn ghost" style="color:#b00020;border-color:#b00020" id="resetVotes" type="button">Reset Local Previews &amp; Registrations</button> <small id="roundInfo"></small></p>
-      <p>Publishing a reset clears browser-local preview votes and registration details for this election round. It cannot reset or change submissions to an official ballot service.</p>
+      <p><button class="btn ghost" style="color:#b00020;border-color:#b00020" id="resetVotes" type="button">Reset Ballot Selections &amp; Registrations</button> <small id="roundInfo"></small></p>
+      <p>Publishing a reset clears browser-saved ballot selections and registration details for this election round. It cannot reset or change submissions to an official ballot service.</p>
       <label for="votingUrl">Official external ballot link (HTTPS only; required before voting can start)</label>
       <input id="votingUrl" placeholder="https://forms.gle/...">
     </section>
@@ -88,7 +88,7 @@
       <input id="ballotTitle" placeholder="2026 General Election">
       <label for="ballotText">Ballot races, one per line: Title | office | area | how many to pick | Candidate, Candidate</label>
       <textarea class="code" id="ballotText" style="height:130px" placeholder="Senator - Springfield | senate | Springfield | 1 | Candidate A, Candidate B&#10;Representative - Springfield District 1 | representative | Springfield District 1 | 1 | Candidate C, Candidate D&#10;Mayor of River City | mayor | River City | 1 | Candidate E, Candidate F"></textarea>
-      <p>Use <b>senate</b> and <b>mayor</b> with a county name (for example, Springfield); use <b>representative</b> with a full district name (for example, Springfield District 1). Published races automatically populate the on-site local ballot preview and are grouped into one map per office; no separate ballot URL is needed for the preview. It is not an official vote, and the static site cannot verify registration or enforce ballot access.</p>
+      <p>Use <b>senate</b> and <b>mayor</b> with a county name (for example, Springfield); use <b>representative</b> with a full district name (for example, Springfield District 1). Published races automatically populate the on-site ballot and are grouped into one map per office; no separate ballot URL is needed. Ballot selections remain in each browser and are not official votes; the static site cannot verify registration or enforce ballot access.</p>
       <p id="ballotError" class="warn hidden" role="alert"></p>
       <label for="colorsText">Candidate colors, one per line: Name: #hexcolor</label>
       <textarea class="code" id="colorsText" style="height:80px" placeholder="Bowser: #d93025"></textarea>

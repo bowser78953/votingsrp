@@ -92,9 +92,9 @@
     save();
   });
   $("resetVotes").addEventListener("click", () => {
-    if (!confirm("Reset this election round? After you publish, each browser will clear its saved local preview votes and registration details. This does not reset an official ballot service.")) return;
+    if (!confirm("Reset this election round? After you publish, each browser will clear its saved ballot selections and registration details. This does not reset an official ballot service.")) return;
     data.voteRound = (data.voteRound || 0) + 1;
-    $("roundInfo").textContent = "Preview round: " + data.voteRound + " (publish to apply)";
+    $("roundInfo").textContent = "Election round: " + data.voteRound + " (publish to apply)";
     save();
   });
 
