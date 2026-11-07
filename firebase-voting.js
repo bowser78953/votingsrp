@@ -114,7 +114,7 @@
       return "This website domain is not authorized in Firebase Authentication. Add the deployed Render domain and your custom domain under Authentication > Settings > Authorized domains.";
     }
     if (error && error.code === "permission-denied") {
-      return "Firestore denied the request. Publish the provided Firestore Rules and create the required ballotConfig documents for this ballot.";
+      return "Firestore denied the request. Publish the provided Firestore Rules and check the ballotConfig/current document.";
     }
     if (error && error.code === "auth/operation-not-allowed") {
       return "Google sign-in is not enabled. Turn on the Google provider under Firebase Authentication > Sign-in method.";
@@ -261,20 +261,31 @@
         "Shared poll submission currently supports one selection per contest. Ask an administrator to configure every contest as pick 1.");
       return;
     }
+    const configSnapshot = await services.getDoc(services.doc(services.db, "ballotConfig", "current"));
+    if (!configSnapshot.exists()) {
+      showError("Ballot configuration is incomplete",
+        "The administrator must create ballotConfig/current in Firestore before voting can begin.");
+      return;
+    }
+    const contestConfigs = configSnapshot.data().contests;
+    if (!contestConfigs || typeof contestConfigs !== "object" || Array.isArray(contestConfigs)) {
+      showError("Ballot configuration is incomplete",
+        "The ballotConfig/current document must contain a contests map keyed by each contest's number.");
+      return;
+    }
     const configs = [];
     for (const race of races) {
       const raceId = String(race.ballotIndex);
-      const snapshot = await services.getDoc(services.doc(services.db, "ballotConfig", raceId));
-      if (!snapshot.exists()) {
+      const config = contestConfigs[raceId];
+      if (!config) {
         showError("Ballot configuration is incomplete",
-          "The administrator must create ballotConfig/" + raceId + " in Firestore before voting can begin.");
+          "Add contest " + raceId + " to the contests map in ballotConfig/current before voting can begin.");
         return;
       }
-      const config = snapshot.data();
       if (config.office !== officeOf(race) || config.areaKey !== areaKeyOf(race) ||
           Number(config.pick) !== 1 || JSON.stringify(config.candidates) !== JSON.stringify(race.candidates)) {
         showError("Ballot configuration does not match",
-          "The Firestore ballotConfig/" + raceId + " document does not match the published ballot. Ask an administrator to update it.");
+          "Contest " + raceId + " in ballotConfig/current does not match the published ballot. Ask an administrator to update it.");
         return;
       }
       configs.push(config);
@@ -417,25 +428,36 @@
         error.hidden = true;
         try {
           await services.runTransaction(services.db, async transaction => {
+            const configRef = services.doc(services.db, "ballotConfig", "current");
+            const configSnapshot = await transaction.get(configRef);
+            if (!configSnapshot.exists()) {
+              throw new Error("The shared ballot configuration is missing. Ask an administrator to create ballotConfig/current.");
+            }
+            const contestConfigs = configSnapshot.data().contests;
+            if (!contestConfigs || typeof contestConfigs !== "object" || Array.isArray(contestConfigs)) {
+              throw new Error("The shared ballot configuration is invalid. Ask an administrator to check ballotConfig/current.");
+            }
             const pending = [];
             for (const selection of selections) {
               const raceId = String(selection.race.ballotIndex);
               const voteRef = services.doc(services.db, "elections", roundId, "votes", user.uid, "contests", raceId);
               const resultRef = services.doc(services.db, "elections", roundId, "results", raceId);
-              const configRef = services.doc(services.db, "ballotConfig", raceId);
               const voteSnapshot = await transaction.get(voteRef);
               const resultSnapshot = await transaction.get(resultRef);
-              const configSnapshot = await transaction.get(configRef);
-              pending.push({ selection, voteRef, resultRef, voteSnapshot, resultSnapshot, configSnapshot });
+              pending.push({ selection, voteRef, resultRef, voteSnapshot, resultSnapshot });
             }
             if (pending.some(item => item.voteSnapshot.exists())) {
               throw new Error("Your Google account already has a ballot recorded for this election round.");
             }
             for (const item of pending) {
-              const { selection, resultSnapshot, configSnapshot } = item;
-              if (!configSnapshot.exists() ||
-                  JSON.stringify(configSnapshot.data().candidates) !== JSON.stringify(selection.config.candidates)) {
-                throw new Error("The published ballot changed while you were voting. Reload the page and review it again.");
+              const { selection, resultSnapshot } = item;
+              const currentConfig = contestConfigs[String(selection.race.ballotIndex)];
+              if (!currentConfig ||
+                  currentConfig.office !== selection.config.office ||
+                  currentConfig.areaKey !== selection.config.areaKey ||
+                  Number(currentConfig.pick) !== Number(selection.config.pick) ||
+                  JSON.stringify(currentConfig.candidates) !== JSON.stringify(selection.config.candidates)) {
+                throw new Error("The published ballot configuration changed while you were voting. Reload the page and review it again.");
               }
               const candidate = selection.candidate;
               const counts = resultSnapshot.exists() ? resultSnapshot.data().counts : {};

@@ -14,8 +14,8 @@ service cloud.firestore {
       return /databases/$(database)/documents/elections/$(roundId)/profiles/$(uid);
     }
 
-    function configPath(raceId) {
-      return /databases/$(database)/documents/ballotConfig/$(raceId);
+    function configPath() {
+      return /databases/$(database)/documents/ballotConfig/current;
     }
 
     function resultPath(roundId, raceId) {
@@ -54,7 +54,9 @@ service cloud.firestore {
 
     function validVote(roundId, uid, raceId) {
       let data = request.resource.data;
-      let ballotPath = configPath(raceId);
+      let ballotPath = configPath();
+      let ballot = get(ballotPath).data;
+      let contest = ballot.contests.get(raceId, {});
       return request.resource.data.keys().hasOnly([
           "uid", "raceId", "candidate", "areaKey", "submittedAt"
         ]) &&
@@ -67,13 +69,14 @@ service cloud.firestore {
         data.areaKey is string &&
         data.submittedAt == request.time &&
         exists(ballotPath) &&
-        get(ballotPath).data.office in ["senate", "representative", "mayor"] &&
-        get(ballotPath).data.pick == 1 &&
-        get(ballotPath).data.areaKey == data.areaKey &&
-        get(ballotPath).data.candidates is list &&
-        get(ballotPath).data.candidates.hasAny([data.candidate]) &&
+        ballot.contests is map &&
+        contest.office in ["senate", "representative", "mayor"] &&
+        contest.pick == 1 &&
+        contest.areaKey == data.areaKey &&
+        contest.candidates is list &&
+        contest.candidates.hasAny([data.candidate]) &&
         validProfile(roundId, uid) &&
-        profileMatchesArea(roundId, uid, get(ballotPath).data.office, data.areaKey) &&
+        profileMatchesArea(roundId, uid, contest.office, data.areaKey) &&
         resultMatchesVote(roundId, raceId, data.candidate, data.areaKey);
     }
 
@@ -98,7 +101,7 @@ service cloud.firestore {
         getAfter(path).data.submittedAt == request.time;
     }
 
-    match /ballotConfig/{raceId} {
+    match /ballotConfig/{configId} {
       allow read: if true;
       allow write: if false;
     }
