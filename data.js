@@ -307,7 +307,7 @@ window.SRP_DATA = {
       "map": "county"
     }
   ],
-  "ballotTitle": "",
+  "ballotTitle": "2026 Congressional Elections",
   "electionOpens": "2026-11-6 01:05",
   "colors": {
     "805_North": "#C04000",
