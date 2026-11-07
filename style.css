@@ -25,18 +25,34 @@ table.admins td, table.admins th { text-align:left; padding:8px; border-bottom:1
 .campaign-admin-row { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:10px 0; border-bottom:1px solid #dce5f2; }
 .campaign-admin-row strong { margin-right:auto; }
 @media (max-width:500px) { .campaign-card { flex-direction:column; } .campaign-photo { width:80px; height:80px; } }
-.chamber-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
-.chamber { min-width:0; padding:22px; background:#f7f9fc; border:1px solid #dce5f2; border-radius:14px; text-align:center; }
-.chamber h3 { margin:0; }
-.chamber-seats { position:relative; width:100%; max-width:360px; aspect-ratio:2 / 1; margin:18px auto 0; }
-.chamber-seat { position:absolute; width:clamp(18px, 5vw, 29px); aspect-ratio:1; transform:translate(-50%,-50%); border:2px solid #fff; border-radius:50%; cursor:pointer; box-shadow:0 0 0 1px #b4c3d2; }
-.chamber-seat.occupied { background:#315d93; }
-.chamber-seat.unfilled { background:#c7cdd5; }
-.chamber-seat:hover,.chamber-seat:focus-visible { transform:translate(-50%,-50%) scale(1.2); }
-.chamber-count { margin:0; color:var(--navy); font-size:1.15rem; font-weight:700; }
-.chamber-details { min-height:2.8em; margin:10px 0; color:#536984; overflow-wrap:anywhere; }
-.chamber-note { color:#647286; font-size:.9rem; margin-bottom:0; }
-@media (max-width:700px) { .chamber-grid { grid-template-columns:1fr; } }
+.home-chambers { grid-column:1 / -1; }
+.chambers-intro { max-width:620px; color:#607083; }
+.chamber-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; margin-top:24px; }
+.chamber { min-width:0; padding:24px; background:#f8fafc; border:1px solid #dce5ed; border-radius:14px; }
+.chamber-heading { display:flex; align-items:start; justify-content:space-between; gap:12px; }
+.chamber h3 { margin:0; font-size:1.2rem; }
+.chamber-kicker { margin:0 0 6px; color:#8a7041; font-size:.65rem; font-weight:800; letter-spacing:.13em; }
+.chamber-badge { flex:none; padding:6px 9px; border-radius:6px; background:#e9eff5; color:#4d6279; font-size:.65rem; font-weight:800; letter-spacing:.06em; }
+.chamber-visual { position:relative; max-width:340px; margin:22px auto 0; }
+.chamber-seats { position:relative; width:100%; aspect-ratio:2 / 1; }
+.chamber-seat { position:absolute; width:clamp(16px, 3vw, 24px); aspect-ratio:1; padding:0; transform:translate(-50%,-50%); border:2px solid #fff; border-radius:50%; cursor:pointer; box-shadow:0 0 0 1px #b6c4d2; transition:transform .15s,box-shadow .15s; }
+.chamber-seat.occupied,.chamber-legend .occupied { background:#315d93; }
+.chamber-seat.unfilled,.chamber-legend .unfilled { background:#c7d0d9; }
+.chamber-seat:hover,.chamber-seat:focus-visible,.chamber-seat.selected { z-index:1; transform:translate(-50%,-50%) scale(1.16); box-shadow:0 0 0 3px #d4ae63; }
+.chamber-count { position:absolute; bottom:0; left:50%; transform:translateX(-50%); display:grid; text-align:center; color:var(--navy); pointer-events:none; line-height:1; }
+.chamber-count strong { font:700 2rem Georgia,serif; }
+.chamber-count span { margin-top:4px; color:#718197; font-size:.6rem; font-weight:800; letter-spacing:.12em; }
+.chamber-legend { display:flex; justify-content:center; flex-wrap:wrap; gap:8px 18px; margin:18px 0; color:#68788a; font-size:.74rem; }
+.chamber-legend span { display:flex; align-items:center; gap:6px; }
+.chamber-legend i { width:9px; height:9px; border-radius:50%; }
+.chamber-details { display:flex; flex-direction:column; justify-content:center; min-height:68px; padding:12px 15px; background:#fff; border:1px solid #e0e8ef; border-radius:9px; overflow-wrap:anywhere; }
+.chamber-details span { margin-bottom:4px; color:#748497; font-size:.64rem; font-weight:800; letter-spacing:.1em; }
+.chamber-details strong { color:var(--navy); font-size:.92rem; }
+.chamber-link { display:flex; justify-content:space-between; align-items:center; margin-top:16px; color:#315d93; font-size:.85rem; font-weight:750; text-decoration:none; }
+.chamber-link:hover { text-decoration:underline; }
+.chamber-note { color:#718093; font-size:.82rem; margin:18px 0 0; }
+@media (max-width:800px) { .chamber-grid { grid-template-columns:1fr; } }
+@media (max-width:400px) { .chamber { padding:18px; } .chamber-seat { width:19px; } }
 .map-instructions { text-align:center; color:#536984; }
 #map .dist:focus { outline:none; }
 #map .dist:focus-visible { outline:none; }

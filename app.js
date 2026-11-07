@@ -125,10 +125,10 @@ const usesCountyMap = (race, index = 0) => /^(county|counties|districts|big|2|tw
       const holder = (separator >= 0 ? text.slice(separator + 1) : text).trim();
       return { area, holder: /^(enrol+ment in progress|election in progress|vacant|n\/a)$/i.test(holder) ? "" : holder };
     }).filter(entry => entry.area || entry.holder);
-    const rows = seatCount === 14 ? [7, 7] : [8, 8];
+    const rows = seatCount === 14 ? [8, 6] : [9, 7];
     let index = 0;
     rows.forEach((count, row) => {
-      const radius = row === 0 ? 44 : 29;
+      const radius = row === 0 ? 44 : 27;
       for (let position = 0; position < count; position++, index++) {
         const member = entries[index];
         const description = member
@@ -141,7 +141,14 @@ const usesCountyMap = (race, index = 0) => /^(county|counties|districts|big|2|tw
         seat.style.left = (50 + radius * Math.cos(angle)) + "%";
         seat.style.top = (91 - radius * 1.65 * Math.sin(angle)) + "%";
         seat.setAttribute("aria-label", description);
-        const show = () => { details.textContent = description; };
+        const show = () => {
+          root.querySelectorAll(".chamber-seat").forEach(item => item.classList.toggle("selected", item === seat));
+          const label = document.createElement("span");
+          label.textContent = member && member.area ? member.area.toUpperCase() : "SEAT DETAILS";
+          const name = document.createElement("strong");
+          name.textContent = member && member.holder ? member.holder : "Election in progress";
+          details.replaceChildren(label, name);
+        };
         seat.addEventListener("mouseenter", show);
         seat.addEventListener("focus", show);
         seat.addEventListener("click", show);
