@@ -141,7 +141,7 @@ window.SRP_DATA = {
       "area": "Springfield District 2",
       "pick": 1,
       "candidates": [
-        "N/A",
+        "spiderx15310",
         "N/A"
       ],
       "map": "district"
@@ -174,8 +174,8 @@ window.SRP_DATA = {
       "area": "River City Housing District 2",
       "pick": 1,
       "candidates": [
-        "N/A",
-        "N/A"
+        "Godzilla_Iraq",
+        "eaglesfly409"
       ],
       "map": "district"
     },
@@ -240,7 +240,7 @@ window.SRP_DATA = {
       "area": "River City",
       "pick": 1,
       "candidates": [
-        "N/A",
+        "Deancena9",
         "N/A"
       ],
       "map": "county"
@@ -250,7 +250,11 @@ window.SRP_DATA = {
   "electionOpens": "2026-11-14 12:00",
   "colors": {
     "805_North": "#C04000",
-    "minimonkey20121": "#0ECC0A"
+    "minimonkey20121": "#0ECC0A",
+    "Godzilla_Iraq": "",
+    "spiderx15310": "",
+    "Deancena9": "#5539CC",
+    "eaglesfly409": ""
   },
   "electionSchedule": {
     "campaigningOpens": "2026-11-07 16:45",
