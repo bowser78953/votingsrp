@@ -21,6 +21,28 @@ const easternDate = value => {
 };
 const usesCountyMap = (race, index = 0) => /^(county|counties|districts|big|2|two)$/i.test(String(race.map || "")) ||
   (!race.map && (index === 1 || /senat|mayor/i.test(String(race.title || ""))));
+const resultAreaKey = race => {
+  const area = String(race.area || "").trim();
+  const district = area.match(/^(.+?)\s+District\s+(\d+)$/i);
+  if (district) return district[1] + "|" + Number(district[2]);
+  return area.replace(/\s+County$/i, "").trim();
+};
+const waitForFirebase = () => {
+  if (window.SRP_FIREBASE) return Promise.resolve(window.SRP_FIREBASE);
+  if (window.SRP_FIREBASE_ERROR) return Promise.reject(window.SRP_FIREBASE_ERROR);
+  if (window.SRP_FIREBASE_READY) return window.SRP_FIREBASE_READY;
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => reject(new Error("Firebase did not finish loading.")), 15000);
+    window.addEventListener("srp-firebase-ready", () => {
+      clearTimeout(timeout);
+      resolve(window.SRP_FIREBASE);
+    }, { once: true });
+    window.addEventListener("srp-firebase-error", () => {
+      clearTimeout(timeout);
+      reject(window.SRP_FIREBASE_ERROR || new Error("Firebase failed to load."));
+    }, { once: true });
+  });
+};
 
 // Bumping voteRound in data.js clears local registration and starts a separate shared-results round.
 (function voteReset() {
@@ -164,6 +186,67 @@ const usesCountyMap = (race, index = 0) => /^(county|counties|districts|big|2|tw
   };
   render("senateSeats", "senateSeatDetails", SITE.senators, 14);
   render("houseSeats", "houseSeatDetails", SITE.representatives, 16);
+})();
+
+(function homeProjections() {
+  const root = document.getElementById("projectionList");
+  if (!root) return;
+  const status = document.getElementById("projectionStatus");
+  const races = (SITE.ballot || []).map((race, index) => ({ ...race, ballotIndex: index }))
+    .filter(race => ["senate", "representative"].includes(String(race.office || "").toLowerCase()) &&
+      race.title && race.area && Array.isArray(race.candidates) && race.candidates.length);
+  if (SITE.showMap === false) {
+    status.textContent = "Projections are unavailable while the results map is hidden.";
+    return;
+  }
+  if (!races.length) {
+    status.textContent = "No Senate or House races are currently published.";
+    return;
+  }
+  const unavailable = message => {
+    root.replaceChildren();
+    status.textContent = message;
+  };
+  waitForFirebase().then(services => {
+    const ref = services.collection(services.db, "elections", String(SITE.voteRound || 1), "results");
+    services.onSnapshot(ref, { includeMetadataChanges: true }, snapshot => {
+      if (snapshot.metadata.fromCache) {
+        unavailable("Waiting for current shared results; cached results may be outdated.");
+        return;
+      }
+      const results = new Map();
+      snapshot.forEach(doc => results.set(doc.id, doc.data()));
+      root.replaceChildren();
+      status.textContent = "Based on the current vote leader in each race. Not a certified result.";
+      races.forEach(race => {
+        const result = results.get(String(race.ballotIndex));
+        const candidates = [...new Set(race.candidates)];
+        const counts = result && result.counts;
+        const valid = !result || (result.areaKey === resultAreaKey(race) && counts &&
+          typeof counts === "object" && !Array.isArray(counts) &&
+          Object.entries(counts).every(([name, count]) => candidates.includes(name) && Number.isSafeInteger(count) && count >= 0));
+        let summary;
+        if (!valid) summary = "Results don't match this race.";
+        else {
+          const totals = candidates.map(name => ({ name, count: result ? counts[name] || 0 : 0 }));
+          const highest = Math.max(...totals.map(item => item.count));
+          const leaders = totals.filter(item => item.count === highest);
+          if (!highest) summary = "No votes yet";
+          else if (leaders.length > 1) summary = "Tied — no projection";
+          else if (/^(n\/a|none|vacant)$/i.test(leaders[0].name.trim())) summary = "Placeholder leading — no projection";
+          else summary = leaders[0].name + " leading · " + highest + " vote" + (highest === 1 ? "" : "s");
+        }
+        const card = document.createElement("article");
+        card.className = "projection-card";
+        const title = document.createElement("strong");
+        title.textContent = race.title;
+        const value = document.createElement("span");
+        value.textContent = summary;
+        card.append(title, value);
+        root.appendChild(card);
+      });
+    }, error => unavailable("Shared results unavailable (" + (error.code || "Firebase error") + ")."));
+  }).catch(error => unavailable("Shared results unavailable (" + error.message + ")."));
 })();
 
 const pages = [
@@ -885,28 +968,6 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
   });
   document.getElementById("mprev").onclick = () => go(cur - 1);
   document.getElementById("mnext").onclick = () => go(cur + 1);
-  const waitForFirebase = () => {
-    if (window.SRP_FIREBASE) return Promise.resolve(window.SRP_FIREBASE);
-    if (window.SRP_FIREBASE_ERROR) return Promise.reject(window.SRP_FIREBASE_ERROR);
-    if (window.SRP_FIREBASE_READY) return window.SRP_FIREBASE_READY;
-    return new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => reject(new Error("Firebase did not finish loading.")), 15000);
-      window.addEventListener("srp-firebase-ready", () => {
-        clearTimeout(timeout);
-        resolve(window.SRP_FIREBASE);
-      }, { once: true });
-      window.addEventListener("srp-firebase-error", () => {
-        clearTimeout(timeout);
-        reject(window.SRP_FIREBASE_ERROR || new Error("Firebase failed to load."));
-      }, { once: true });
-    });
-  };
-  const resultAreaKey = race => {
-    const area = String(race.area || "").trim();
-    const district = area.match(/^(.+?)\s+District\s+(\d+)$/i);
-    if (district) return district[1] + "|" + Number(district[2]);
-    return area.replace(/\s+County$/i, "").trim();
-  };
   waitForFirebase().then(services => {
     const resultCollection = services.collection(
       services.db, "elections", String(SITE.voteRound || 1), "results"

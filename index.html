@@ -61,6 +61,14 @@
       </article>
     </div>
     <p class="chamber-note">The current member lists identify counties, not specific districts or numbered seats. Positions shown are illustrative.</p>
+    <div class="chamber-projections" aria-labelledby="projection-heading">
+      <p class="home-eyebrow">UNOFFICIAL LIVE POLL</p>
+      <h3 id="projection-heading">Tentative race projections</h3>
+      <p>These are simply the candidates currently leading the shared poll—not a statistical forecast or an official result. They can change as votes arrive.</p>
+      <p id="projectionStatus" class="projection-status" role="status">Connecting to shared results...</p>
+      <div id="projectionList" class="projection-list"></div>
+      <a class="chamber-link" href="live.html">Explore the live map <span aria-hidden="true">&rarr;</span></a>
+    </div>
   </section>
   <section class="home-grid" aria-label="Learn about SRP government">
     <article class="card reveal" id="senate">
@@ -89,6 +97,7 @@
 </main>
 <footer>&copy; Springfield Roleplay Government Voting</footer>
 <script src="data.js"></script>
+<script type="module" src="firebase-config.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

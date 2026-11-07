@@ -51,6 +51,14 @@ table.admins td, table.admins th { text-align:left; padding:8px; border-bottom:1
 .chamber-link { display:flex; justify-content:space-between; align-items:center; margin-top:16px; color:#315d93; font-size:.85rem; font-weight:750; text-decoration:none; }
 .chamber-link:hover { text-decoration:underline; }
 .chamber-note { color:#718093; font-size:.82rem; margin:18px 0 0; }
+.chamber-projections { margin-top:26px; padding-top:24px; border-top:1px solid #e0e8ef; }
+.chamber-projections h3 { margin:0 0 8px; }
+.chamber-projections > p:not(.home-eyebrow) { color:#607083; font-size:.9rem; }
+.projection-status { font-weight:700; }
+.projection-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr)); gap:10px; }
+.projection-card { display:flex; flex-direction:column; gap:5px; padding:13px 15px; border:1px solid #e0e8ef; border-radius:9px; background:#f8fafc; overflow-wrap:anywhere; }
+.projection-card strong { color:var(--navy); font-size:.86rem; }
+.projection-card span { color:#526a83; font-size:.85rem; }
 @media (max-width:800px) { .chamber-grid { grid-template-columns:1fr; } }
 @media (max-width:400px) { .chamber { padding:18px; } .chamber-seat { width:19px; } }
 .map-instructions { text-align:center; color:#536984; }
