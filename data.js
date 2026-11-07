@@ -1,7 +1,7 @@
 window.SRP_DATA = {
   "registerFormUrl": "",
   "liveStreamUrl": "",
-  "contactEmail": "bbowsersrp@gmail.com",
+  "contactEmail": "owner",
   "announcement": "Election Date TBD",
   "senators": [
     "Springfield: @walker103444",
@@ -39,7 +39,7 @@ window.SRP_DATA = {
   "votingOpen": true,
   "siteOff": false,
   "showMap": true,
-  "voteRound": 3,
+  "voteRound": 4,
   "votingUrl": "",
   "ballot": [
     {
