@@ -323,5 +323,6 @@ window.SRP_DATA = {
   },
   "candidateProfiles": [],
   "officialResultsUrl": "",
-  "campaigns": []
+  "campaigns": [],
+  "campaignOpen": true
 };
