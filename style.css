@@ -311,13 +311,13 @@ input,select,textarea{border-radius:3px!important}
 }
 html{scroll-padding-top:82px}
 body{background:radial-gradient(ellipse at 50% -300px,#e6edf2 0,transparent 70%),var(--bg);color:var(--ink);font-family:"Segoe UI",Arial,sans-serif}
-header{padding:14px clamp(18px,5vw,72px);gap:16px;background:linear-gradient(112deg,#12243a,#1e3858 72%,#274d70);border-bottom:3px solid var(--gold);box-shadow:0 6px 20px rgba(12,31,53,.16)}
-header img{width:50px;height:50px;padding:4px;border:1px solid rgba(255,255,255,.25);border-radius:14px;background:rgba(255,255,255,.08);filter:none}
+header{padding:11px 35px;gap:15px;background:#1e3858;border-bottom:0;box-shadow:0 2px 8px rgba(12,31,53,.16)}
+header img{width:50px;height:50px;padding:0;border:0;border-radius:0;background:none;filter:none}
 header h1{font-family:"Segoe UI",Arial,sans-serif;font-size:1.13rem;letter-spacing:.01em}
-header small{margin-bottom:3px;color:#e1c98e;font-size:.62rem;font-weight:700;letter-spacing:.17em}
-.adminlink{width:124px;height:42px;border:1px solid rgba(255,255,255,.28);border-radius:10px;background:rgba(255,255,255,.09);box-shadow:none}
-.adminlink span{padding:3px 10px;border:0;background:none;font-family:"Segoe UI",Arial,sans-serif;font-size:.77rem;letter-spacing:.16em}
-.adminlink:hover{transform:translateY(-1px);background:rgba(255,255,255,.16);box-shadow:0 5px 16px rgba(0,0,0,.15)}
+header small{margin-bottom:3px;color:#f0ca63;font-size:.62rem;font-weight:700;letter-spacing:.17em}
+.adminlink{width:124px;height:42px;border:1px solid rgba(255,255,255,.35);border-radius:10px;background:linear-gradient(rgba(18,36,58,.68),rgba(18,36,58,.68)),url("whitehouse.jpg") center 40%/cover;box-shadow:none}
+.adminlink span{padding:3px 10px;border:0;background:none;color:#fff;font-family:"Segoe UI",Arial,sans-serif;font-size:.77rem;letter-spacing:.16em;text-shadow:0 1px 3px #000}
+.adminlink:hover{transform:translateY(-1px);background:linear-gradient(rgba(18,36,58,.48),rgba(18,36,58,.48)),url("whitehouse.jpg") center 40%/cover;box-shadow:0 5px 16px rgba(0,0,0,.15)}
 .announce{padding:9px 16px;background:#f1e7ce;color:#604a22;border-bottom:1px solid #e4d6b5;font-size:.93rem}
 nav{position:sticky;top:0;justify-content:center;gap:6px;padding:7px 16px;background:rgba(22,42,66,.96);border-bottom:1px solid rgba(255,255,255,.12);box-shadow:0 7px 20px rgba(13,30,49,.13);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 nav a{padding:11px 15px;border:0;border-radius:9px;color:#d9e3ed;font-size:.88rem;transition:background .18s,color .18s}
@@ -425,7 +425,7 @@ footer{margin-top:auto;padding:25px 20px;border-top:3px solid var(--gold);backgr
 ::selection{background:#ead8ad;color:#1b2b40}
 :focus-visible{outline:3px solid #d5b66e;outline-offset:3px}
 @media(max-width:700px){
-  header{padding:11px 16px}
+  header{padding:10px 16px;gap:10px}
   header img{width:44px;height:44px}
   header h1{font-size:1rem}
   .adminlink{width:82px;height:36px}
@@ -476,6 +476,7 @@ footer{margin-top:auto;padding:25px 20px;border-top:3px solid var(--gold);backgr
 .home-grid>.card p:not(.home-eyebrow){min-height:3.5em}
 .home-grid .more{margin-top:8px}
 #ballotText{min-height:125px}
+#registrationCard{align-self:start}
 @media(max-width:700px){
   .home-election{padding:22px 20px}
   .home-grid{grid-template-columns:1fr;gap:14px}
