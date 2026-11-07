@@ -35,11 +35,11 @@ window.SRP_DATA = {
       "hash": "081b9096cd1a0c6f176319f326a147eba47710410e12cf1dab4bd7f93188901a"
     }
   ],
-  "registrationOpen": false,
-  "votingOpen": false,
+  "registrationOpen": true,
+  "votingOpen": true,
   "siteOff": false,
   "showMap": true,
-  "voteRound": 7,
+  "voteRound": 8,
   "votingUrl": "",
   "ballot": [
     {
