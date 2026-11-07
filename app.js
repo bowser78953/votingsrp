@@ -22,7 +22,7 @@ const easternDate = value => {
 const usesCountyMap = (race, index = 0) => /^(county|counties|districts|big|2|two)$/i.test(String(race.map || "")) ||
   (!race.map && (index === 1 || /senat|mayor/i.test(String(race.title || ""))));
 
-// Bumping voteRound in data.js clears every visitor's saved vote and tally the next time they visit.
+// Bumping voteRound in data.js clears each browser's registration and local preview for the new round.
 (function voteReset() {
   const r = String(SITE.voteRound || 0);
   const stored = localStorage.getItem("srp_round") || "0";
@@ -30,6 +30,8 @@ const usesCountyMap = (race, index = 0) => /^(county|counties|districts|big|2|tw
     localStorage.removeItem("srp_voted");
     localStorage.removeItem("srp_tally");
     localStorage.removeItem("srp_tally2");
+    localStorage.removeItem("srp_reg");
+    localStorage.removeItem("srp_reg_approved");
   }
   localStorage.setItem("srp_round", r);
 })();
@@ -77,10 +79,10 @@ const usesCountyMap = (race, index = 0) => /^(county|counties|districts|big|2|tw
   const ballot = (SITE.ballot || []).filter(race => race && race.title && Array.isArray(race.candidates) && race.candidates.length);
 
   if (SITE.votingOpen) {
-    state.textContent = httpsUrl(SITE.votingUrl) ? "VOTING OPEN" : "BALLOT NOT LINKED";
-    message.textContent = httpsUrl(SITE.votingUrl)
-      ? "Voting is marked open. Follow the official ballot link and election instructions."
-      : "Voting is marked open, but an official ballot link has not been published. Check Election Information for updates.";
+    state.textContent = ballot.length ? "LOCAL PREVIEW OPEN" : "NO CONTESTS PUBLISHED";
+    message.textContent = ballot.length
+      ? "A local preview is available from the published races. Preview selections stay in your browser and are not official votes."
+      : "The local ballot preview is open, but no contests have been published yet.";
   } else if (SITE.registrationOpen) {
     state.textContent = "REGISTRATION OPEN";
     message.textContent = "Voter registration is currently marked open. Eligibility must still be confirmed by election officials.";
@@ -146,13 +148,13 @@ const pages = [
   const campaignActive = SITE.campaignOpen === true && campaignStart && campaignEnd &&
     campaignStart <= new Date() && new Date() <= campaignEnd;
   const contactEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(SITE.contactEmail || ""));
-  const registrationAvailable = !!httpsUrl(SITE.registerFormUrl) || contactEmail;
-  const votingAvailable = !!httpsUrl(SITE.votingUrl);
+  const registrationAvailable = true;
+  const votingAvailable = (SITE.ballot || []).some(race => race && race.title && Array.isArray(race.candidates) && race.candidates.length);
   const phases = [
     { title: "Voter registration", active: SITE.registrationOpen === true, available: registrationAvailable, start: schedule.registrationOpens, end: schedule.registrationCloses },
     { title: "Candidate registration", active: SITE.registrationOpen === true, available: contactEmail, start: schedule.registrationOpens, end: schedule.registrationCloses },
     { title: "Candidate campaigning", active: !!campaignActive, available: true, start: schedule.campaigningOpens, end: schedule.campaigningCloses },
-    { title: "Voting", active: SITE.votingOpen === true, available: votingAvailable, start: schedule.votingOpens, end: schedule.votingCloses }
+    { title: "Local ballot preview", active: SITE.votingOpen === true, available: votingAvailable, start: schedule.votingOpens, end: schedule.votingCloses }
   ];
   phases.forEach(phase => {
     const row = document.createElement("div");
@@ -337,31 +339,156 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
 
 (function status() {
   const box = document.getElementById("votebox");
-  if (box && !POLICY_OK) {
+  if (!box) return;
+  const heading = document.createElement("h2");
+  const message = document.createElement("p");
+  const notice = document.createElement("p");
+  notice.className = "notice";
+  notice.textContent = "Local preview only: this browser-only ballot is not submitted to election officials, is not a real vote, and can be changed or bypassed. Use the official election process for your vote.";
+  box.classList.add("ballot-card");
+  if (!POLICY_OK) {
     box.className = "card closed";
     box.innerHTML = POLICY_MSG;
-  } else if (box) {
-    const ballotUrl = httpsUrl(SITE.votingUrl);
-    if (SITE.votingOpen && ballotUrl) {
-      box.className = "card";
-      const heading = document.createElement("h2");
-      heading.textContent = "Voting is OPEN";
-      const message = document.createElement("p");
-      message.textContent = "Use the official ballot. This site does not store or email your vote.";
-      const link = document.createElement("a");
-      link.className = "btn blue";
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.href = ballotUrl;
-      link.textContent = "Open Official Ballot";
-      box.replaceChildren(heading, message, link);
-    } else if (SITE.votingOpen) {
-      box.className = "card closed";
-      box.innerHTML = '<h2>Official ballot not available</h2><p>Voting is marked open, but election administration has not published a secure official ballot link. No vote can be submitted on this static website.</p><a class="more" href="election-info.html">Check election announcements</a>';
-    } else {
-      box.className = "card closed";
-      box.innerHTML = "<h2>Voting is currently CLOSED</h2><p>Check back on election day. Make sure you are registered first.</p>";
+    return;
+  }
+  if (!SITE.votingOpen) {
+    box.className = "card closed";
+    heading.textContent = "Voting is currently CLOSED";
+    message.textContent = "Check back on election day. Make sure your registration is confirmed first.";
+    box.replaceChildren(heading, message);
+    return;
+  }
+  let registration;
+  try {
+    registration = JSON.parse(localStorage.getItem("srp_reg") || "null");
+  } catch (error) {
+    throw new Error("Could not read the local registration preview.", { cause: error });
+  }
+  if (!registration || !registration.county || !registration.district) {
+    box.className = "card closed";
+    heading.textContent = "Register before opening the local preview";
+    message.textContent = "Complete the registration form, then return here to preview the contests for your selected area.";
+    const link = document.createElement("a");
+    link.className = "btn blue";
+    link.href = "register.html";
+    link.textContent = "Register Now";
+    box.replaceChildren(heading, message, notice, link);
+    return;
+  }
+  renderBallot();
+
+  function renderBallot() {
+    const races = (SITE.ballot || []).map((race, ballotIndex) => ({ ...race, ballotIndex }))
+      .filter(race => {
+        if (!race || !Array.isArray(race.candidates) || !race.candidates.length) return false;
+        const office = String(race.office || (/senat/i.test(race.title) ? "senate" :
+          /representative|congress|house/i.test(race.title) ? "representative" : /mayor/i.test(race.title) ? "mayor" : "")).toLowerCase();
+        const area = String(race.area || "");
+        if (office === "representative") {
+          const match = area.match(/^(.+?)\s+District\s+(\d+)$/i);
+          return match && match[1].toLowerCase() === registration.county.toLowerCase() &&
+            Number(match[2]) === Number(registration.district);
+        }
+        if (office === "senate" || office === "mayor") {
+          const county = area.replace(/\s+County$/i, "").trim();
+          return county && county.toLowerCase() === registration.county.toLowerCase();
+        }
+        return false;
+      });
+    box.className = "card ballot-card";
+    if (localStorage.getItem("srp_voted")) {
+      heading.textContent = "Local preview already recorded";
+      message.textContent = "A preview selection has already been saved in this browser for this election round.";
+      box.replaceChildren(heading, message, notice);
+      return;
     }
+    heading.textContent = SITE.ballotTitle || "Local Ballot Preview";
+    heading.className = "ballot-title";
+    const ballotHeader = document.createElement("div");
+    ballotHeader.className = "ballot-header";
+    const eyebrow = document.createElement("p");
+    eyebrow.className = "form-eyebrow";
+    eyebrow.textContent = "LOCAL BALLOT PREVIEW";
+    const subtitle = document.createElement("p");
+    subtitle.className = "ballot-subtitle";
+    subtitle.textContent = "Select candidates for the contests in your registered area.";
+    ballotHeader.append(eyebrow, heading, subtitle);
+    const form = document.createElement("form");
+    form.id = "localBallotForm";
+    const voter = document.createElement("p");
+    voter.className = "voter";
+    voter.textContent = "Preview for " + registration.county + " County, District " + registration.district;
+    const rules = document.createElement("p");
+    rules.className = "rules";
+    rules.textContent = "Choose the required number of candidates in each contest. Selections stay in this browser only.";
+    form.append(voter, rules);
+    races.forEach(race => {
+      const fieldset = document.createElement("fieldset");
+      fieldset.className = "pos";
+      const legend = document.createElement("legend");
+      const pick = Number.isInteger(Number(race.pick)) && Number(race.pick) > 0 ? Number(race.pick) : 1;
+      legend.textContent = race.title + " (choose " + pick + ")";
+      fieldset.appendChild(legend);
+      race.candidates.forEach(candidate => {
+        const label = document.createElement("label");
+        label.className = "opt";
+        const input = document.createElement("input");
+        input.type = pick === 1 ? "radio" : "checkbox";
+        input.name = "race-" + race.ballotIndex;
+        input.value = candidate;
+        const color = (SITE.colors || {})[candidate];
+        if (color) input.style.accentColor = color;
+        const text = document.createElement("span");
+        text.textContent = candidate;
+        label.append(input, text);
+        fieldset.appendChild(label);
+      });
+      form.appendChild(fieldset);
+    });
+    if (!races.length) {
+      const empty = document.createElement("p");
+      empty.className = "notice";
+      empty.textContent = "No contests are published for your county and district.";
+      form.appendChild(empty);
+    } else {
+      const submit = document.createElement("button");
+      submit.className = "btn blue";
+      submit.type = "submit";
+      submit.textContent = "Save Local Preview";
+      form.appendChild(submit);
+      form.addEventListener("submit", event => {
+        event.preventDefault();
+        const selections = races.map(race => {
+          const pick = Number.isInteger(Number(race.pick)) && Number(race.pick) > 0 ? Number(race.pick) : 1;
+          return {
+            race,
+            pick,
+            candidates: [...form.querySelectorAll('input[name="race-' + race.ballotIndex + '"]:checked')].map(input => input.value)
+          };
+        });
+        const invalid = selections.find(selection => selection.candidates.length !== selection.pick);
+        if (invalid) {
+          alert("Choose exactly " + invalid.pick + " candidate" + (invalid.pick === 1 ? "" : "s") + " for " + invalid.race.title + ".");
+          return;
+        }
+        const tally = JSON.parse(localStorage.getItem("srp_tally2") || "{}");
+        const areaKey = registration.county + "|" + registration.district;
+        selections.forEach(({ race, candidates }) => {
+          tally[race.ballotIndex] = tally[race.ballotIndex] || {};
+          tally[race.ballotIndex][areaKey] = tally[race.ballotIndex][areaKey] || {};
+          candidates.forEach(candidate => {
+            const areaTally = tally[race.ballotIndex][areaKey];
+            areaTally[candidate] = (areaTally[candidate] || 0) + 1;
+          });
+        });
+        localStorage.setItem("srp_tally2", JSON.stringify(tally));
+        localStorage.setItem("srp_voted", JSON.stringify({ at: Date.now(), areaKey }));
+        heading.textContent = "Local preview saved";
+        message.textContent = "Your selections are saved only in this browser. They were not submitted to election officials and do not count as a vote.";
+        box.replaceChildren(heading, message, notice);
+      });
+    }
+    box.replaceChildren(ballotHeader, form, notice);
   }
 })();
 
@@ -570,11 +697,14 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
     f.parentElement.innerHTML = POLICY_MSG;
     return;
   }
-  if (!SITE.registrationOpen) {
-    f.parentElement.innerHTML = '<div class="closed"><h2>Registration is currently CLOSED</h2><p>Check back soon. Registration will open before the next election.</p></div>';
-    return;
-  }
   const county = f.elements.county, district = f.elements.district, summary = document.getElementById("regsummary");
+  const submit = f.querySelector('[type="submit"]');
+  const ok = document.getElementById("ok");
+  const lockRegistration = () => {
+    f.querySelectorAll("input, select, textarea").forEach(field => { field.disabled = true; });
+    submit.disabled = true;
+    submit.textContent = "Registration Submitted";
+  };
   Object.keys(COUNTIES).forEach(c => county.add(new Option(c, c)));
   const update = () => {
     district.length = 0;
@@ -588,38 +718,51 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
   f.addEventListener("reset", () => setTimeout(update));
   district.addEventListener("change", () => {
     if (!district.value) { summary.style.display = "none"; return; }
-    summary.textContent = "You will be registered in " + county.value + " County, District " + district.value + ".";
+    summary.textContent = "Selected area: " + county.value + " County, District " + district.value + ".";
     summary.style.display = "block";
   });
-  const registrationUrl = httpsUrl(SITE.registerFormUrl);
-  if (registrationUrl) {
-    const message = document.createElement("p");
-    message.textContent = "Complete the official registration form. Your eligibility is not confirmed until election officials review it.";
-    const link = document.createElement("a");
-    link.className = "btn blue";
-    link.href = registrationUrl;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.textContent = "Open Official Registration Form";
-    f.replaceWith(message, link);
+  let savedRegistration;
+  try {
+    savedRegistration = JSON.parse(localStorage.getItem("srp_reg") || "null");
+  } catch (error) {
+    throw new Error("Could not read the saved local registration.", { cause: error });
+  }
+  if (!SITE.registrationOpen && !savedRegistration) {
+    f.parentElement.innerHTML = '<div class="closed"><h2>Registration is currently CLOSED</h2><p>Check back before the next election round.</p></div>';
     return;
   }
-  const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(SITE.contactEmail || "")) ? SITE.contactEmail : "";
-  if (!email) {
-    f.replaceWith(Object.assign(document.createElement("p"), {
-      className: "notice",
-      textContent: "No official registration method is configured. Contact election administration through its designated official channel."
-    }));
-    return;
+  if (savedRegistration) {
+    f.elements.name.value = savedRegistration.name || "";
+    f.elements.discord.value = savedRegistration.discord || "";
+    f.elements.notes.value = savedRegistration.notes || "";
+    if (COUNTIES[savedRegistration.county] && Number(savedRegistration.district) >= 1 &&
+        Number(savedRegistration.district) <= COUNTIES[savedRegistration.county]) {
+      county.value = savedRegistration.county;
+      update();
+      district.value = String(savedRegistration.district);
+      summary.textContent = "Registered area: " + county.value + " County, District " + district.value + ". Submitted registrations cannot be changed this round.";
+      summary.style.display = "block";
+    }
+    lockRegistration();
+    ok.textContent = "Registration submitted. Your details are read-only for this election round.";
+    ok.style.display = "block";
   }
   f.addEventListener("submit", e => {
     e.preventDefault();
     const d = new FormData(f);
-    const body = "Username: " + d.get("name") + "\nDiscord: " + d.get("discord") + "\nCounty: " + d.get("county") + "\nDistrict: " + d.get("district") + "\nNotes: " + d.get("notes");
-    const ok = document.getElementById("ok");
-    location.href = "mailto:" + email + "?subject=" + encodeURIComponent("SRP Voter Registration Request") + "&body=" + encodeURIComponent(body);
-    ok.textContent = "If your email app opens, send the draft to submit your request. This website does not save it; wait for election officials to confirm your eligibility.";
-    f.reset();
+    const registration = {
+      name: String(d.get("name") || "").trim(),
+      discord: String(d.get("discord") || "").trim(),
+      county: String(d.get("county") || ""),
+      district: String(d.get("district") || ""),
+      notes: String(d.get("notes") || "").trim()
+    };
+    localStorage.setItem("srp_reg", JSON.stringify(registration));
+    localStorage.removeItem("srp_reg_approved");
+    lockRegistration();
+    summary.textContent = "Registered area: " + registration.county + " County, District " + registration.district + ". Submitted registrations cannot be changed this round.";
+    summary.style.display = "block";
+    ok.textContent = "Registration complete and saved in this browser. Your details are read-only for this election round.";
     ok.style.display = "block";
   });
 })();

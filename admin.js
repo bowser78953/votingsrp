@@ -92,7 +92,7 @@
     save();
   });
   $("resetVotes").addEventListener("click", () => {
-    if (!confirm("Clear browser-local map previews when these settings are published? This does not reset or change votes on an official ballot service.")) return;
+    if (!confirm("Reset this election round? After you publish, each browser will clear its saved local preview votes and registration details. This does not reset an official ballot service.")) return;
     data.voteRound = (data.voteRound || 0) + 1;
     $("roundInfo").textContent = "Preview round: " + data.voteRound + " (publish to apply)";
     save();

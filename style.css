@@ -476,8 +476,54 @@ footer{margin-top:auto;padding:25px 20px;border-top:3px solid var(--gold);backgr
 .home-grid>.card p:not(.home-eyebrow){min-height:3.5em}
 .home-grid .more{margin-top:8px}
 #ballotText{min-height:125px}
-#registrationCard{align-self:start}
+#registrationCard{align-self:start;max-width:900px;width:100%;margin-inline:auto;padding:32px 38px}
+#registrationCard>h2{margin-bottom:8px;font-size:1.75rem}
+.form-eyebrow{margin:0 0 7px!important;color:#8a6e34!important;font-size:.7rem!important;font-weight:800;letter-spacing:.15em;line-height:1.4!important}
+.registration-intro{color:#566579}
+.registration-note{margin:18px 0 22px;background:#f8f5ed;border-color:#e7dcc1}
+.registration-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 18px}
+.registration-form .form-field{min-width:0}
+.registration-form .form-field-wide,#regsummary{grid-column:1/-1}
+.registration-form .form-field label{display:flex;align-items:center;justify-content:space-between;margin:10px 0 7px;font-size:.92rem}
+.registration-form .optional-label{color:#758294;font-size:.78rem;font-weight:500}
+.registration-form input,.registration-form select,.registration-form textarea{min-height:48px}
+.registration-form textarea{resize:vertical}
+.registration-form :disabled{background:#f1f3f5;color:#596675;opacity:1;cursor:not-allowed}
+.registration-form button:disabled{opacity:.6}
+.form-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:12px}
+.form-actions .btn{margin:0}
+.form-actions>span{color:#758294;font-size:.85rem}
+#regsummary{margin:8px 0 0}
+#ok{margin-top:18px}
+.ballot-card{width:100%;max-width:850px;margin-inline:auto;padding:32px 38px}
+.ballot-header{padding-bottom:20px;border-bottom:1px solid #e3e8ec}
+.ballot-title,.ballot-card>h2{margin:0;color:var(--navy);font-size:clamp(1.5rem,3vw,2rem)}
+.ballot-subtitle{margin:8px 0 0!important;color:#647286}
+#localBallotForm{padding-top:18px}
+#localBallotForm .voter{margin:0 0 14px;padding:12px 15px;border:1px solid #dfe6ec;border-radius:10px;background:#f5f7f9;color:#33465b;font-weight:650}
+#localBallotForm .rules{margin-bottom:20px;color:#627187;font-size:.94rem}
+#localBallotForm fieldset.pos{margin:0 0 22px;padding:0;border:0}
+#localBallotForm legend{float:none;width:auto;padding:0 0 10px;color:var(--navy);font-size:1.08rem;font-weight:750}
+#localBallotForm .opt{min-height:54px;margin:8px 0;padding:13px 15px;border:1px solid #dce3e9;border-radius:10px;background:#fff;transition:border-color .15s,background .15s,box-shadow .15s}
+#localBallotForm .opt:hover{border-color:#9bb2c9;background:#f8fafc}
+#localBallotForm .opt:has(input:checked){border-color:var(--blue);background:#eff5fa;box-shadow:0 0 0 2px rgba(49,93,138,.12)}
+#localBallotForm .opt span{font-weight:650}
+#localBallotForm>button{min-width:210px}
+.ballot-card>.notice{margin:20px 0 0;background:#f8f5ed;border-color:#e7dcc1;color:#59677a;font-size:.9rem}
+.approval-confirmation{display:flex;align-items:flex-start;gap:10px;margin:18px 0;font-weight:600;line-height:1.5}
+.approval-confirmation input{flex:none;width:20px;height:20px;margin-top:2px;accent-color:var(--blue)}
+#localBallotForm .voter{padding:10px 14px;border-radius:8px;background:#eef2f6}
+#localBallotForm .rules{color:#566579}
+#localBallotForm fieldset.pos{margin:0 0 16px}
+#localBallotForm label.opt{display:flex;align-items:center;gap:12px;margin:8px 0;padding:14px 16px;border:1px solid #d9e0e7;border-radius:10px;background:#f8fafc;cursor:pointer}
+#localBallotForm label.opt input{width:20px;height:20px;flex:none;accent-color:var(--blue)}
+#localBallotForm button:disabled{opacity:.55;cursor:not-allowed}
 @media(max-width:700px){
+  #registrationCard,.ballot-card{padding:24px 20px}
+  .registration-form{grid-template-columns:1fr;gap:0}
+  .registration-form .form-field-wide,#regsummary{grid-column:auto}
+  .form-actions{align-items:flex-start;flex-direction:column;gap:8px}
+  #localBallotForm>button{width:100%}
   .home-election{padding:22px 20px}
   .home-grid{grid-template-columns:1fr;gap:14px}
   .home-grid>.card p:not(.home-eyebrow){min-height:0}

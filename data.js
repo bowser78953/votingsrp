@@ -1,7 +1,7 @@
 window.SRP_DATA = {
   "registerFormUrl": "",
   "liveStreamUrl": "",
-  "contactEmail": "owner",
+  "contactEmail": "bbowsersrp@gmail.com",
   "announcement": "Election Date TBD",
   "senators": [
     "Springfield: @walker103444",

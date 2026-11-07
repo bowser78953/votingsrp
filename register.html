@@ -15,25 +15,40 @@
 <nav></nav>
 <section class="hero small">
   <h2>Register to Vote</h2>
-  <p>Sign up so your voice is counted in the next SRP election.</p>
+  <p>Submit your registration once. Submitted details cannot be changed during this election round.</p>
 </section>
 <main>
   <section class="card gold reveal" id="registrationCard">
+    <p class="form-eyebrow">VOTER SERVICES</p>
     <h2>Voter Registration</h2>
-    <p class="notice">This static website cannot verify voter eligibility or securely store registration. Submitting a request does not complete registration; wait for confirmation from election officials.</p>
-    <form id="regform">
-      <label for="name">In-game username</label>
-      <input id="name" name="name" required>
-      <label for="discord">Discord username</label>
-      <input id="discord" name="discord" required>
-      <label for="county">County</label>
-      <select id="county" name="county" required><option value="">Select your county</option></select>
-      <label for="district">District</label>
-      <select id="district" name="district" required disabled><option value="">Select a county first</option></select>
+    <p class="registration-intro">Enter your account details and select your county and district. Your registration is complete as soon as you submit this form.</p>
+    <p class="notice registration-note">Registration is saved in this browser only and cannot be changed after submission. It does not verify eligibility with election officials.</p>
+    <form id="regform" class="registration-form">
+      <div class="form-field">
+        <label for="name">In-game username</label>
+        <input id="name" name="name" autocomplete="username" required>
+      </div>
+      <div class="form-field">
+        <label for="discord">Discord username</label>
+        <input id="discord" name="discord" required>
+      </div>
+      <div class="form-field">
+        <label for="county">County</label>
+        <select id="county" name="county" required><option value="">Select your county</option></select>
+      </div>
+      <div class="form-field">
+        <label for="district">District</label>
+        <select id="district" name="district" required disabled><option value="">Select a county first</option></select>
+      </div>
       <p id="regsummary" class="notice" style="display:none"></p>
-      <label for="notes">Notes (optional)</label>
-      <textarea id="notes" name="notes" rows="3"></textarea>
-      <p><button class="btn blue" type="submit">Submit Registration</button></p>
+      <div class="form-field form-field-wide">
+        <label for="notes">Notes <span class="optional-label">Optional</span></label>
+        <textarea id="notes" name="notes" rows="3" placeholder="Optional note for this local registration"></textarea>
+      </div>
+      <div class="form-actions form-field-wide">
+        <button class="btn blue" type="submit">Complete Registration</button>
+        <span>Review your details carefully before submitting; they cannot be changed afterward.</span>
+      </div>
     </form>
     <div class="ok" id="ok"></div>
   </section>
