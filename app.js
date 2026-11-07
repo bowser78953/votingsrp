@@ -22,7 +22,7 @@ const easternDate = value => {
 const usesCountyMap = (race, index = 0) => /^(county|counties|districts|big|2|two)$/i.test(String(race.map || "")) ||
   (!race.map && (index === 1 || /senat|mayor/i.test(String(race.title || ""))));
 
-// Bumping voteRound in data.js clears each browser's registration and local preview for the new round.
+// Bumping voteRound in data.js clears local registration and starts a separate shared-results round.
 (function voteReset() {
   const r = String(SITE.voteRound || 0);
   const stored = localStorage.getItem("srp_round") || "0";
@@ -148,6 +148,7 @@ const pages = [
   const campaignActive = SITE.campaignOpen === true && campaignStart && campaignEnd &&
     campaignStart <= new Date() && new Date() <= campaignEnd;
   const contactEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(SITE.contactEmail || ""));
+  const candidateRegistrationOpen = SITE.registrationOpen === true && contactEmail;
   const registrationAvailable = true;
   const votingAvailable = (SITE.ballot || []).some(race => race && race.title && Array.isArray(race.candidates) && race.candidates.length);
   const phases = [
@@ -183,7 +184,6 @@ const pages = [
   const profilesRoot = document.getElementById("candidateProfiles");
   const profiles = Array.isArray(SITE.candidateProfiles) ? SITE.candidateProfiles : [];
   const visibleProfiles = campaignActive ? profiles.filter(profile => profile && profile.name && profile.office) : [];
-  document.getElementById("noCandidateProfiles").classList.toggle("hidden", visibleProfiles.length > 0);
   visibleProfiles.slice().sort((a, b) => String(a.office).localeCompare(String(b.office)) || String(a.name).localeCompare(String(b.name))).forEach(profile => {
     const card = document.createElement("article");
     card.className = "candidate-profile";
@@ -204,22 +204,26 @@ const pages = [
   });
 
   const application = document.getElementById("candidateApplication");
-  const applicationStatus = document.getElementById("candidateApplicationStatus");
   const applicationDialog = document.getElementById("candidateApplicationDialog");
   const applicationMessage = document.getElementById("candidateApplicationMessage");
+  const openApplication = document.getElementById("openCandidateApplication");
   const closeApplicationDialog = () => applicationDialog.close();
-  document.getElementById("openCandidateApplication").addEventListener("click", () => applicationDialog.showModal());
+  if (candidateRegistrationOpen) {
+    openApplication.disabled = false;
+    openApplication.textContent = "Open Application & Election Planning Form";
+    openApplication.addEventListener("click", () => applicationDialog.showModal());
+  } else {
+    openApplication.disabled = true;
+    openApplication.textContent = SITE.registrationOpen === true ? "Candidate Applications Unavailable" : "Candidate Applications Closed";
+  }
   document.getElementById("closeCandidateApplication").addEventListener("click", closeApplicationDialog);
   document.getElementById("cancelCandidateApplication").addEventListener("click", closeApplicationDialog);
   applicationDialog.addEventListener("click", event => {
     if (event.target === applicationDialog) closeApplicationDialog();
   });
-  if (SITE.registrationOpen !== true) {
-    applicationStatus.textContent = "Candidate registration is closed. You can still send an election-planning inquiry; it will not be treated as an official candidate application.";
-    applicationStatus.classList.remove("hidden");
-  }
   application.addEventListener("submit", event => {
     event.preventDefault();
+    if (!candidateRegistrationOpen) return;
     if (!application.reportValidity()) return;
     const fields = new FormData(application);
     const name = String(fields.get("name") || "").trim();
@@ -340,6 +344,7 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
 (function status() {
   const box = document.getElementById("votebox");
   if (!box) return;
+  if (box.hasAttribute("data-shared-voting")) return;
   const heading = document.createElement("h2");
   const message = document.createElement("p");
   const notice = document.createElement("p");
@@ -624,7 +629,9 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
   ];
   const colors = SITE.colors || {};
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  const tallies = () => JSON.parse(localStorage.getItem("srp_tally2") || "{}");
+  let sharedTallies = {};
+  let sharedResultsStatus = "Connecting to shared results";
+  const tallies = () => sharedTallies;
   const offices = [
     { key: "senate", label: "Senate", geography: "county" },
     { key: "representative", label: "Representatives", geography: "district" },
@@ -659,7 +666,7 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
     const county = countyNames.find(name => title.toLowerCase().includes(name.toLowerCase()));
     return county ? { type: "county", key: normalizeCounty(county) } : null;
   };
-  let cur = 0, timer;
+  let cur = 0;
   const tip = document.createElement("div");
   tip.className = "maptip";
   box.style.position = "relative";
@@ -696,8 +703,8 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
       };
     });
     const mapName = countyMap ? "county" : "district";
-    document.getElementById("mtitle").textContent = office.label + " — " + (countyMap ? "County" : "District") + " Map Preview";
-    svg.setAttribute("aria-label", "Unofficial local preview of " + office.label + " by " + mapName);
+    document.getElementById("mtitle").textContent = office.label + " — " + (countyMap ? "County" : "District") + " Map Results";
+    svg.setAttribute("aria-label", "Unofficial shared poll results for " + office.label + " by " + mapName);
     const legendNames = [...new Set(groupRaces.flatMap(race => race.candidates))].sort();
     document.getElementById("legend").innerHTML = legendNames.map(name =>
       '<span><i style="background:' + (colors[name] || "#888") + '"></i>' + esc(name) + "</span>"
@@ -726,7 +733,7 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
     }).join("");
     svg.innerHTML = out;
     document.getElementById("maptotal").textContent = groupRaces.length
-      ? "Local browser preview: " + total + " vote" + (total === 1 ? "" : "s") + " on this device; not an official count."
+      ? sharedResultsStatus + ": " + total + " vote" + (total === 1 ? "" : "s") + ". Unverified roleplay poll; not an official count."
       : "No " + office.label.toLowerCase() + " contests are published. Areas are gray; no results are displayed.";
     document.querySelectorAll("#mdots button").forEach((button, index) => {
       button.classList.toggle("on", index === cur);
@@ -743,6 +750,55 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
   });
   document.getElementById("mprev").onclick = () => go(cur - 1);
   document.getElementById("mnext").onclick = () => go(cur + 1);
+  const waitForFirebase = () => {
+    if (window.SRP_FIREBASE) return Promise.resolve(window.SRP_FIREBASE);
+    if (window.SRP_FIREBASE_ERROR) return Promise.reject(window.SRP_FIREBASE_ERROR);
+    if (window.SRP_FIREBASE_READY) return window.SRP_FIREBASE_READY;
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => reject(new Error("Firebase did not finish loading.")), 15000);
+      window.addEventListener("srp-firebase-ready", () => {
+        clearTimeout(timeout);
+        resolve(window.SRP_FIREBASE);
+      }, { once: true });
+      window.addEventListener("srp-firebase-error", () => {
+        clearTimeout(timeout);
+        reject(window.SRP_FIREBASE_ERROR || new Error("Firebase failed to load."));
+      }, { once: true });
+    });
+  };
+  const resultAreaKey = race => {
+    const area = String(race.area || "").trim();
+    const district = area.match(/^(.+?)\s+District\s+(\d+)$/i);
+    if (district) return district[1] + "|" + Number(district[2]);
+    return area.replace(/\s+County$/i, "").trim();
+  };
+  waitForFirebase().then(services => {
+    const resultCollection = services.collection(
+      services.db, "elections", String(SITE.voteRound || 1), "results"
+    );
+    services.onSnapshot(resultCollection, snapshot => {
+      const next = {};
+      snapshot.forEach(resultDocument => {
+        const race = elections.find(item => String(item.ballotIndex) === resultDocument.id);
+        if (!race) return;
+        const result = resultDocument.data();
+        if (!result || result.areaKey !== resultAreaKey(race) ||
+            !result.counts || typeof result.counts !== "object" || Array.isArray(result.counts)) return;
+        next[race.ballotIndex] = { [result.areaKey]: result.counts };
+      });
+      sharedTallies = next;
+      sharedResultsStatus = "Shared unofficial roleplay poll";
+      draw();
+    }, error => {
+      sharedResultsStatus = "Shared results unavailable (" +
+        (error && error.code ? error.code : "Firebase error") + "). Check Firebase setup and Firestore Rules";
+      draw();
+    });
+  }).catch(error => {
+    sharedResultsStatus = "Shared results unavailable (" +
+      (error && error.message ? error.message : "Firebase error") + ")";
+    draw();
+  });
   svg.addEventListener("mousemove", ev => {
     const g = ev.target.closest(".dist");
     if (!g) { tip.style.display = "none"; return; }
@@ -767,8 +823,6 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
   });
   svg.addEventListener("mouseleave", () => { tip.style.display = "none"; });
   draw();
-  window.addEventListener("storage", draw);
-  setInterval(() => { if (tip.style.display !== "block") draw(); }, 3000);
 })();
 
 (function countdown() {

@@ -148,6 +148,7 @@
 
   const lines = s => s.split("\n").map(x => x.trim()).filter(Boolean);
   const countyNames = ["Springfield", "Fairview Congressional", "Agriculture", "River City Housing", "River City", "Industrial", "Bayside"];
+  const countyAliases = { Fairview: "Fairview Congressional" };
   const districtCounts = {
     "Springfield": 2,
     "Fairview Congressional": 3,
@@ -156,6 +157,11 @@
     "River City": 2,
     "Industrial": 3,
     "Bayside": 2
+  };
+  const canonicalCountyName = value => {
+    const name = String(value || "").trim();
+    return countyNames.find(county => county.toLowerCase() === name.toLowerCase()) ||
+      Object.entries(countyAliases).find(([alias]) => alias.toLowerCase() === name.toLowerCase())?.[1] || "";
   };
   const inferOffice = race => {
     if (/^(senate|representative|mayor)$/i.test(String(race.office || ""))) return race.office.toLowerCase();
@@ -172,7 +178,9 @@
       const match = title.match(/(.+?)\s+District\s+(\d+)/i);
       if (match) return match[1].trim() + " District " + Number(match[2]);
     } else {
-      const county = countyNames.slice().sort((a, b) => b.length - a.length).find(name => title.toLowerCase().includes(name.toLowerCase()));
+      const county = [...countyNames, ...Object.keys(countyAliases)]
+        .sort((a, b) => b.length - a.length)
+        .find(name => title.toLowerCase().includes(name.toLowerCase()));
       if (county) return county;
     }
     return "";
@@ -222,8 +230,8 @@
       const candidates = (p[4] || "").split(",").map(x => x.trim()).filter(Boolean);
       const county = area.replace(/\s+County$/i, "").trim();
       const districtMatch = area.match(/^(.+?)\s+District\s+(\d+)$/i);
-      const canonicalCounty = countyNames.find(name => name.toLowerCase() === county.toLowerCase());
-      const districtCounty = districtMatch && countyNames.find(name => name.toLowerCase() === districtMatch[1].toLowerCase());
+      const canonicalCounty = canonicalCountyName(county);
+      const districtCounty = districtMatch && canonicalCountyName(districtMatch[1]);
       const districtNumber = districtMatch ? Number(districtMatch[2]) : 0;
       const validArea = office === "representative"
         ? !!districtCounty && districtNumber <= districtCounts[districtCounty]

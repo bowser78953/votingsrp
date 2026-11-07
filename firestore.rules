@@ -1,0 +1,173 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function googleSignedIn() {
+      return signedIn() &&
+        request.auth.token.firebase.sign_in_provider == "google.com";
+    }
+
+    function profilePath(roundId, uid) {
+      return /databases/$(database)/documents/elections/$(roundId)/profiles/$(uid);
+    }
+
+    function configPath(raceId) {
+      return /databases/$(database)/documents/ballotConfig/$(raceId);
+    }
+
+    function resultPath(roundId, raceId) {
+      return /databases/$(database)/documents/elections/$(roundId)/results/$(raceId);
+    }
+
+    function votePath(roundId, uid, raceId) {
+      return /databases/$(database)/documents/elections/$(roundId)/votes/$(uid)/contests/$(raceId);
+    }
+
+    function validDistrict(county, district) {
+      return (county == "Springfield" && district in ["1", "2"]) ||
+        (county == "Fairview Congressional" && district in ["1", "2", "3"]) ||
+        (county == "River City Housing" && district in ["1", "2"]) ||
+        (county == "River City" && district in ["1", "2"]) ||
+        (county == "Bayside" && district in ["1", "2"]) ||
+        (county == "Industrial" && district in ["1", "2", "3"]) ||
+        (county == "Agriculture" && district in ["1", "2"]);
+    }
+
+    function validProfile(roundId, uid) {
+      let path = profilePath(roundId, uid);
+      return exists(path) &&
+        get(path).data.uid == uid &&
+        get(path).data.county is string &&
+        get(path).data.district is string &&
+        validDistrict(get(path).data.county, get(path).data.district);
+    }
+
+    function profileMatchesArea(roundId, uid, office, areaKey) {
+      let profile = get(profilePath(roundId, uid)).data;
+      return (office == "representative" &&
+          areaKey == profile.county + "|" + profile.district) ||
+        (office in ["senate", "mayor"] && areaKey == profile.county);
+    }
+
+    function validVote(roundId, uid, raceId) {
+      let data = request.resource.data;
+      let ballotPath = configPath(raceId);
+      return request.resource.data.keys().hasOnly([
+          "uid", "raceId", "candidate", "areaKey", "submittedAt"
+        ]) &&
+        request.resource.data.keys().hasAll([
+          "uid", "raceId", "candidate", "areaKey", "submittedAt"
+        ]) &&
+        data.uid == uid &&
+        data.raceId == raceId &&
+        data.candidate is string &&
+        data.areaKey is string &&
+        data.submittedAt == request.time &&
+        exists(ballotPath) &&
+        get(ballotPath).data.office in ["senate", "representative", "mayor"] &&
+        get(ballotPath).data.pick == 1 &&
+        get(ballotPath).data.areaKey == data.areaKey &&
+        get(ballotPath).data.candidates is list &&
+        get(ballotPath).data.candidates.hasAny([data.candidate]) &&
+        validProfile(roundId, uid) &&
+        profileMatchesArea(roundId, uid, get(ballotPath).data.office, data.areaKey) &&
+        resultMatchesVote(roundId, raceId, data.candidate, data.areaKey);
+    }
+
+    function resultMatchesVote(roundId, raceId, candidate, areaKey) {
+      let path = resultPath(roundId, raceId);
+      return existsAfter(path) &&
+        getAfter(path).data.raceId == raceId &&
+        getAfter(path).data.areaKey == areaKey &&
+        getAfter(path).data.counts is map &&
+        (exists(path)
+          ? get(path).data.counts is map &&
+            getAfter(path).data.counts.get(candidate, 0) == get(path).data.counts.get(candidate, 0) + 1
+          : getAfter(path).data.counts.get(candidate, 0) == 1);
+    }
+
+    function pairedVoteMatchesResult(roundId, uid, raceId, areaKey) {
+      let path = votePath(roundId, uid, raceId);
+      return existsAfter(path) &&
+        getAfter(path).data.uid == uid &&
+        getAfter(path).data.raceId == raceId &&
+        getAfter(path).data.areaKey == areaKey &&
+        getAfter(path).data.submittedAt == request.time;
+    }
+
+    match /ballotConfig/{raceId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /elections/{roundId}/profiles/{uid} {
+      allow get: if googleSignedIn() && request.auth.uid == uid;
+      allow list: if false;
+      allow create: if googleSignedIn() &&
+        request.auth.uid == uid &&
+        request.resource.data.keys().hasOnly(["uid", "county", "district", "createdAt"]) &&
+        request.resource.data.keys().hasAll(["uid", "county", "district", "createdAt"]) &&
+        request.resource.data.uid == uid &&
+        request.resource.data.county is string &&
+        request.resource.data.district is string &&
+        validDistrict(request.resource.data.county, request.resource.data.district) &&
+        request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+
+    match /elections/{roundId}/votes/{uid}/contests/{raceId} {
+      allow get: if googleSignedIn() && request.auth.uid == uid;
+      allow list: if false;
+      allow create: if googleSignedIn() &&
+        request.auth.uid == uid &&
+        validVote(roundId, uid, raceId);
+      allow update, delete: if false;
+    }
+
+    match /elections/{roundId}/results/{raceId} {
+      allow get, list: if true;
+      allow create: if googleSignedIn() &&
+        request.resource.data.keys().hasOnly(["raceId", "areaKey", "counts"]) &&
+        request.resource.data.keys().hasAll(["raceId", "areaKey", "counts"]) &&
+        request.resource.data.raceId == raceId &&
+        request.resource.data.areaKey is string &&
+        request.resource.data.counts is map &&
+        pairedVoteMatchesResult(roundId, request.auth.uid, raceId, request.resource.data.areaKey) &&
+        request.resource.data.counts.keys().hasOnly([
+          getAfter(votePath(roundId, request.auth.uid, raceId)).data.candidate
+        ]) &&
+        request.resource.data.counts.keys().hasAll([
+          getAfter(votePath(roundId, request.auth.uid, raceId)).data.candidate
+        ]) &&
+        request.resource.data.counts.get(
+          getAfter(votePath(roundId, request.auth.uid, raceId)).data.candidate, 0
+        ) == 1;
+      allow update: if googleSignedIn() &&
+        request.resource.data.keys().hasOnly(["raceId", "areaKey", "counts"]) &&
+        request.resource.data.keys().hasAll(["raceId", "areaKey", "counts"]) &&
+        request.resource.data.raceId == raceId &&
+        request.resource.data.areaKey == resource.data.areaKey &&
+        request.resource.data.counts is map &&
+        pairedVoteMatchesResult(roundId, request.auth.uid, raceId, request.resource.data.areaKey) &&
+        request.resource.data.counts.diff(resource.data.counts).affectedKeys().hasOnly([
+          getAfter(votePath(roundId, request.auth.uid, raceId)).data.candidate
+        ]) &&
+        request.resource.data.counts.diff(resource.data.counts).affectedKeys().hasAll([
+          getAfter(votePath(roundId, request.auth.uid, raceId)).data.candidate
+        ]) &&
+        request.resource.data.counts.get(
+          getAfter(votePath(roundId, request.auth.uid, raceId)).data.candidate, 0
+        ) == resource.data.counts.get(
+          getAfter(votePath(roundId, request.auth.uid, raceId)).data.candidate, 0
+        ) + 1;
+      allow delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

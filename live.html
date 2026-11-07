@@ -15,23 +15,24 @@
 <nav></nav>
 <section class="hero small">
   <h2>Live Election Broadcast</h2>
-  <p>Find official result notices after verification. Senate and Mayor contests share county maps; Representatives share a district map.</p>
+  <p>Ballots update the shared aggregate map. Senate and Mayor contests share county maps; Representatives share a district map.</p>
 </section>
 <main>
   <div id="stream">
     <div class="offair"><h2><span class="dot"></span>Currently Off Air</h2><p>No election is being broadcast right now. Check back on election day.</p></div>
   </div>
-  <p class="notice results-disclaimer">The map is a browser-local preview, not a shared or verified count. Only results published in an official SRP announcement after verification are certified.</p>
+  <p class="notice results-disclaimer">This map shows shared aggregate totals for the unofficial roleplay poll. Google accounts are not verified as unique people, and poll areas are self-reported. These results are not official or certified.</p>
   <section class="card" id="mapbox">
-    <div class="mapnav"><button type="button" id="mprev" aria-label="Previous map">&#8249;</button><h2 id="mtitle">Local Results Preview</h2><button type="button" id="mnext" aria-label="Next map">&#8250;</button></div>
+    <div class="mapnav"><button type="button" id="mprev" aria-label="Previous map">&#8249;</button><h2 id="mtitle">Shared Poll Results</h2><button type="button" id="mnext" aria-label="Next map">&#8250;</button></div>
     <div id="legend" class="legend"></div>
-    <svg id="map" viewBox="0 0 847 767" role="img" aria-label="Unofficial local preview of district results"></svg>
+    <svg id="map" viewBox="0 0 847 767" role="img" aria-label="Unofficial shared poll results by district"></svg>
     <div id="mdots" class="office-tabs" role="tablist" aria-label="Results map office"></div>
     <p id="maptotal" class="muted"></p>
   </section>
 </main>
 <footer>&copy; Springfield Roleplay Government Voting</footer>
 <script src="data.js"></script>
+<script type="module" src="firebase-config.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

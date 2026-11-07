@@ -276,6 +276,7 @@ input,select,textarea{border-radius:3px!important}
 .candidate-dialog-close{flex:none;border:0;border-radius:50%;width:36px;height:36px;background:#eef2fa;color:var(--navy);font-size:1.6rem;line-height:1;cursor:pointer}
 .candidate-dialog-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin-top:8px}
 .candidate-dialog-actions .btn{margin:0}
+#openCandidateApplication:disabled{opacity:.55;cursor:not-allowed;filter:grayscale(.25);transform:none;box-shadow:none}
 @media(max-width:500px){.candidate-dialog{padding:20px 16px}.candidate-dialog-actions{flex-direction:column-reverse}.candidate-dialog-actions .btn{width:100%}}
 .schedule-fields{display:grid;grid-template-columns:minmax(170px,1fr) minmax(200px,1.5fr);align-items:center;gap:8px 16px}
 .schedule-fields label{margin:0!important}
@@ -554,6 +555,7 @@ footer{margin-top:auto;padding:25px 20px;border-top:3px solid var(--gold);backgr
 .ballot-state{display:flex;align-items:center;gap:20px;padding:34px 42px;background:linear-gradient(135deg,#fff 0%,#f8fafc 100%)}
 .ballot-state-icon{display:grid;place-items:center;flex:none;width:58px;height:58px;border:1px solid #a8d7b8;border-radius:50%;background:#eaf7ef;color:#18713a;font-size:1.65rem;font-weight:700;box-shadow:0 0 0 7px #f2faf5}
 .ballot-state-closed .ballot-state-icon{border-color:#e7d19b;background:#fff7e2;color:#8b6817;box-shadow:0 0 0 7px #fffaf0}
+.ballot-state-error .ballot-state-icon{border-color:#e6aaa5;background:#fff3f1;color:#8d2923;box-shadow:0 0 0 7px #fff8f7}
 .ballot-state-copy{min-width:0}
 .ballot-state-eyebrow{margin:0 0 6px!important;color:#64758a;font-size:.7rem!important;font-weight:800;letter-spacing:.13em;line-height:1.4!important}
 .ballot-state-copy h2{margin:0 0 7px;color:#17345c;font-size:clamp(1.45rem,3vw,1.8rem);letter-spacing:-.02em}
