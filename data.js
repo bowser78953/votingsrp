@@ -254,7 +254,7 @@ window.SRP_DATA = {
     "Godzilla_Iraq": "",
     "spiderx15310": "",
     "Deancena9": "#5539CC",
-    "eaglesfly409": "",
+    "eaglesfly409": "#6827F5",
     "ERLC_2077": "#5BA5F5",
     "SonnyManny9": "#2E8B57"
   },
