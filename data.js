@@ -298,7 +298,7 @@ window.SRP_DATA = {
     {
       "title": "Mayor of River City",
       "office": "mayor",
-      "area": "Springfield",
+      "area": "River City",
       "pick": 1,
       "candidates": [
         "Bowser",
