@@ -48,8 +48,8 @@ window.SRP_DATA = {
       "area": "Springfield",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "county"
     },
@@ -59,8 +59,8 @@ window.SRP_DATA = {
       "area": "River City",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "county"
     },
@@ -70,8 +70,8 @@ window.SRP_DATA = {
       "area": "River City Housing",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "county"
     },
@@ -81,8 +81,8 @@ window.SRP_DATA = {
       "area": "Bayside",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "county"
     },
@@ -92,8 +92,8 @@ window.SRP_DATA = {
       "area": "Industrial",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "county"
     },
@@ -103,8 +103,8 @@ window.SRP_DATA = {
       "area": "Agriculture",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "county"
     },
@@ -114,8 +114,8 @@ window.SRP_DATA = {
       "area": "Fairview Congressional",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "county"
     },
@@ -125,8 +125,8 @@ window.SRP_DATA = {
       "area": "Springfield District 1",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "district"
     },
@@ -136,8 +136,8 @@ window.SRP_DATA = {
       "area": "Springfield District 2",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "district"
     },
@@ -147,8 +147,8 @@ window.SRP_DATA = {
       "area": "Fairview Congressional District 1",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "district"
     },
@@ -158,8 +158,8 @@ window.SRP_DATA = {
       "area": "Fairview Congressional District 2",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "district"
     },
@@ -169,8 +169,8 @@ window.SRP_DATA = {
       "area": "Fairview Congressional District 3",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "district"
     },
@@ -180,8 +180,8 @@ window.SRP_DATA = {
       "area": "River City Housing District 1",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "district"
     },
@@ -191,8 +191,8 @@ window.SRP_DATA = {
       "area": "River City Housing District 2",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "district"
     },
@@ -202,8 +202,8 @@ window.SRP_DATA = {
       "area": "River City District 1",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "district"
     },
@@ -213,8 +213,8 @@ window.SRP_DATA = {
       "area": "River City District 2",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "district"
     },
@@ -224,8 +224,8 @@ window.SRP_DATA = {
       "area": "Bayside District 1",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "district"
     },
@@ -235,8 +235,8 @@ window.SRP_DATA = {
       "area": "Bayside District 2",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "district"
     },
@@ -246,8 +246,8 @@ window.SRP_DATA = {
       "area": "Industrial District 1",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "district"
     },
@@ -257,8 +257,8 @@ window.SRP_DATA = {
       "area": "Industrial District 2",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "district"
     },
@@ -268,8 +268,8 @@ window.SRP_DATA = {
       "area": "Industrial District 3",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "district"
     },
@@ -279,8 +279,8 @@ window.SRP_DATA = {
       "area": "Agriculture District 1",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "district"
     },
@@ -290,8 +290,8 @@ window.SRP_DATA = {
       "area": "Agriculture District 2",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "district"
     },
@@ -301,8 +301,8 @@ window.SRP_DATA = {
       "area": "Springfield",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "county"
     }
