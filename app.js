@@ -680,6 +680,7 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   let sharedTallies = {};
   let sharedResultsStatus = "Connecting to shared results";
+  let sharedResultsReady = false;
   const tallies = () => sharedTallies;
   const offices = [
     { key: "senate", label: "Senate", geography: "county" },
@@ -716,10 +717,10 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
     return county ? { type: "county", key: normalizeCounty(county) } : null;
   };
   let cur = 0;
-  const tip = document.createElement("div");
-  tip.className = "maptip";
-  box.style.position = "relative";
-  box.appendChild(tip);
+  let selectedRegion = null;
+  const details = document.getElementById("mapDetails");
+  document.getElementById("closeMapDetails").addEventListener("click", () => details.close());
+  details.addEventListener("close", () => { selectedRegion = null; });
 
   const resultsFor = (race, area) => {
     const all = tallies()[race.ballotIndex] || {};
@@ -729,6 +730,39 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
     if (countyName) Object.keys(all).filter(key => key.split("|")[0] === countyName[0])
       .forEach(key => Object.entries(all[key]).forEach(([name, count]) => { result[name] = (result[name] || 0) + count; }));
     return result;
+  };
+  const updateDetails = () => {
+    if (!selectedRegion) return;
+    const race = elections.find(item => String(item.ballotIndex) === selectedRegion.raceId);
+    const area = race ? areaOf(race) : null;
+    const counts = race && area ? resultsFor(race, area) : {};
+    const names = race ? [...new Set(race.candidates)] : [];
+    const total = names.reduce((sum, name) => sum + (counts[name] || 0), 0);
+    const highest = names.reduce((max, name) => Math.max(max, counts[name] || 0), 0);
+    const leaders = names.filter(name => highest > 0 && (counts[name] || 0) === highest);
+    document.getElementById("mapDetailsTitle").textContent = selectedRegion.name;
+    document.getElementById("mapDetailsRace").textContent = race ? race.title : "No contest published for this area.";
+    const status = document.getElementById("mapDetailsStatus");
+    if (!race) status.textContent = "No candidates are listed for this area.";
+    else if (!sharedResultsReady) status.textContent = sharedResultsStatus + ".";
+    else if (!total) status.textContent = "No votes yet.";
+    else if (leaders.length > 1) status.textContent = "Tied: " + leaders.join(", ") + " · " + total + " votes.";
+    else status.textContent = "Leading: " + leaders[0] + " · " + total + " vote" + (total === 1 ? "" : "s") + ".";
+    const list = document.getElementById("mapDetailsCandidates");
+    list.replaceChildren();
+    names.forEach(name => {
+      const item = document.createElement("li");
+      const swatch = document.createElement("span");
+      swatch.className = "map-candidate-color";
+      swatch.style.backgroundColor = colors[name] || "#888";
+      const label = document.createElement("span");
+      label.textContent = name;
+      const count = document.createElement("strong");
+      const votes = counts[name] || 0;
+      count.textContent = sharedResultsReady ? votes + " vote" + (votes === 1 ? "" : "s") : "Results unavailable";
+      item.append(swatch, label, count);
+      list.appendChild(item);
+    });
   };
   const draw = () => {
     const office = offices[cur];
@@ -745,6 +779,7 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
       return {
         area: { type: "district", key: area[0] + "|" + area[1] },
         label: area[2],
+        fullName: area[0] + " District " + area[1],
         points: area[3],
         x: area[3].split(" ").map(point => Number(point.split(",")[0])).reduce((sum, x) => sum + x, 0) / area[3].split(" ").length,
         y: area[3].split(" ").map(point => Number(point.split(",")[1])).reduce((sum, y) => sum + y, 0) / area[3].split(" ").length,
@@ -754,10 +789,6 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
     const mapName = countyMap ? "county" : "district";
     document.getElementById("mtitle").textContent = office.label + " — " + (countyMap ? "County" : "District") + " Map Results";
     svg.setAttribute("aria-label", "Unofficial shared poll results for " + office.label + " by " + mapName);
-    const legendNames = [...new Set(groupRaces.flatMap(race => race.candidates))].sort();
-    document.getElementById("legend").innerHTML = legendNames.map(name =>
-      '<span><i style="background:' + (colors[name] || "#888") + '"></i>' + esc(name) + "</span>"
-    ).join("") + '<span><i style="background:#d3d7dc"></i>No votes / no race</span>';
     let total = 0;
     const out = regions.map(region => {
       const race = groupRaces.find(item => {
@@ -775,22 +806,24 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
       const fontSize = countyMap ? 19 : 24;
       const lineHeight = countyMap ? 24 : 26;
       const data = race ? race.ballotIndex : "";
-      return '<g class="dist" data-race="' + data + '" data-k="' + esc(region.area.key) + '" data-n="' + esc(countyMap ? label + " County" : region.label) + '">' +
+      const regionName = countyMap ? label + " County" : region.fullName;
+      return '<g class="dist" role="button" tabindex="0" aria-label="' + esc(regionName + " results") + '" data-race="' + data + '" data-n="' + esc(regionName) + '">' +
         '<polygon points="' + region.points + '" fill="' + fill + '" stroke="#222" stroke-width="2"></polygon>' +
         '<text x="' + region.x + '" y="' + region.y + '" text-anchor="middle" font-size="' + fontSize + '" font-weight="700" fill="' + (won ? "#fff" : "#222") + '" pointer-events="none">' +
         esc(lines[0]) + '<tspan x="' + region.x + '" dy="' + lineHeight + '">' + esc(lines[1] || "") + "</tspan></text></g>";
     }).join("");
     svg.innerHTML = out;
     document.getElementById("maptotal").textContent = groupRaces.length
-      ? sharedResultsStatus + ": " + total + " vote" + (total === 1 ? "" : "s") + ". Unverified roleplay poll; not an official count."
+      ? sharedResultsStatus + (sharedResultsReady ? ": " + total + " vote" + (total === 1 ? "" : "s") : "") + ". Unverified roleplay poll; not an official count."
       : "No " + office.label.toLowerCase() + " contests are published. Areas are gray; no results are displayed.";
     document.querySelectorAll("#mdots button").forEach((button, index) => {
       button.classList.toggle("on", index === cur);
       button.setAttribute("aria-selected", String(index === cur));
     });
+    updateDetails();
   };
 
-  const go = i => { cur = (i + offices.length) % offices.length; draw(); };
+  const go = i => { if (details.open) details.close(); selectedRegion = null; cur = (i + offices.length) % offices.length; draw(); };
   const nav = box.querySelector(".mapnav"), dots = document.getElementById("mdots");
   dots.innerHTML = offices.map((office, index) => '<button type="button" role="tab" aria-label="' + office.label + ' map" aria-selected="' + (index === cur) + '">' + office.label + "</button>").join("");
   dots.addEventListener("click", ev => {
@@ -836,41 +869,36 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
         next[race.ballotIndex] = { [result.areaKey]: result.counts };
       });
       sharedTallies = next;
+      sharedResultsReady = true;
       sharedResultsStatus = "Shared unofficial roleplay poll";
       draw();
     }, error => {
+      sharedResultsReady = false;
+      sharedTallies = {};
       sharedResultsStatus = "Shared results unavailable (" +
         (error && error.code ? error.code : "Firebase error") + "). Check Firebase setup and Firestore Rules";
       draw();
     });
   }).catch(error => {
+    sharedResultsReady = false;
     sharedResultsStatus = "Shared results unavailable (" +
       (error && error.message ? error.message : "Firebase error") + ")";
     draw();
   });
-  svg.addEventListener("mousemove", ev => {
-    const g = ev.target.closest(".dist");
-    if (!g) { tip.style.display = "none"; return; }
-    const race = elections.find(item => String(item.ballotIndex) === g.dataset.race);
-    const area = race ? areaOf(race) : null;
-    const t = race && area ? resultsFor(race, area) : {};
-    const sum = Object.values(t).reduce((a, b) => a + b, 0);
-    const rows = (race ? race.candidates : []).map(n => ({ n, v: t[n] || 0 })).sort((a, b) => b.v - a.v);
-    let h = "<b>" + g.dataset.n + "</b><div class=\"tl\">" + esc(race ? race.title : "No contest published for this area") + "</div>";
-    if (!race) h += '<div class="tl">No eligible race published</div>';
-    else if (!sum) h += '<div class="tl">No votes yet</div>';
-    else {
-      const lead = rows.length > 1 && rows[0].v === rows[1].v ? "Tied" : rows[0].n + " leading";
-      h += '<div class="tl">' + esc(lead) + " &middot; " + sum + " vote" + (sum === 1 ? "" : "s") + "</div>";
-      h += rows.map(r => '<div class="tr"><i style="background:' + (colors[r.n] || "#888") + '"></i>' + esc(r.n) + "<span>" + Math.round(r.v / sum * 100) + "% (" + r.v + ")</span></div>").join("");
-    }
-    tip.innerHTML = h;
-    tip.style.display = "block";
-    const r = box.getBoundingClientRect();
-    tip.style.left = Math.min(ev.clientX - r.left + 16, r.width - 230) + "px";
-    tip.style.top = (ev.clientY - r.top + 16) + "px";
+  const openRegion = region => {
+    selectedRegion = { raceId: region.dataset.race, name: region.dataset.n };
+    updateDetails();
+    if (!details.open) details.showModal();
+  };
+  svg.addEventListener("click", event => {
+    const region = event.target.closest(".dist");
+    if (region) openRegion(region);
   });
-  svg.addEventListener("mouseleave", () => { tip.style.display = "none"; });
+  svg.addEventListener("keydown", event => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    const region = event.target.closest(".dist");
+    if (region) { event.preventDefault(); openRegion(region); }
+  });
   draw();
 })();
 

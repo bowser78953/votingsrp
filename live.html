@@ -24,10 +24,19 @@
   <p class="notice results-disclaimer">This map shows shared aggregate totals for the unofficial roleplay poll. Google accounts are not verified as unique people, and poll areas are self-reported. These results are not official or certified.</p>
   <section class="card" id="mapbox">
     <div class="mapnav"><button type="button" id="mprev" aria-label="Previous map">&#8249;</button><h2 id="mtitle">Shared Poll Results</h2><button type="button" id="mnext" aria-label="Next map">&#8250;</button></div>
-    <div id="legend" class="legend"></div>
-    <svg id="map" viewBox="0 0 847 767" role="img" aria-label="Unofficial shared poll results by district"></svg>
+    <p class="map-instructions">Select a county or district to see its candidates and results.</p>
+    <svg id="map" viewBox="0 0 847 767" role="group" aria-label="Unofficial shared poll results by district"></svg>
     <div id="mdots" class="office-tabs" role="tablist" aria-label="Results map office"></div>
     <p id="maptotal" class="muted"></p>
+    <dialog id="mapDetails" class="map-details" aria-labelledby="mapDetailsTitle">
+      <div class="map-details-header">
+        <h2 id="mapDetailsTitle"></h2>
+        <button type="button" id="closeMapDetails" aria-label="Close results">&times;</button>
+      </div>
+      <p id="mapDetailsRace"></p>
+      <p id="mapDetailsStatus" role="status"></p>
+      <ul id="mapDetailsCandidates"></ul>
+    </dialog>
   </section>
 </main>
 <footer>&copy; Springfield Roleplay Government Voting</footer>
