@@ -323,6 +323,13 @@ window.SRP_DATA = {
   },
   "candidateProfiles": [],
   "officialResultsUrl": "",
-  "campaigns": [],
+  "campaigns": [
+    {
+      "photoUrl": "https://cdn.corenexis.com/f/9wh6uKIm.png",
+      "name": "805_inorth",
+      "office": "Candidate for Senator 2 of River City",
+      "statement": "A VOICE FOR EVERY CITIZEN OF RIVER CITY.\nA SENATOR WHO SERVES.\n\nI am running for Senator because every voice deserves to be heard, every citizen deserves equal opportunity, and every community deserves a seat at the table.\n\nMy promise to all the civilians:\n\nTransparency. I will support laws that make government spending and decisions open to the public.\nAccountability. Leaders who answer to the people.\nProtected Rights. For every person, without exception.\nDecent jobs and fair wages. I will file measures that protect workers and support small businesses.\nProtection of rights. I will defend and strengthen laws that safeguard children, seniors and workers.\n\n*Laws that work. Budgets that serve. Leaders who answer to you.*\n\nYOUR TRUST. YOUR VOICE. OUR FUTURE.\n\nVOTE **NORTH ** FOR SENATOR."
+    }
+  ],
   "campaignOpen": true
 };
