@@ -244,7 +244,20 @@ window.SRP_DATA = {
     "registrationOpens": "2026-11-13 12:00",
     "registrationCloses": "2026-11-14 12:00"
   },
-  "candidateProfiles": [],
+  "candidateProfiles": [
+    {
+      "name": "805_inorth",
+      "office": "Senate",
+      "experience": "Staffing",
+      "statement": "A VOICE FOR EVERY CITIZEN OF RIVER CITY. A SENATOR WHO SERVES."
+    },
+    {
+      "name": "minimonkey20121",
+      "office": "Senate",
+      "experience": "LCSO HR & More",
+      "statement": "Hello! Im Mini and today im running for bayside senator!"
+    }
+  ],
   "officialResultsUrl": "",
   "campaigns": [
     {
