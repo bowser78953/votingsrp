@@ -351,7 +351,8 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
     ["Industrial", "Industrial", "380,358 527,370 578,436 610,638 368,638 365,505 353,448 358,420", 473, 443],
     ["Bayside", "Bayside", "141,638 745,638 847,760 847,767 368,767 0,755 131,718", 430, 676]
   ];
-  const isBig = (el, i) => /big|district|^\s*(type\s*)?(2|two)\s*$/i.test(String(el.map || "")) || (!el.map && i === 1);
+  const isBig = (el, i) => /senat|mayor/i.test(String(el.title || "")) ||
+    /big|district|^\s*(type\s*)?(2|two)\s*$/i.test(String(el.map || "")) || (!el.map && i === 1);
   const colors = SITE.colors || {};
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   if (!elections.length) {

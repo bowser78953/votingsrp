@@ -48,7 +48,8 @@ window.SRP_DATA = {
       "candidates": [
         "Hunt",
         "Bowser"
-      ]
+      ],
+      "map": "districts"
     }
   ],
   "ballotTitle": "",

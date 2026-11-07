@@ -155,7 +155,8 @@
     $("electionOpens").value = data.electionSchedule.votingOpens || data.electionOpens || "";
     $("votingCloses").value = data.electionSchedule.votingCloses || "";
     $("ballotTitle").value = data.ballotTitle || "";
-    $("ballotText").value = (data.ballot || []).map(b => b.title + " | " + (b.pick || 1) + " | " + b.candidates.join(", ") + (b.map ? " | " + (b.map === "districts" ? "2" : "1") : "")).join("\n");
+    $("ballotText").value = (data.ballot || []).map(b => b.title + " | " + (b.pick || 1) + " | " + b.candidates.join(", ") +
+      (/senat|mayor/i.test(String(b.title || "")) ? " | 2" : b.map ? " | " + (b.map === "districts" ? "2" : "1") : "")).join("\n");
     $("colorsText").value = Object.entries(data.colors || {}).map(([k, v]) => k + ": " + v).join("\n");
     $("candidateProfilesText").value = data.candidateProfiles.map(p => [p.name, p.office, p.experience, p.statement].join(" | ")).join("\n");
     $("officialResultsUrl").value = data.officialResultsUrl;
