@@ -34,7 +34,6 @@ window.SRP_DATA = {
     "Representative of Industrial District 3: N/A",
     "Representative of River City Housing District 1: Enrolment in progress",
     "Representative of River City Housing District 2: N/A",
-    "Representative of River City Housing District 3: N/A",
     "Representative of Bayside District 1: @dkozimor",
     "Representative of Bayside District 2: N/A"
   ],
