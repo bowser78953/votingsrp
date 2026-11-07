@@ -25,6 +25,18 @@ table.admins td, table.admins th { text-align:left; padding:8px; border-bottom:1
 .campaign-admin-row { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:10px 0; border-bottom:1px solid #dce5f2; }
 .campaign-admin-row strong { margin-right:auto; }
 @media (max-width:500px) { .campaign-card { flex-direction:column; } .campaign-photo { width:80px; height:80px; } }
+.chamber-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+.chamber { min-width:0; padding:22px; background:#f7f9fc; border:1px solid #dce5f2; border-radius:14px; text-align:center; }
+.chamber h3 { margin:0; }
+.chamber-seats { position:relative; width:100%; max-width:360px; aspect-ratio:2 / 1; margin:18px auto 0; }
+.chamber-seat { position:absolute; width:clamp(18px, 5vw, 29px); aspect-ratio:1; transform:translate(-50%,-50%); border:2px solid #fff; border-radius:50%; cursor:pointer; box-shadow:0 0 0 1px #b4c3d2; }
+.chamber-seat.occupied { background:#315d93; }
+.chamber-seat.unfilled { background:#c7cdd5; }
+.chamber-seat:hover,.chamber-seat:focus-visible { transform:translate(-50%,-50%) scale(1.2); }
+.chamber-count { margin:0; color:var(--navy); font-size:1.15rem; font-weight:700; }
+.chamber-details { min-height:2.8em; margin:10px 0; color:#536984; overflow-wrap:anywhere; }
+.chamber-note { color:#647286; font-size:.9rem; margin-bottom:0; }
+@media (max-width:700px) { .chamber-grid { grid-template-columns:1fr; } }
 .map-instructions { text-align:center; color:#536984; }
 #map .dist:focus { outline:none; }
 #map .dist:focus-visible { outline:none; }

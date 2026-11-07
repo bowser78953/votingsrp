@@ -40,6 +40,28 @@
       <a class="btn ghost-dark" href="vote.html">Voting Details</a>
     </div>
   </section>
+  <section class="card home-chambers" aria-labelledby="home-chambers-heading">
+    <p class="home-eyebrow">YOUR REPRESENTATIVES</p>
+    <h2 id="home-chambers-heading">Inside the Chambers</h2>
+    <p>Hover over, focus, or tap a seat to see who holds it. Member information comes from the current Senate and House lists.</p>
+    <div class="chamber-grid">
+      <article class="chamber" aria-labelledby="senate-seats-heading">
+        <h3 id="senate-seats-heading">SRP Senate</h3>
+        <div id="senateSeats" class="chamber-seats"></div>
+        <p class="chamber-count">14 seats</p>
+        <p id="senateSeatDetails" class="chamber-details" aria-live="polite">Select a seat to see its member.</p>
+        <a class="more" href="senate.html">View the Senate &rarr;</a>
+      </article>
+      <article class="chamber" aria-labelledby="house-seats-heading">
+        <h3 id="house-seats-heading">House of Representatives</h3>
+        <div id="houseSeats" class="chamber-seats"></div>
+        <p class="chamber-count">16 seats</p>
+        <p id="houseSeatDetails" class="chamber-details" aria-live="polite">Select a seat to see its member.</p>
+        <a class="more" href="house.html">View the House &rarr;</a>
+      </article>
+    </div>
+    <p class="chamber-note">The current member lists identify counties, not specific districts or numbered seats. Positions shown are illustrative.</p>
+  </section>
   <section class="home-grid" aria-label="Learn about SRP government">
     <article class="card reveal" id="senate">
       <p class="home-eyebrow">REPRESENTATION &amp; LEGISLATION</p>

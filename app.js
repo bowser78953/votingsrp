@@ -113,6 +113,52 @@ const usesCountyMap = (race, index = 0) => /^(county|counties|districts|big|2|tw
   });
 })();
 
+(function homeChambers() {
+  const render = (id, detailsId, members, seatCount) => {
+    const root = document.getElementById(id);
+    if (!root) return;
+    const details = document.getElementById(detailsId);
+    const entries = (Array.isArray(members) ? members : []).map(entry => {
+      const text = String(entry || "").trim();
+      const separator = text.indexOf(":");
+      const area = separator >= 0 ? text.slice(0, separator).trim() : "";
+      const holder = (separator >= 0 ? text.slice(separator + 1) : text).trim();
+      return { area, holder: /^(enrol+ment in progress|election in progress|vacant|n\/a)$/i.test(holder) ? "" : holder };
+    }).filter(entry => entry.area || entry.holder);
+    const rows = seatCount === 14 ? [7, 7] : [8, 8];
+    let index = 0;
+    rows.forEach((count, row) => {
+      const radius = row === 0 ? 44 : 29;
+      for (let position = 0; position < count; position++, index++) {
+        const member = entries[index];
+        const description = member
+          ? [member.area, member.holder || "Election in progress"].filter(Boolean).join(": ")
+          : "Election in progress";
+        const angle = Math.PI - (Math.PI * position / (count - 1));
+        const seat = document.createElement("button");
+        seat.type = "button";
+        seat.className = "chamber-seat" + (member && member.holder ? " occupied" : " unfilled");
+        seat.style.left = (50 + radius * Math.cos(angle)) + "%";
+        seat.style.top = (91 - radius * 1.65 * Math.sin(angle)) + "%";
+        seat.setAttribute("aria-label", description);
+        const show = () => { details.textContent = description; };
+        seat.addEventListener("mouseenter", show);
+        seat.addEventListener("focus", show);
+        seat.addEventListener("click", show);
+        root.appendChild(seat);
+      }
+    });
+    if (entries.length > seatCount) {
+      const warning = document.createElement("p");
+      warning.className = "warn";
+      warning.textContent = "The member list has more entries than available seats. Please update the list in the admin dashboard.";
+      root.after(warning);
+    }
+  };
+  render("senateSeats", "senateSeatDetails", SITE.senators, 14);
+  render("houseSeats", "houseSeatDetails", SITE.representatives, 16);
+})();
+
 const pages = [
   ["index.html", "Home Page"],
   ["election-info.html", "Election Info"],
