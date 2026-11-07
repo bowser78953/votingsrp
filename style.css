@@ -26,6 +26,8 @@ table.admins td, table.admins th { text-align:left; padding:8px; border-bottom:1
 .campaign-admin-row strong { margin-right:auto; }
 @media (max-width:500px) { .campaign-card { flex-direction:column; } .campaign-photo { width:80px; height:80px; } }
 .map-instructions { text-align:center; color:#536984; }
+#map .dist:focus { outline:none; }
+#map .dist:focus-visible { outline:none; }
 #map .dist:focus-visible polygon { stroke:#215a9b; stroke-width:5; }
 .map-details { width:min(480px, calc(100% - 32px)); max-height:80vh; overflow:auto; border:0; border-radius:14px; padding:24px; color:var(--navy); box-shadow:0 12px 40px #0005; }
 .map-details::backdrop { background:#091a2cb3; }
