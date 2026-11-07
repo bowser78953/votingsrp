@@ -301,8 +301,8 @@ window.SRP_DATA = {
       "area": "Springfield",
       "pick": 1,
       "candidates": [
-        "N/A",
-        "N/A"
+        "Bowser",
+        "Wedgie"
       ],
       "map": "county"
     }
