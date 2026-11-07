@@ -314,11 +314,11 @@ window.SRP_DATA = {
     "minimonkey20121": "#0ECC0A"
   },
   "electionSchedule": {
-    "campaigningOpens": "2026-11-7 16:43",
-    "campaigningCloses": "2026-11-9 12:00",
+    "campaigningOpens": "2026-11-07 16:45",
+    "campaigningCloses": "2026-11-09 12:00",
     "votingOpens": "2026-11-10 12:00",
     "votingCloses": "2026-11-11 12:00",
-    "registrationOpens": "2026-11-9 12:00",
+    "registrationOpens": "2026-11-09 12:00",
     "registrationCloses": "2026-11-10 12:00"
   },
   "candidateProfiles": [],
