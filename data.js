@@ -59,7 +59,7 @@ window.SRP_DATA = {
       "area": "River City",
       "pick": 1,
       "candidates": [
-        "805_Noth",
+        "805_North",
         "N/A"
       ],
       "map": "county"
@@ -301,8 +301,8 @@ window.SRP_DATA = {
       "area": "River City",
       "pick": 1,
       "candidates": [
-        "Bowser",
-        "Wedgie"
+        "N/A",
+        "N/A"
       ],
       "map": "county"
     }
@@ -310,8 +310,7 @@ window.SRP_DATA = {
   "ballotTitle": "",
   "electionOpens": "2026-11-6 01:05",
   "colors": {
-    "Bowser": "#E80505",
-    "Wedgie": "#0560E8"
+    "805_North": "#C04000"
   },
   "electionSchedule": {},
   "candidateProfiles": [],
