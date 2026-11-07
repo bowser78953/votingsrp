@@ -81,7 +81,7 @@ window.SRP_DATA = {
       "area": "Bayside",
       "pick": 1,
       "candidates": [
-        "N/A",
+        "minimonkey20121",
         "N/A"
       ],
       "map": "county"
@@ -310,9 +310,11 @@ window.SRP_DATA = {
   "ballotTitle": "",
   "electionOpens": "2026-11-6 01:05",
   "colors": {
-    "805_North": "#C04000"
+    "805_North": "#C04000",
+    "minimonkey20121": "#0ECC0A"
   },
   "electionSchedule": {},
   "candidateProfiles": [],
-  "officialResultsUrl": ""
+  "officialResultsUrl": "",
+  "campaigns": []
 };
