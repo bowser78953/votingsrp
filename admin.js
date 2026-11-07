@@ -147,6 +147,36 @@
   });
 
   const lines = s => s.split("\n").map(x => x.trim()).filter(Boolean);
+  const countyNames = ["Springfield", "Fairview Congressional", "Agriculture", "River City Housing", "River City", "Industrial", "Bayside"];
+  const districtCounts = {
+    "Springfield": 2,
+    "Fairview Congressional": 3,
+    "Agriculture": 2,
+    "River City Housing": 2,
+    "River City": 2,
+    "Industrial": 3,
+    "Bayside": 2
+  };
+  const inferOffice = race => {
+    if (/^(senate|representative|mayor)$/i.test(String(race.office || ""))) return race.office.toLowerCase();
+    const title = String(race.title || "");
+    if (/senat/i.test(title)) return "senate";
+    if (/representative|congress|house/i.test(title)) return "representative";
+    if (/mayor/i.test(title)) return "mayor";
+    return "";
+  };
+  const inferArea = (race, office) => {
+    if (race.area) return race.area;
+    const title = String(race.title || "");
+    if (office === "representative") {
+      const match = title.match(/(.+?)\s+District\s+(\d+)/i);
+      if (match) return match[1].trim() + " District " + Number(match[2]);
+    } else {
+      const county = countyNames.slice().sort((a, b) => b.length - a.length).find(name => title.toLowerCase().includes(name.toLowerCase()));
+      if (county) return county;
+    }
+    return "";
+  };
   function fillLists() {
     $("registrationOpens").value = data.electionSchedule.registrationOpens || "";
     $("registrationCloses").value = data.electionSchedule.registrationCloses || "";
@@ -155,8 +185,10 @@
     $("electionOpens").value = data.electionSchedule.votingOpens || data.electionOpens || "";
     $("votingCloses").value = data.electionSchedule.votingCloses || "";
     $("ballotTitle").value = data.ballotTitle || "";
-    $("ballotText").value = (data.ballot || []).map(b => b.title + " | " + (b.pick || 1) + " | " + b.candidates.join(", ") +
-      (/senat|mayor/i.test(String(b.title || "")) ? " | 2" : b.map ? " | " + (b.map === "districts" ? "2" : "1") : "")).join("\n");
+    $("ballotText").value = (data.ballot || []).map(b => {
+      const office = inferOffice(b);
+      return [b.title, office, inferArea(b, office), b.pick || 1, b.candidates.join(", ")].join(" | ");
+    }).join("\n");
     $("colorsText").value = Object.entries(data.colors || {}).map(([k, v]) => k + ": " + v).join("\n");
     $("candidateProfilesText").value = data.candidateProfiles.map(p => [p.name, p.office, p.experience, p.statement].join(" | ")).join("\n");
     $("officialResultsUrl").value = data.officialResultsUrl;
@@ -180,10 +212,44 @@
   });
   $("ballotTitle").addEventListener("input", () => { data.ballotTitle = $("ballotTitle").value.trim(); save(); });
   $("ballotText").addEventListener("input", () => {
-    data.ballot = lines($("ballotText").value).map(l => {
-      const p = l.split("|").map(x => x.trim());
-      return { title: p[0], pick: parseInt(p[1], 10) || 1, candidates: (p[2] || "").split(",").map(x => x.trim()).filter(Boolean), map: /big|district|^(type\s*)?(2|two)$/i.test(p[3] || "") ? "districts" : (p[3] ? "gray" : undefined) };
-    });
+    const parsed = [];
+    const seenAreas = new Set();
+    for (const [index, line] of lines($("ballotText").value).entries()) {
+      const p = line.split("|").map(x => x.trim());
+      const office = String(p[1] || "").toLowerCase();
+      const area = p[2] || "";
+      const pick = Number(p[3]);
+      const candidates = (p[4] || "").split(",").map(x => x.trim()).filter(Boolean);
+      const county = area.replace(/\s+County$/i, "").trim();
+      const districtMatch = area.match(/^(.+?)\s+District\s+(\d+)$/i);
+      const canonicalCounty = countyNames.find(name => name.toLowerCase() === county.toLowerCase());
+      const districtCounty = districtMatch && countyNames.find(name => name.toLowerCase() === districtMatch[1].toLowerCase());
+      const districtNumber = districtMatch ? Number(districtMatch[2]) : 0;
+      const validArea = office === "representative"
+        ? !!districtCounty && districtNumber <= districtCounts[districtCounty]
+        : (office === "senate" || office === "mayor") && !!canonicalCounty;
+      const areaKey = office + "|" + (office === "representative"
+        ? districtCounty + "|" + districtNumber
+        : canonicalCounty);
+      if (p.length !== 5 || !p[0] || !["senate", "representative", "mayor"].includes(office) || !validArea ||
+          !Number.isInteger(pick) || pick < 1 || !candidates.length || seenAreas.has(areaKey)) {
+        $("ballotError").textContent = "Race " + (index + 1) + " needs a title, valid office and matching county/district, positive pick count, candidates, and a unique office-area pair. Senate and Mayor use counties; Representatives use districts. No changes were saved.";
+        $("ballotError").classList.remove("hidden");
+        return;
+      }
+      seenAreas.add(areaKey);
+      parsed.push({
+        title: p[0],
+        office,
+        area: office === "representative" ? districtCounty + " District " + districtNumber : canonicalCounty,
+        pick,
+        candidates,
+        map: office === "representative" ? "district" : "county"
+      });
+    }
+    $("ballotError").textContent = "";
+    $("ballotError").classList.add("hidden");
+    data.ballot = parsed;
     save();
   });
   $("colorsText").addEventListener("input", () => {

@@ -15,7 +15,7 @@
 <nav></nav>
 <section class="hero small">
   <h2>Live Election Broadcast</h2>
-  <p>Find official result notices after verification. The district map is a browser-local preview only.</p>
+  <p>Find official result notices after verification. Senate and Mayor contests share county maps; Representatives share a district map.</p>
 </section>
 <main>
   <div id="stream">
@@ -26,7 +26,7 @@
     <div class="mapnav"><button type="button" id="mprev" aria-label="Previous map">&#8249;</button><h2 id="mtitle">Local Results Preview</h2><button type="button" id="mnext" aria-label="Next map">&#8250;</button></div>
     <div id="legend" class="legend"></div>
     <svg id="map" viewBox="0 0 847 767" role="img" aria-label="Unofficial local preview of district results"></svg>
-    <div id="mdots" class="mdots"></div>
+    <div id="mdots" class="office-tabs" role="tablist" aria-label="Results map office"></div>
     <p id="maptotal" class="muted"></p>
   </section>
 </main>

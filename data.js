@@ -44,12 +44,14 @@ window.SRP_DATA = {
   "ballot": [
     {
       "title": "Mayor of River City",
+      "office": "mayor",
+      "area": "River City",
       "pick": 1,
       "candidates": [
         "Hunt",
         "Bowser"
       ],
-      "map": "districts"
+      "map": "county"
     }
   ],
   "ballotTitle": "",

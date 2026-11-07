@@ -14,32 +14,55 @@
 </header>
 <nav></nav>
 <section class="hero">
+  <p class="hero-kicker">SPRINGFIELD ROLEPLAY GOVERNMENT</p>
   <h2>Serving Today. Shaping Tomorrow.</h2>
-  <p>Welcome to Springfield Roleplay Government Voting. Register, follow the elections live, and help decide who leads SRP.</p>
+  <p>Your central place for election schedules, candidate information, and official voting links for SRP.</p>
   <a href="register.html" class="btn gold">Register to Vote</a>
   <a href="election-info.html" class="btn ghost">Election Information</a>
-  <a href="live.html" class="btn ghost">Watch Live Broadcast</a>
+  <a href="policies.html" class="btn ghost">Election Rules</a>
 </section>
 <div id="countdown" class="countdown"></div>
 <main>
   <section class="steps reveal">
     <div class="step"><i>1</i><h3>Register</h3><p>Pick your county and district and sign up to vote.</p></div>
     <div class="step"><i>2</i><h3>Vote</h3><p>Use the official ballot once when voting is open. Votes are final.</p></div>
-    <div class="step"><i>3</i><h3>Watch Live</h3><p>Follow results district by district on the live map.</p></div>
+    <div class="step"><i>3</i><h3>Check Official Notices</h3><p>See results in official SRP announcements after verification.</p></div>
+  </section>
+  <section class="card gold home-election reveal" aria-labelledby="home-election-heading">
+    <div class="home-section-heading">
+      <div><p class="home-eyebrow">THE ELECTION DESK</p><h2 id="home-election-heading">Election at a glance</h2></div>
+      <span class="home-status-pill" id="homeElectionState">CHECKING</span>
+    </div>
+    <p id="homeElectionMessage" aria-live="polite"></p>
+    <div id="homeRaceList" class="home-race-list"></div>
+    <div class="home-actions">
+      <a class="btn blue" href="election-info.html">View Election Information</a>
+      <a class="btn ghost-dark" href="vote.html">Voting Details</a>
+    </div>
+  </section>
+  <section class="home-grid" aria-label="Learn about SRP government">
+    <article class="card reveal" id="senate">
+      <p class="home-eyebrow">REPRESENTATION &amp; LEGISLATION</p>
+      <h2>The SRP Senate</h2>
+      <p>The Senate represents SRP communities, reviews proposals, and helps shape government laws and policies.</p>
+      <a class="more" href="senate.html">Explore the Senate &rarr;</a>
+    </article>
+    <article class="card reveal" id="house">
+      <p class="home-eyebrow">YOUR COMMUNITY'S VOICE</p>
+      <h2>House of Representatives</h2>
+      <p>Representatives bring community concerns forward and take part in reviewing and debating government proposals.</p>
+      <a class="more" href="house.html">Explore the House &rarr;</a>
+    </article>
   </section>
   <section class="card gold reveal">
-    <h2>Why Vote in SRP?</h2>
-    <p>Voting in SRP gives every community member an opportunity to have their voice heard and help shape the future of the government. By voting, you help choose representatives who will make important decisions and represent the interests of the community. Elections promote fairness, accountability, and transparency within SRP. Every vote matters and helps determine the direction our government takes. Voting is your opportunity to participate, make a difference, and have a say in how SRP is governed.</p>
-  </section>
-  <section class="card reveal" id="senate">
-    <h2>What is the SRP Senate?</h2>
-    <p>The SRP Senate is the legislative branch of the SRP government, responsible for creating, reviewing, and passing laws and policies. Senators represent the community and work to ensure that the government operates fairly and effectively. The Senate oversees government departments and holds officials accountable for their actions. Members may participate in debates, propose legislation, and vote on important government decisions. Overall, the SRP Senate serves to represent the people, uphold justice, and maintain order within the government.</p>
-    <a class="more" href="senate.html">Learn more about the Senate &rarr;</a>
-  </section>
-  <section class="card reveal" id="house">
-    <h2>What is The House of Representatives?</h2>
-    <p>The SRP House of Representatives is a legislative body within the SRP government that represents the people and their interests. Representatives work to introduce, review, and debate proposed laws and government policies. They ensure that community concerns are heard and brought forward to the government. Members also work alongside the Senate to support legislation and maintain government accountability. Overall, the House of Representatives serves as the voice of the people and helps ensure fair and effective governance within SRP.</p>
-    <a class="more" href="house.html">Learn more about the House &rarr;</a>
+    <p class="home-eyebrow">A FAIR PROCESS STARTS WITH EVERYONE</p>
+    <h2>Make your participation count</h2>
+    <p>Review the published schedule and candidate information, follow the Election Rules &amp; Policies, and use only the official ballot when voting opens. Election officials publish results after verification.</p>
+    <div class="home-actions">
+      <a class="btn blue" href="policies.html">Read Election Rules</a>
+      <a class="btn ghost-dark" href="live.html">Official Notices &amp; Map Preview</a>
+      <a class="btn ghost-dark" href="election-info.html#candidate-application-heading">Candidate &amp; Planning Inquiry</a>
+    </div>
   </section>
 </main>
 <footer>&copy; Springfield Roleplay Government Voting</footer>

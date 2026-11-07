@@ -19,6 +19,8 @@ const easternDate = value => {
   const offset = zone.includes("EDT") ? 4 : 5;
   return new Date(Date.UTC(+y, +m - 1, +d, +h + offset, +min));
 };
+const usesCountyMap = (race, index = 0) => /^(county|counties|districts|big|2|two)$/i.test(String(race.map || "")) ||
+  (!race.map && (index === 1 || /senat|mayor/i.test(String(race.title || ""))));
 
 // Bumping voteRound in data.js clears every visitor's saved vote and tally the next time they visit.
 (function voteReset() {
@@ -65,6 +67,48 @@ const easternDate = value => {
   };
   fill("senators", SITE.senators);
   fill("reps", SITE.representatives);
+})();
+
+(function homeElectionSnapshot() {
+  const message = document.getElementById("homeElectionMessage");
+  if (!message) return;
+  const state = document.getElementById("homeElectionState");
+  const races = document.getElementById("homeRaceList");
+  const ballot = (SITE.ballot || []).filter(race => race && race.title && Array.isArray(race.candidates) && race.candidates.length);
+
+  if (SITE.votingOpen) {
+    state.textContent = httpsUrl(SITE.votingUrl) ? "VOTING OPEN" : "BALLOT NOT LINKED";
+    message.textContent = httpsUrl(SITE.votingUrl)
+      ? "Voting is marked open. Follow the official ballot link and election instructions."
+      : "Voting is marked open, but an official ballot link has not been published. Check Election Information for updates.";
+  } else if (SITE.registrationOpen) {
+    state.textContent = "REGISTRATION OPEN";
+    message.textContent = "Voter registration is currently marked open. Eligibility must still be confirmed by election officials.";
+  } else {
+    state.textContent = ballot.length ? "ELECTION INFORMATION" : "DATES NOT ANNOUNCED";
+    message.textContent = SITE.announcement && !/tbd/i.test(SITE.announcement)
+      ? String(SITE.announcement)
+      : "No election dates have been announced. Check the official schedule and notices for updates.";
+  }
+  state.classList.toggle("is-open", !!SITE.votingOpen || !!SITE.registrationOpen);
+
+  if (!ballot.length) {
+    const empty = document.createElement("p");
+    empty.className = "home-no-races";
+    empty.textContent = "No ballot races have been published yet.";
+    races.appendChild(empty);
+    return;
+  }
+  ballot.forEach(race => {
+    const item = document.createElement("div");
+    item.className = "home-race";
+    const title = document.createElement("strong");
+    title.textContent = race.title;
+    const candidates = document.createElement("span");
+    candidates.textContent = race.candidates.slice().sort((a, b) => String(a).localeCompare(String(b))).join(" · ");
+    item.append(title, candidates);
+    races.appendChild(item);
+  });
 })();
 
 const pages = [
@@ -228,7 +272,10 @@ const pages = [
     heading.textContent = election.title;
     const details = document.createElement("p");
     const pick = Number.isInteger(Number(election.pick)) && Number(election.pick) > 0 ? Number(election.pick) : 1;
-    details.textContent = "Select " + pick + (pick === 1 ? " candidate" : " candidates") + " when voting is open.";
+    const office = String(election.office || (/senat/i.test(election.title) ? "senate" : /representative|congress|house/i.test(election.title) ? "representative" : /mayor/i.test(election.title) ? "mayor" : ""));
+    const area = election.area ? " for " + election.area : "";
+    details.textContent = "Select " + pick + (pick === 1 ? " candidate" : " candidates") + " when voting is open." +
+      (office ? " " + office[0].toUpperCase() + office.slice(1) + area + " appears on the " + (office === "representative" ? "district" : "county") + " map." : "");
     const candidates = document.createElement("ul");
     candidates.className = "candidate-list";
     [...election.candidates].sort((a, b) => String(a).localeCompare(String(b), undefined, { sensitivity: "base" })).forEach(name => {
@@ -321,7 +368,8 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
 (function liveMap() {
   const box = document.getElementById("mapbox");
   if (!box) return;
-  const elections = (SITE.ballot || []).filter(p => p.candidates && p.candidates.length);
+  const elections = (SITE.ballot || []).map((race, index) => ({ ...race, ballotIndex: index }))
+    .filter(race => race.candidates && race.candidates.length);
   if (SITE.showMap === false) { box.remove(); return; }
   const svg = document.getElementById("map");
   const D = [
@@ -351,99 +399,138 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
     ["Industrial", "Industrial", "380,358 527,370 578,436 610,638 368,638 365,505 353,448 358,420", 473, 443],
     ["Bayside", "Bayside", "141,638 745,638 847,760 847,767 368,767 0,755 131,718", 430, 676]
   ];
-  const isBig = (el, i) => /senat|mayor/i.test(String(el.title || "")) ||
-    /big|district|^\s*(type\s*)?(2|two)\s*$/i.test(String(el.map || "")) || (!el.map && i === 1);
   const colors = SITE.colors || {};
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  if (!elections.length) {
-    document.getElementById("mtitle").textContent = "District Map — No Ballot Published";
-    document.getElementById("legend").innerHTML = '<span><i style="background:#d3d7dc"></i>No votes</span>';
-    const emptyMap = document.getElementById("map");
-    emptyMap.setAttribute("aria-label", "Blank district map preview; no ballot published");
-    emptyMap.innerHTML = D.map(d => {
-      const points = d[3].split(" ").map(p => p.split(",").map(Number));
-      const cx = points.reduce((sum, p) => sum + p[0], 0) / points.length;
-      const cy = points.reduce((sum, p) => sum + p[1], 0) / points.length;
-      const [area, district] = d[2].split(" ");
-      return '<g><polygon points="' + d[3] + '" fill="#d3d7dc" stroke="#222" stroke-width="2"></polygon>' +
-        '<text x="' + cx + '" y="' + cy + '" text-anchor="middle" font-size="24" font-weight="700" fill="#222" pointer-events="none">' +
-        esc(area) + '<tspan x="' + cx + '" dy="26">' + esc(district) + "</tspan></text></g>";
-    }).join("");
-    document.querySelector(".mapnav").classList.add("single");
-    document.getElementById("maptotal").textContent = "No ballot data is published. Districts are shown in gray as a blank preview; no results are displayed.";
-    return;
-  }
   const tallies = () => JSON.parse(localStorage.getItem("srp_tally2") || "{}");
+  const offices = [
+    { key: "senate", label: "Senate", geography: "county" },
+    { key: "representative", label: "Representatives", geography: "district" },
+    { key: "mayor", label: "Mayors", geography: "county" }
+  ];
+  const officeOf = race => {
+    if (/^(senate|representative|mayor)$/i.test(String(race.office || ""))) return race.office.toLowerCase();
+    const title = String(race.title || "");
+    if (/senat/i.test(title)) return "senate";
+    if (/representative|congress|house/i.test(title)) return "representative";
+    if (/mayor/i.test(title)) return "mayor";
+    return "";
+  };
+  const normalizeCounty = value => String(value || "").replace(/\s+County$/i, "").trim().toLowerCase();
+  const countyNames = B.map(area => area[0]).sort((a, b) => b.length - a.length);
+  const areaOf = race => {
+    if (race.area) {
+      const districtMatch = String(race.area).match(/^(.+?)\s+District\s+(\d+)$/i);
+      if (districtMatch) return { type: "district", key: districtMatch[1] + "|" + Number(districtMatch[2]) };
+      return { type: "county", key: normalizeCounty(race.area) };
+    }
+    const title = String(race.title || "");
+    if (officeOf(race) === "representative") {
+      const district = D.find(area => {
+        const label = area[2];
+        const parts = label.match(/^(.*?)\s+D(\d+)$/);
+        return title.toLowerCase().includes((area[0] + " district " + area[1]).toLowerCase()) ||
+          (parts && title.toLowerCase().includes(parts[1].toLowerCase() + " d" + parts[2]));
+      });
+      return district ? { type: "district", key: district[0] + "|" + district[1] } : null;
+    }
+    const county = countyNames.find(name => title.toLowerCase().includes(name.toLowerCase()));
+    return county ? { type: "county", key: normalizeCounty(county) } : null;
+  };
   let cur = 0, timer;
   const tip = document.createElement("div");
   tip.className = "maptip";
   box.style.position = "relative";
   box.appendChild(tip);
 
+  const resultsFor = (race, area) => {
+    const all = tallies()[race.ballotIndex] || {};
+    if (area.type === "district") return all[area.key] || {};
+    const countyName = B.find(item => normalizeCounty(item[0]) === area.key);
+    const result = {};
+    if (countyName) Object.keys(all).filter(key => key.split("|")[0] === countyName[0])
+      .forEach(key => Object.entries(all[key]).forEach(([name, count]) => { result[name] = (result[name] || 0) + count; }));
+    return result;
+  };
   const draw = () => {
-    const el = elections[cur], names = el.candidates, gray = true;
-    const tally = tallies()[cur] || {};
-    document.getElementById("mtitle").textContent = el.title + " — Local Preview";
-    document.getElementById("legend").innerHTML = names.map(n => '<span><i style="background:' + (colors[n] || "#888") + '"></i>' + esc(n) + "</span>").join("") + '<span><i style="background:' + "#d3d7dc" + '"></i>No votes</span>';
-    let total = 0, out = gray ? "" : '<image href="map.jpg" x="0" y="0" width="847" height="767"></image>';
-    D.forEach(d => {
-      const t = tally[d[0] + "|" + d[1]] || {};
-      const e = Object.entries(t).sort((a, b) => b[1] - a[1]);
-      const tie = e.length > 1 && e[0][1] === e[1][1];
-      const won = e.length && !tie;
-      const fill = won ? (colors[e[0][0]] || "#888") : (gray ? "#d3d7dc" : "#000");
-      const op = won ? (gray ? 1 : 0.62) : (gray ? 1 : 0.0);
-      e.forEach(x => total += x[1]);
-      const pts = d[3].split(" ").map(p => p.split(",").map(Number));
-      const cx = pts.reduce((s, p) => s + p[0], 0) / pts.length, cy = pts.reduce((s, p) => s + p[1], 0) / pts.length;
-      const txt = won ? "#fff" : "#222";
-      out += '<g class="dist" data-k="' + d[0] + "|" + d[1] + '" data-n="' + d[0] + " District " + d[1] + '"><polygon points="' + d[3] + '" fill="' + fill + '" fill-opacity="' + op + '" stroke="' + "#222" + '" stroke-width="2"></polygon><text x="' + cx + '" y="' + cy + '" text-anchor="middle" font-size="24" font-weight="700" fill="' + txt + '" ' + 'stroke="none" ' + 'pointer-events="none">' + d[2].split(" ")[0] + '<tspan x="' + cx + '" dy="26">' + d[2].split(" ")[1] + "</tspan></text></g>";
+    const office = offices[cur];
+    const groupRaces = elections.filter(race => officeOf(race) === office.key);
+    const countyMap = office.geography === "county";
+    const regions = countyMap ? B.map(area => ({
+      area: { type: "county", key: normalizeCounty(area[0]) },
+      label: area[1],
+      points: area[2],
+      x: area[3],
+      y: area[4]
+    })) : D.map(area => {
+      const labelParts = area[2].split(" ");
+      return {
+        area: { type: "district", key: area[0] + "|" + area[1] },
+        label: area[2],
+        points: area[3],
+        x: area[3].split(" ").map(point => Number(point.split(",")[0])).reduce((sum, x) => sum + x, 0) / area[3].split(" ").length,
+        y: area[3].split(" ").map(point => Number(point.split(",")[1])).reduce((sum, y) => sum + y, 0) / area[3].split(" ").length,
+        labelParts
+      };
     });
-    if (isBig(el, cur)) {
-      out = ""; total = 0;
-      B.forEach(b => {
-        const t = {};
-        Object.keys(tally).filter(k => k.split("|")[0] === b[0]).forEach(k => Object.entries(tally[k]).forEach(([n, v]) => t[n] = (t[n] || 0) + v));
-        const e = Object.entries(t).sort((x, y) => y[1] - x[1]);
-        const won = e.length && !(e.length > 1 && e[0][1] === e[1][1]);
-        e.forEach(x => total += x[1]);
-        out += '<g class="dist" data-k="' + b[0] + '" data-n="' + b[1] + ' District"><polygon points="' + b[2] + '" fill="' + (won ? (colors[e[0][0]] || "#888") : "#d3d7dc") + '" stroke="#222" stroke-width="2"></polygon><text x="' + b[3] + '" y="' + b[4] + '" text-anchor="middle" font-size="22" font-weight="700" fill="' + (won ? "#fff" : "#222") + '" pointer-events="none">' + b[1] + '<tspan x="' + b[3] + '" dy="25">District</tspan></text></g>';
+    const mapName = countyMap ? "county" : "district";
+    document.getElementById("mtitle").textContent = office.label + " — " + (countyMap ? "County" : "District") + " Map Preview";
+    svg.setAttribute("aria-label", "Unofficial local preview of " + office.label + " by " + mapName);
+    const legendNames = [...new Set(groupRaces.flatMap(race => race.candidates))].sort();
+    document.getElementById("legend").innerHTML = legendNames.map(name =>
+      '<span><i style="background:' + (colors[name] || "#888") + '"></i>' + esc(name) + "</span>"
+    ).join("") + '<span><i style="background:#d3d7dc"></i>No votes / no race</span>';
+    let total = 0;
+    const out = regions.map(region => {
+      const race = groupRaces.find(item => {
+        const area = areaOf(item);
+        return area && area.type === region.area.type && area.key === region.area.key;
       });
-    }
+      const tally = race ? resultsFor(race, region.area) : {};
+      const entries = Object.entries(tally).sort((a, b) => b[1] - a[1]);
+      const tie = entries.length > 1 && entries[0][1] === entries[1][1];
+      const won = entries.length > 0 && !tie;
+      entries.forEach(([, count]) => { total += count; });
+      const fill = won ? (colors[entries[0][0]] || "#888") : "#d3d7dc";
+      const label = region.label;
+      const lines = countyMap ? [label, "County"] : region.labelParts;
+      const fontSize = countyMap ? 19 : 24;
+      const lineHeight = countyMap ? 24 : 26;
+      const data = race ? race.ballotIndex : "";
+      return '<g class="dist" data-race="' + data + '" data-k="' + esc(region.area.key) + '" data-n="' + esc(countyMap ? label + " County" : region.label) + '">' +
+        '<polygon points="' + region.points + '" fill="' + fill + '" stroke="#222" stroke-width="2"></polygon>' +
+        '<text x="' + region.x + '" y="' + region.y + '" text-anchor="middle" font-size="' + fontSize + '" font-weight="700" fill="' + (won ? "#fff" : "#222") + '" pointer-events="none">' +
+        esc(lines[0]) + '<tspan x="' + region.x + '" dy="' + lineHeight + '">' + esc(lines[1] || "") + "</tspan></text></g>";
+    }).join("");
     svg.innerHTML = out;
-    document.getElementById("maptotal").textContent = "Local browser preview: " + total + " vote" + (total === 1 ? "" : "s") + " on this device; not an official count.";
-    document.querySelectorAll("#mdots button").forEach((b, i) => b.classList.toggle("on", i === cur));
+    document.getElementById("maptotal").textContent = groupRaces.length
+      ? "Local browser preview: " + total + " vote" + (total === 1 ? "" : "s") + " on this device; not an official count."
+      : "No " + office.label.toLowerCase() + " contests are published. Areas are gray; no results are displayed.";
+    document.querySelectorAll("#mdots button").forEach((button, index) => {
+      button.classList.toggle("on", index === cur);
+      button.setAttribute("aria-selected", String(index === cur));
+    });
   };
 
-  const go = i => { cur = (i + elections.length) % elections.length; draw(); };
+  const go = i => { cur = (i + offices.length) % offices.length; draw(); };
   const nav = box.querySelector(".mapnav"), dots = document.getElementById("mdots");
-  if (elections.length > 1) {
-    dots.innerHTML = elections.map((e, i) => '<button type="button" aria-label="' + esc(e.title) + '"></button>').join("");
-    dots.addEventListener("click", ev => { const i = [...dots.children].indexOf(ev.target); if (i >= 0) go(i); });
-    document.getElementById("mprev").onclick = () => go(cur - 1);
-    document.getElementById("mnext").onclick = () => go(cur + 1);
-    const start = () => { clearInterval(timer); timer = setInterval(() => go(cur + 1), 8000); };
-    box.addEventListener("mouseenter", () => clearInterval(timer));
-    box.addEventListener("mouseleave", start);
-    start();
-  } else {
-    nav.classList.add("single");
-  }
-
+  dots.innerHTML = offices.map((office, index) => '<button type="button" role="tab" aria-label="' + office.label + ' map" aria-selected="' + (index === cur) + '">' + office.label + "</button>").join("");
+  dots.addEventListener("click", ev => {
+    const index = [...dots.children].indexOf(ev.target.closest("button"));
+    if (index >= 0) go(index);
+  });
+  document.getElementById("mprev").onclick = () => go(cur - 1);
+  document.getElementById("mnext").onclick = () => go(cur + 1);
   svg.addEventListener("mousemove", ev => {
     const g = ev.target.closest(".dist");
     if (!g) { tip.style.display = "none"; return; }
-    const names = elections[cur].candidates;
-    const all = tallies()[cur] || {};
-    let t = all[g.dataset.k] || {};
-    if (isBig(elections[cur], cur)) {
-      t = {};
-      Object.keys(all).filter(k => k.split("|")[0] === g.dataset.k).forEach(k => Object.entries(all[k]).forEach(([n, v]) => t[n] = (t[n] || 0) + v));
-    }
+    const race = elections.find(item => String(item.ballotIndex) === g.dataset.race);
+    const area = race ? areaOf(race) : null;
+    const t = race && area ? resultsFor(race, area) : {};
     const sum = Object.values(t).reduce((a, b) => a + b, 0);
-    const rows = names.map(n => ({ n, v: t[n] || 0 })).sort((a, b) => b.v - a.v);
-    let h = "<b>" + g.dataset.n + "</b><div class=\"tl\">" + esc(elections[cur].title) + "</div>";
-    if (!sum) h += '<div class="tl">No votes yet</div>';
+    const rows = (race ? race.candidates : []).map(n => ({ n, v: t[n] || 0 })).sort((a, b) => b.v - a.v);
+    let h = "<b>" + g.dataset.n + "</b><div class=\"tl\">" + esc(race ? race.title : "No contest published for this area") + "</div>";
+    if (!race) h += '<div class="tl">No eligible race published</div>';
+    else if (!sum) h += '<div class="tl">No votes yet</div>';
     else {
       const lead = rows.length > 1 && rows[0].v === rows[1].v ? "Tied" : rows[0].n + " leading";
       h += '<div class="tl">' + esc(lead) + " &middot; " + sum + " vote" + (sum === 1 ? "" : "s") + "</div>";

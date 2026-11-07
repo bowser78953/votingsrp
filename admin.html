@@ -86,8 +86,10 @@
       <label class="switch"><input type="checkbox" id="campaignOpen"><span class="slider"></span><span class="swtext"><b>Campaign Statements</b><small id="campaignState">CLOSED</small></span></label>
       <label for="ballotTitle">Ballot title</label>
       <input id="ballotTitle" placeholder="2026 General Election">
-      <label for="ballotText">Elections, one per line: Title | how many to pick | Candidate, Candidate | map 1 or 2 (optional)</label>
-      <textarea class="code" id="ballotText" style="height:110px" placeholder="President | 1 | Bowser, Wedgie | picture"></textarea>
+      <label for="ballotText">Ballot races, one per line: Title | office | area | how many to pick | Candidate, Candidate</label>
+      <textarea class="code" id="ballotText" style="height:130px" placeholder="Senator - Springfield | senate | Springfield | 1 | Candidate A, Candidate B&#10;Representative - Springfield District 1 | representative | Springfield District 1 | 1 | Candidate C, Candidate D&#10;Mayor of River City | mayor | River City | 1 | Candidate E, Candidate F"></textarea>
+      <p>Use <b>senate</b> and <b>mayor</b> with a county name (for example, Springfield); use <b>representative</b> with a full district name (for example, Springfield District 1). The site groups entries into one map per office. Configure the official external ballot separately to show each voter only their eligible races; this static site cannot verify voter districts or enforce ballot access.</p>
+      <p id="ballotError" class="warn hidden" role="alert"></p>
       <label for="colorsText">Candidate colors, one per line: Name: #hexcolor</label>
       <textarea class="code" id="colorsText" style="height:80px" placeholder="Bowser: #d93025"></textarea>
       <label for="candidateProfilesText">Owner-approved candidate profiles, one per line: Name | Office | SRP experience/qualifications | SRP campaign statement</label>
