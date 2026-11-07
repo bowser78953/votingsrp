@@ -43,7 +43,7 @@ window.SRP_DATA = {
   "votingUrl": "",
   "ballot": [
     {
-      "title": "Senator - Springfield",
+      "title": "Senator 2 - Springfield",
       "office": "senate",
       "area": "Springfield",
       "pick": 1,
@@ -54,7 +54,7 @@ window.SRP_DATA = {
       "map": "county"
     },
     {
-      "title": "Senator - River City",
+      "title": "Senator 2 - River City",
       "office": "senate",
       "area": "River City",
       "pick": 1,
@@ -65,7 +65,7 @@ window.SRP_DATA = {
       "map": "county"
     },
     {
-      "title": "Senator - River City Housing",
+      "title": "Senator 2 - River City Housing",
       "office": "senate",
       "area": "River City Housing",
       "pick": 1,
@@ -76,7 +76,7 @@ window.SRP_DATA = {
       "map": "county"
     },
     {
-      "title": "Senator - Bayside",
+      "title": "Senator 2 - Bayside",
       "office": "senate",
       "area": "Bayside",
       "pick": 1,
@@ -87,7 +87,7 @@ window.SRP_DATA = {
       "map": "county"
     },
     {
-      "title": "Senator - Industrial",
+      "title": "Senator 2 - Industrial",
       "office": "senate",
       "area": "Industrial",
       "pick": 1,
@@ -98,7 +98,7 @@ window.SRP_DATA = {
       "map": "county"
     },
     {
-      "title": "Senator - Agriculture",
+      "title": "Senator 2 - Agriculture",
       "office": "senate",
       "area": "Agriculture",
       "pick": 1,
@@ -109,7 +109,7 @@ window.SRP_DATA = {
       "map": "county"
     },
     {
-      "title": "Senator - Fairview Congressional",
+      "title": "Senator 2 - Fairview Congressional",
       "office": "senate",
       "area": "Fairview Congressional",
       "pick": 1,
@@ -120,31 +120,9 @@ window.SRP_DATA = {
       "map": "county"
     },
     {
-      "title": "Representative - Springfield District 1",
-      "office": "representative",
-      "area": "Springfield District 1",
-      "pick": 1,
-      "candidates": [
-        "N/A",
-        "N/A"
-      ],
-      "map": "district"
-    },
-    {
       "title": "Representative - Springfield District 2",
       "office": "representative",
       "area": "Springfield District 2",
-      "pick": 1,
-      "candidates": [
-        "N/A",
-        "N/A"
-      ],
-      "map": "district"
-    },
-    {
-      "title": "Representative - Fairview Congressional District 1",
-      "office": "representative",
-      "area": "Fairview Congressional District 1",
       "pick": 1,
       "candidates": [
         "N/A",
@@ -175,31 +153,9 @@ window.SRP_DATA = {
       "map": "district"
     },
     {
-      "title": "Representative - River City Housing District 1",
-      "office": "representative",
-      "area": "River City Housing District 1",
-      "pick": 1,
-      "candidates": [
-        "N/A",
-        "N/A"
-      ],
-      "map": "district"
-    },
-    {
       "title": "Representative - River City Housing District 2",
       "office": "representative",
       "area": "River City Housing District 2",
-      "pick": 1,
-      "candidates": [
-        "N/A",
-        "N/A"
-      ],
-      "map": "district"
-    },
-    {
-      "title": "Representative - River City District 1",
-      "office": "representative",
-      "area": "River City District 1",
       "pick": 1,
       "candidates": [
         "N/A",
@@ -219,31 +175,9 @@ window.SRP_DATA = {
       "map": "district"
     },
     {
-      "title": "Representative - Bayside District 1",
-      "office": "representative",
-      "area": "Bayside District 1",
-      "pick": 1,
-      "candidates": [
-        "N/A",
-        "N/A"
-      ],
-      "map": "district"
-    },
-    {
       "title": "Representative - Bayside District 2",
       "office": "representative",
       "area": "Bayside District 2",
-      "pick": 1,
-      "candidates": [
-        "N/A",
-        "N/A"
-      ],
-      "map": "district"
-    },
-    {
-      "title": "Representative - Industrial District 1",
-      "office": "representative",
-      "area": "Industrial District 1",
       "pick": 1,
       "candidates": [
         "N/A",
@@ -266,17 +200,6 @@ window.SRP_DATA = {
       "title": "Representative - Industrial District 3",
       "office": "representative",
       "area": "Industrial District 3",
-      "pick": 1,
-      "candidates": [
-        "N/A",
-        "N/A"
-      ],
-      "map": "district"
-    },
-    {
-      "title": "Representative - Agriculture District 1",
-      "office": "representative",
-      "area": "Agriculture District 1",
       "pick": 1,
       "candidates": [
         "N/A",
