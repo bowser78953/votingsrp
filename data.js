@@ -64,7 +64,7 @@ window.SRP_DATA = {
       "area": "Springfield",
       "pick": 1,
       "candidates": [
-        "N/A",
+        "SonnyManny9",
         "N/A"
       ],
       "map": "county"
@@ -142,7 +142,7 @@ window.SRP_DATA = {
       "pick": 1,
       "candidates": [
         "spiderx15310",
-        "N/A"
+        "ERLC_2077"
       ],
       "map": "district"
     },
@@ -254,7 +254,9 @@ window.SRP_DATA = {
     "Godzilla_Iraq": "",
     "spiderx15310": "",
     "Deancena9": "#5539CC",
-    "eaglesfly409": ""
+    "eaglesfly409": "",
+    "ERLC_2077": "#5BA5F5",
+    "SonnyManny9": "#2E8B57"
   },
   "electionSchedule": {
     "campaigningOpens": "2026-11-07 16:45",
