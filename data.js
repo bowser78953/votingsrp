@@ -231,18 +231,18 @@ window.SRP_DATA = {
     }
   ],
   "ballotTitle": "2026 Congressional Elections",
-  "electionOpens": "2026-11-10 12:00",
+  "electionOpens": "2026-11-14 12:00",
   "colors": {
     "805_North": "#C04000",
     "minimonkey20121": "#0ECC0A"
   },
   "electionSchedule": {
     "campaigningOpens": "2026-11-07 16:45",
-    "campaigningCloses": "2026-11-09 12:00",
-    "votingOpens": "2026-11-10 12:00",
-    "votingCloses": "2026-11-11 12:00",
-    "registrationOpens": "2026-11-09 12:00",
-    "registrationCloses": "2026-11-10 12:00"
+    "campaigningCloses": "2026-11-14 12:00",
+    "votingOpens": "2026-11-14 12:00",
+    "votingCloses": "2026-11-15 12:00",
+    "registrationOpens": "2026-11-13 12:00",
+    "registrationCloses": "2026-11-14 12:00"
   },
   "candidateProfiles": [],
   "officialResultsUrl": "",
