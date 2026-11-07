@@ -43,20 +43,45 @@ window.SRP_DATA = {
   "votingUrl": "",
   "ballot": [
     {
-      "title": "Mayor of River City",
-      "office": "mayor",
-      "area": "River City",
+      "title": "Senator - Springfield",
+      "office": "senate",
+      "area": "Springfield",
       "pick": 1,
       "candidates": [
-        "Hunt",
-        "Bowser"
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "county"
+    },
+    {
+      "title": "Representative - Springfield District 1",
+      "office": "representative",
+      "area": "Springfield District 1",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
+      ],
+      "map": "district"
+    },
+    {
+      "title": "Mayor of Springfield",
+      "office": "mayor",
+      "area": "Springfield",
+      "pick": 1,
+      "candidates": [
+        "Bowser",
+        "Wedgie"
       ],
       "map": "county"
     }
   ],
   "ballotTitle": "",
   "electionOpens": "2026-11-6 01:05",
-  "colors": {},
+  "colors": {
+    "Bowser": "#E80505",
+    "Wedgie": "#0560E8"
+  },
   "electionSchedule": {},
   "candidateProfiles": [],
   "officialResultsUrl": ""
