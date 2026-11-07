@@ -59,7 +59,7 @@ window.SRP_DATA = {
       "area": "River City",
       "pick": 1,
       "candidates": [
-        "N/A",
+        "805_Noth",
         "N/A"
       ],
       "map": "county"
