@@ -4,6 +4,7 @@
   let data = Object.assign(JSON.parse(JSON.stringify(window.SRP_DATA)), JSON.parse(localStorage.getItem(DRAFT) || "{}"));
   data.electionSchedule = data.electionSchedule || {};
   data.candidateProfiles = Array.isArray(data.candidateProfiles) ? data.candidateProfiles : [];
+  data.campaigns = Array.isArray(data.campaigns) ? data.campaigns : [];
   data.officialResultsUrl = data.officialResultsUrl || "";
   delete data.siteOnline;
   // The live admin list always comes from the published data.js, so removed admins can't linger in a draft.
@@ -24,6 +25,7 @@
     $("role").textContent = session.role;
     $("adminstab").classList.toggle("hidden", session.role !== "owner");
     $("publishtab").classList.toggle("hidden", !isOwner());
+    $("campaignManager").classList.toggle("hidden", !isOwner() || !document.querySelector('[data-t="settings"]').classList.contains("on"));
     document.querySelector('[data-p="publish"]').classList.toggle("hidden", !isOwner());
     $("ghToken").value = isOwner() ? localStorage.getItem("srp_gh") || "" : "";
     ["announcement", "registerFormUrl", "liveStreamUrl", "contactEmail", "votingUrl"].forEach(k => $(k).value = data[k] || "");
@@ -71,7 +73,7 @@
     if (!t) return;
     if (t === "publish" && !isOwner()) return;
     document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b === e.target));
-    document.querySelectorAll("[data-p]").forEach(p => p.classList.toggle("hidden", p.dataset.p !== t));
+    document.querySelectorAll("[data-p]").forEach(p => p.classList.toggle("hidden", p.dataset.p !== t || (p.id === "campaignManager" && !isOwner())));
     if (t === "publish") renderOut();
   });
 
@@ -205,6 +207,84 @@
     $("ghToken").value = isOwner() ? localStorage.getItem("srp_gh") || "" : "";
   }
   fillLists();
+
+  let editingCampaign = null;
+  function resetCampaignForm() {
+    editingCampaign = null;
+    $("campaignForm").reset();
+    $("campaignSave").textContent = "Add Campaign to Draft";
+    $("campaignCancel").classList.add("hidden");
+    $("campaignError").classList.add("hidden");
+  }
+  function renderCampaigns() {
+    const list = $("campaignList");
+    list.replaceChildren();
+    if (!data.campaigns.length) {
+      list.textContent = "No campaigns in this draft yet.";
+      return;
+    }
+    data.campaigns.forEach((campaign, index) => {
+      const row = document.createElement("div");
+      row.className = "campaign-admin-row";
+      const title = document.createElement("strong");
+      title.textContent = campaign.name + " — " + campaign.office;
+      const edit = document.createElement("button");
+      edit.type = "button";
+      edit.className = "btn ghost-dark";
+      edit.textContent = "Edit";
+      edit.addEventListener("click", () => {
+        if (!isOwner()) return;
+        editingCampaign = index;
+        $("campaignPhoto").value = campaign.photoUrl || "";
+        $("campaignName").value = campaign.name;
+        $("campaignOffice").value = campaign.office;
+        $("campaignStatement").value = campaign.statement;
+        $("campaignSave").textContent = "Save Changes to Draft";
+        $("campaignCancel").classList.remove("hidden");
+        $("campaignMessage").textContent = "";
+        $("campaignName").focus();
+      });
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "btn ghost-dark";
+      remove.textContent = "Remove";
+      remove.addEventListener("click", () => {
+        if (!isOwner() || !confirm("Remove this campaign from the draft? Publish to apply the change.")) return;
+        data.campaigns.splice(index, 1);
+        resetCampaignForm();
+        renderCampaigns();
+        save();
+        $("campaignMessage").textContent = "Campaign removed from draft. Publish to update the live site.";
+      });
+      row.append(title, edit, remove);
+      list.appendChild(row);
+    });
+  }
+  $("campaignForm").addEventListener("submit", event => {
+    event.preventDefault();
+    if (!isOwner()) { alert("Only the owner can manage campaigns."); return; }
+    const photoUrl = $("campaignPhoto").value.trim();
+    const name = $("campaignName").value.trim();
+    const office = $("campaignOffice").value.trim();
+    const statement = $("campaignStatement").value.trim();
+    if (!name || !office || !statement || (photoUrl && !httpsUrl(photoUrl))) {
+      $("campaignError").textContent = "Enter a name, position, and campaign statement. Photo links must use HTTPS.";
+      $("campaignError").classList.remove("hidden");
+      return;
+    }
+    const campaign = { photoUrl, name, office, statement };
+    if (editingCampaign === null) data.campaigns.push(campaign);
+    else data.campaigns[editingCampaign] = campaign;
+    resetCampaignForm();
+    renderCampaigns();
+    save();
+    $("campaignMessage").textContent = "Campaign saved to draft. Use the Publish tab to update the live site.";
+  });
+  $("campaignCancel").addEventListener("click", () => {
+    resetCampaignForm();
+    $("campaignMessage").textContent = "Editing cancelled.";
+  });
+  renderCampaigns();
   ["registrationOpens", "registrationCloses", "campaigningOpens", "campaigningCloses", "votingCloses"].forEach(id => {
     $(id).addEventListener("input", () => {
       data.electionSchedule[id] = $(id).value.trim();

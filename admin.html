@@ -101,6 +101,26 @@
       <p id="officialResultsUrlError" class="warn hidden" role="alert"></p>
     </section>
 
+    <section class="card hidden" data-p="settings" id="campaignManager">
+        <h3>Campaigns</h3>
+        <p>Add or edit a candidate's campaign, then use the Publish tab to put your changes on the live site. Campaigns appear only when Campaign Statements are enabled and the scheduled campaign period is open.</p>
+        <div id="campaignList"></div>
+        <form id="campaignForm">
+          <label for="campaignPhoto">Candidate photo URL (HTTPS, optional)</label>
+          <input id="campaignPhoto" type="url" placeholder="https://example.com/photo.jpg">
+          <label for="campaignName">Candidate name</label>
+          <input id="campaignName" required>
+          <label for="campaignOffice">Position</label>
+          <input id="campaignOffice" required>
+          <label for="campaignStatement">Campaign statement</label>
+          <textarea id="campaignStatement" rows="10" required placeholder="Paste the full campaign statement here. Multiple paragraphs are supported."></textarea>
+          <p id="campaignError" class="warn hidden" role="alert"></p>
+          <button class="btn blue" type="submit" id="campaignSave">Add Campaign to Draft</button>
+          <button class="btn ghost-dark hidden" type="button" id="campaignCancel">Cancel Editing</button>
+          <p id="campaignMessage" aria-live="polite"></p>
+        </form>
+    </section>
+
     <section class="card" data-p="settings">
       <h3>Senators &amp; Representatives</h3>
       <label for="senatorsText">Senators, one per line</label>

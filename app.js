@@ -116,6 +116,7 @@ const usesCountyMap = (race, index = 0) => /^(county|counties|districts|big|2|tw
 const pages = [
   ["index.html", "Home Page"],
   ["election-info.html", "Election Info"],
+  ["campaigns.html", "Campaigns"],
   ["policies.html", "Policies"],
   ["senate.html", "SRP Senate"],
   ["house.html", "SRP House of Rep"],
@@ -135,6 +136,54 @@ const pages = [
     html += '<a href="' + href + '" class="' + (active + extra).trim() + '">' + label + "</a>";
   });
   nav.innerHTML = html;
+})();
+
+(function campaignsPage() {
+  const list = document.getElementById("campaignsList");
+  if (!list) return;
+  const schedule = SITE.electionSchedule || {};
+  const start = easternDate(schedule.campaigningOpens);
+  const end = easternDate(schedule.campaigningCloses);
+  const now = new Date();
+  const active = SITE.campaignOpen === true && start && end && start <= now && now <= end;
+  const status = document.getElementById("campaignStatus");
+  if (!active) {
+    status.textContent = "Campaign statements are currently closed.";
+    return;
+  }
+  const campaigns = (Array.isArray(SITE.campaigns) ? SITE.campaigns : [])
+    .filter(campaign => campaign && campaign.name && campaign.office && campaign.statement);
+  if (!campaigns.length) {
+    status.textContent = "No campaigns have been published yet.";
+    return;
+  }
+  status.hidden = true;
+  campaigns.slice().sort((a, b) => String(a.office).localeCompare(String(b.office)) || String(a.name).localeCompare(String(b.name))).forEach(campaign => {
+    const card = document.createElement("article");
+    card.className = "campaign-card";
+    const photoUrl = httpsUrl(campaign.photoUrl);
+    if (photoUrl) {
+      const photo = document.createElement("img");
+      photo.className = "campaign-photo";
+      photo.src = photoUrl;
+      photo.alt = "Photo of " + campaign.name;
+      photo.loading = "lazy";
+      photo.referrerPolicy = "no-referrer";
+      card.appendChild(photo);
+    }
+    const content = document.createElement("div");
+    const heading = document.createElement("h3");
+    heading.textContent = campaign.name;
+    const office = document.createElement("p");
+    office.className = "campaign-office";
+    office.textContent = campaign.office;
+    const statement = document.createElement("p");
+    statement.className = "campaign-statement";
+    statement.textContent = campaign.statement;
+    content.append(heading, office, statement);
+    card.appendChild(content);
+    list.appendChild(card);
+  });
 })();
 
 (function electionInfo() {
