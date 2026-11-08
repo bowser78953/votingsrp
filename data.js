@@ -141,7 +141,8 @@ window.SRP_DATA = {
       "area": "Springfield District 2",
       "pick": 1,
       "candidates": [
-        "spiderx15310"
+        "spiderx15310",
+        "N/A"
       ],
       "map": "district"
     },
@@ -251,7 +252,7 @@ window.SRP_DATA = {
     "805_North": "#C04000",
     "minimonkey20121": "#0ECC0A",
     "Godzilla_Iraq": "",
-    "spiderx15310": "",
+    "spiderx15310": "#428c8e",
     "Deancena9": "#5539CC",
     "eaglesfly409": "#6827F5",
     "ERLC_2077": "#5BA5F5",
