@@ -87,7 +87,7 @@ window.SRP_DATA = {
       "pick": 1,
       "candidates": [
         "statepolice979",
-        "N/A"
+        "gaming_jod1123"
       ],
       "map": "county"
     },
@@ -261,7 +261,8 @@ window.SRP_DATA = {
     "Honeyking21": "#CC0808",
     "Cernyb": "#ff7100",
     "statepolice979": "#0015BC",
-    "starhamud": "#000000"
+    "starhamud": "#000000",
+    "gaming_jod1123": "#8C3E03"
   },
   "electionSchedule": {
     "campaigningOpens": "2026-11-07 16:45",
@@ -316,6 +317,12 @@ window.SRP_DATA = {
       "name": "Cernyb",
       "office": "Candidate for Senator 2 of River City",
       "statement": "A SENATOR WHO WILL LISTEN!!!!\n\nMy Goals as Senator!!! It is to listen and have a voice about what the community wants!!! And make sure that laws helping citizens will be passed, and the ones that don’t will be voted AGAINST!!! I Promise Transparency, and I will fight for the citizens of River City so they get a vote in everything so they can be engaged in what laws are passed. I will listen to the citizens to find out what they want and not the ones that the people don’t want!!!\n\n\n\n\nA Senator that Will Fight for Good laws being passed, not the ones that won’t benefit the people of River City!!!!\n\n\n\nCERNY FOR SENATOR OF RIVER CITY!!!!!"
+    },
+    {
+      "photoUrl": "https://cdn.corenexis.com/f/doAdnqvO.png",
+      "name": "starhamud",
+      "office": "Mayor of River City",
+      "statement": "# Mayor of River City - starhamud\n\n*Hello dear citizens. I am starhamud and I am a candidate for Mayor. I am running for mayor because I believe I can make River City a better place under my leadership*\n\n**Experience:**\n\n*It has been 1 year 9 months for me in SRP. I am whitelisted in 20 departments. That is:*\n\n- Liberty County Sheriffs Office: SH11 - Major\n- Liberty State Police: State Trooper\n- Department of Transportation: Lead Traffic Control Supervisor\n- Valley Transit: Junior Manager\n- Global Security: Manager\n- United Nations: Junior Division Director\n- Liberty County Wildlife Service: Senior Supervisor\n- Department Of Homeland Security:  First Sergeant - Border Patrol - Seaman\n- Springfield Food Hall: Senior Supervisor\n- Springfield Fire Department:  Senior Fire Fighter\n- Special Weapons And Tactics: Head Sergeant\n- Channel 5 News: Overseer\n- Wildlife Hunters: Director\n- United States Secret Service: Specialist\n- Fairview County Police Department: Junior Deputy\n- 75th Army Rangers: Ranger Specialist\n- G&W Agriculture: Farm Supervisor\n- Fish And Game Warden: Owner Assistant\n- ATV Off Road Sports: Recruit MX Racer\n\n**What I would do if elected as mayor:**\n\n*If I am elected as mayor, I would prioritise public development and the needs of citizens. I would listen to their needs, implement their needs and make sure that my citizens are striving and happy. I would develop infrastructure by making community facilities such as parks, basic services, and more.*\n\n**I did not choose to be a candidate just because it looks cool, I chose to be a candidate to become a leader and make River City a better place for everyone.**\n\n***Thank you. And I hope I earn your vote.***\n\n<@1122883616339402822> \nCandidate <:SRPGov:1442240177597710438>"
     }
   ],
   "campaignOpen": true
