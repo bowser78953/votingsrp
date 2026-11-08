@@ -241,7 +241,7 @@ window.SRP_DATA = {
       "pick": 1,
       "candidates": [
         "Deancena9",
-        "N/A"
+        "starhamud"
       ],
       "map": "county"
     }
@@ -260,7 +260,8 @@ window.SRP_DATA = {
     "kxkgy": "#8ad3ff",
     "Honeyking21": "#CC0808",
     "Cernyb": "#ff7100",
-    "statepolice979": "#0015BC"
+    "statepolice979": "#0015BC",
+    "starhamud": "#000000"
   },
   "electionSchedule": {
     "campaigningOpens": "2026-11-07 16:45",
