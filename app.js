@@ -192,6 +192,8 @@ const waitForFirebase = () => {
   const root = document.getElementById("projectionList");
   if (!root) return;
   const status = document.getElementById("projectionStatus");
+  const minimumVotes = 10;
+  const minimumLead = 10;
   const races = (SITE.ballot || []).map((race, index) => ({ ...race, ballotIndex: index }))
     .filter(race => ["senate", "representative"].includes(String(race.office || "").toLowerCase()) &&
       race.title && race.area && Array.isArray(race.candidates) && race.candidates.length);
@@ -229,11 +231,15 @@ const waitForFirebase = () => {
         if (!valid) summary = "Results don't match this race.";
         else {
           const totals = candidates.map(name => ({ name, count: result ? counts[name] || 0 : 0 }));
+          const totalVotes = totals.reduce((sum, item) => sum + item.count, 0);
           const highest = Math.max(...totals.map(item => item.count));
           const leaders = totals.filter(item => item.count === highest);
+          const runnerUp = Math.max(0, ...totals.filter(item => item.count < highest).map(item => item.count));
           if (!highest) summary = "No votes yet";
           else if (leaders.length > 1) summary = "Tied — no projection";
           else if (/^(n\/a|none|vacant)$/i.test(leaders[0].name.trim())) summary = "Placeholder leading — no projection";
+          else if (totalVotes < minimumVotes) summary = "Not enough votes — no projection";
+          else if (highest - runnerUp < minimumLead) summary = "Lead too small — no projection";
           else summary = leaders[0].name + " leading · " + highest + " vote" + (highest === 1 ? "" : "s");
         }
         const card = document.createElement("article");
