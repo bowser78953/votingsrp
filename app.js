@@ -135,6 +135,42 @@ const waitForFirebase = () => {
   });
 })();
 
+(function homeSchedule() {
+  const root = document.getElementById("homeSchedule");
+  if (!root) return;
+  const schedule = Object.assign({ votingOpens: SITE.electionOpens }, SITE.electionSchedule || {});
+  const format = value => {
+    if (!value) return "Not announced";
+    if (!easternDate(value)) return "Date unavailable";
+    const [year, month, day, hour, minute] = String(value).trim().split(/[- T:]/).map(Number);
+    return new Intl.DateTimeFormat("en-US", {
+      timeZone: "UTC", month: "short", day: "numeric", year: "numeric",
+      hour: "numeric", minute: "2-digit"
+    }).format(new Date(Date.UTC(year, month - 1, day, hour, minute)));
+  };
+  const phases = [
+    { title: "Registration", start: schedule.registrationOpens, end: schedule.registrationCloses },
+    { title: "Campaigning", start: schedule.campaigningOpens, end: schedule.campaigningCloses },
+    { title: "Voting", start: schedule.votingOpens, end: schedule.votingCloses }
+  ];
+  root.textContent = "";
+  phases.forEach((phase, index) => {
+    const row = document.createElement("div");
+    row.className = "home-schedule-row";
+    const number = document.createElement("span");
+    number.className = "home-schedule-number";
+    number.textContent = "0" + (index + 1);
+    const content = document.createElement("div");
+    const title = document.createElement("h3");
+    title.textContent = phase.title;
+    const dates = document.createElement("p");
+    dates.textContent = "Opens: " + format(phase.start) + " · Closes: " + format(phase.end);
+    content.append(title, dates);
+    row.append(number, content);
+    root.appendChild(row);
+  });
+})();
+
 (function homeChambers() {
   const render = (id, detailsId, members, seatCount) => {
     const root = document.getElementById(id);

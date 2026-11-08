@@ -16,18 +16,19 @@
 <section class="hero home-hero">
   <div class="home-hero-inner">
     <div class="home-hero-copy">
-      <p class="hero-kicker">SPRINGFIELD ROLEPLAY GOVERNMENT</p>
-      <h2>Your community.<br>Your voice.</h2>
-      <p>Stay informed, explore the candidates, and take part in Springfield's elections.</p>
+      <p class="hero-kicker">THE SPRINGFIELD ELECTION HUB</p>
+      <h2>Democracy starts<br>with <em>you.</em></h2>
+      <p>Your guide to Springfield's elections, representatives, and the community you call home.</p>
       <div class="home-hero-actions">
         <a href="register.html" class="btn gold">Register to Vote <span aria-hidden="true">&rarr;</span></a>
         <a href="election-info.html" class="btn ghost">Explore the Election</a>
       </div>
     </div>
     <div class="home-hero-panel">
-      <span class="home-hero-panel-kicker">YOUR ELECTION RESOURCE</span>
-      <h3>Everything you need to take part.</h3>
-      <p>Find the information that matters, all in one place.</p>
+      <div class="home-hero-seal"><img src="logo.png" alt=""><span>SPRINGFIELD<br>ROLEPLAY GOVERNMENT</span></div>
+      <span class="home-hero-panel-kicker">YOUR GUIDE TO PARTICIPATION</span>
+      <h3>Be informed.<br>Be involved.</h3>
+      <p>Everything you need to follow the election.</p>
       <div class="home-hero-links">
         <a href="campaigns.html"><span>01</span> Meet the candidates <b aria-hidden="true">&rarr;</b></a>
         <a href="vote.html"><span>02</span> View voting details <b aria-hidden="true">&rarr;</b></a>
@@ -38,10 +39,13 @@
 </section>
 <div id="countdown" class="countdown"></div>
 <main>
-  <section class="steps reveal">
-    <div class="step"><i>01</i><h3>Register</h3><p>Pick your county and district and sign up to vote.</p><a href="register.html">Get registered <span aria-hidden="true">&rarr;</span></a></div>
-    <div class="step"><i>02</i><h3>Ballot</h3><p>Review and submit your choices for the contests in your county and district.</p><a href="vote.html">View the ballot <span aria-hidden="true">&rarr;</span></a></div>
-    <div class="step"><i>03</i><h3>Check Official Notices</h3><p>See results in official SRP announcements after verification.</p><a href="live.html">Explore results <span aria-hidden="true">&rarr;</span></a></div>
+  <section class="home-start reveal" aria-labelledby="home-start-heading">
+    <div class="home-start-heading"><div><p class="home-eyebrow">YOUR VOICE MATTERS</p><h2 id="home-start-heading">Your election, made simple.</h2></div><p>From getting registered to following the results, here's where to start.</p></div>
+    <div class="steps">
+      <div class="step"><i>01</i><h3>Get registered</h3><p>Choose your county and district and create your registration.</p><a href="register.html">Go to registration <span aria-hidden="true">&rarr;</span></a></div>
+      <div class="step"><i>02</i><h3>Explore your ballot</h3><p>Review the contests for your area and participate in the site's shared poll.</p><a href="vote.html">View voting details <span aria-hidden="true">&rarr;</span></a></div>
+      <div class="step"><i>03</i><h3>Follow the election</h3><p>Explore poll totals and check official SRP announcements for verified results.</p><a href="live.html">Explore the map <span aria-hidden="true">&rarr;</span></a></div>
+    </div>
   </section>
   <section class="card gold home-election reveal" aria-labelledby="home-election-heading">
     <div class="home-section-heading">
@@ -53,6 +57,27 @@
     <div class="home-actions">
       <a class="btn blue" href="election-info.html">View Election Information</a>
       <a class="btn ghost-dark" href="vote.html">Voting Details</a>
+    </div>
+  </section>
+  <section class="home-schedule reveal" aria-labelledby="home-schedule-heading">
+    <div class="home-schedule-intro">
+      <p class="home-eyebrow">MARK YOUR CALENDAR</p>
+      <h2 id="home-schedule-heading">The road to election day.</h2>
+      <p>Plan ahead with the published election schedule. Times are shown in Eastern Time.</p>
+      <a href="election-info.html">See full election information <span aria-hidden="true">&rarr;</span></a>
+    </div>
+    <div class="home-schedule-list" id="homeSchedule">
+      <p>Loading the published schedule...</p>
+    </div>
+  </section>
+  <section class="home-map-feature reveal" aria-labelledby="home-map-heading">
+    <div class="home-map-image" aria-hidden="true"></div>
+    <div class="home-map-copy">
+      <p class="home-eyebrow">EXPLORE SPRINGFIELD</p>
+      <h2 id="home-map-heading">See the election<br>from your community.</h2>
+      <p>Explore the interactive map by county or district to see candidates and shared poll totals for each contest.</p>
+      <p class="home-map-disclaimer">Poll totals are not official or certified results. Check SRP announcements for verified results.</p>
+      <a class="btn gold" href="live.html">Explore the results map <span aria-hidden="true">&rarr;</span></a>
     </div>
   </section>
   <section class="card home-chambers" aria-labelledby="home-chambers-heading">
