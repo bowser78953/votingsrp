@@ -789,6 +789,9 @@ main:has(.home-start)>.home-start,main:has(.home-start)>.home-election,main:has(
 .home-map-copy .home-map-disclaimer{font-size:.84rem;color:#c0d0ce!important}
 .home-map-copy .btn{margin:8px 0 0}
 .home-map-copy .btn span{margin-left:8px}
+.home-grid{grid-template-columns:1fr}
+.home-government-image{display:grid;place-items:center;min-height:260px;background:radial-gradient(circle,#315c63 0,#203f4a 50%,#182f39 100%)}
+.home-government-image img{width:min(72%,270px);height:auto;filter:drop-shadow(0 10px 20px rgba(0,0,0,.25))}
 @media(max-width:700px){
   .home-hero-inner{gap:30px;padding:52px 20px 40px}
   .home-hero h2{font-size:clamp(3rem,12vw,4.2rem)}
@@ -798,5 +801,7 @@ main:has(.home-start)>.home-start,main:has(.home-start)>.home-election,main:has(
   .home-schedule{grid-template-columns:1fr;gap:22px;padding:25px 22px}
   .home-map-feature{grid-template-columns:1fr}
   .home-map-image{min-height:200px}
+  .home-government-image{min-height:200px}
+  .home-government-image img{width:180px;max-width:70%}
   .home-map-copy{padding:28px 22px}
 }
