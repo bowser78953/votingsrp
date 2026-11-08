@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Owner Recovery | Springfield Roleplay Government Voting</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <section class="card">
+    <h1>Owner Account Recovery</h1>
+    <p>Choose a new owner password. It stays in this browser; this page only prepares a password hash and does not change the live account by itself.</p>
+    <form id="recoveryForm">
+      <label for="newPassword">New owner password (at least 12 characters)</label>
+      <input id="newPassword" type="password" minlength="12" autocomplete="new-password" required>
+      <label for="confirmPassword">Confirm password</label>
+      <input id="confirmPassword" type="password" minlength="12" autocomplete="new-password" required>
+      <p><button class="btn blue" type="submit">Prepare recovery</button></p>
+    </form>
+    <p id="recoveryStatus" role="status" aria-live="polite"></p>
+    <p>To set up the private registration counter, also sign in using the Google account that should own it.</p>
+    <button class="btn blue" type="button" id="googleSignIn">Sign in with owner Google account</button>
+    <p id="googleStatus" role="status" aria-live="polite"></p>
+  </section>
+</main>
+<script type="module" src="firebase-config.js"></script>
+<script>
+  window.srpRecoveryResult = {};
+  const status = document.getElementById("recoveryStatus");
+  document.getElementById("recoveryForm").addEventListener("submit", async event => {
+    event.preventDefault();
+    const password = document.getElementById("newPassword");
+    const confirmation = document.getElementById("confirmPassword");
+    if (password.value !== confirmation.value) {
+      status.textContent = "The passwords do not match.";
+      return;
+    }
+    try {
+      const salt = Array.from(crypto.getRandomValues(new Uint8Array(16)), byte => byte.toString(16).padStart(2, "0")).join("");
+      const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(salt + password.value));
+      window.srpRecoveryResult.salt = salt;
+      window.srpRecoveryResult.hash = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
+      password.value = "";
+      confirmation.value = "";
+      status.textContent = "Recovery prepared. Keep your new password safe; it has not been published yet.";
+    } catch (error) {
+      status.textContent = "Could not prepare recovery: " + error.message;
+    }
+  });
+  document.getElementById("googleSignIn").addEventListener("click", async event => {
+    event.currentTarget.disabled = true;
+    const googleStatus = document.getElementById("googleStatus");
+    try {
+      const services = await window.SRP_FIREBASE_READY;
+      const result = await services.signInWithPopup(services.auth, new services.GoogleAuthProvider());
+      window.srpRecoveryResult.uid = result.user.uid;
+      googleStatus.textContent = "Owner Google account selected.";
+    } catch (error) {
+      googleStatus.textContent = "Google sign-in failed: " + error.message;
+    } finally {
+      document.getElementById("googleSignIn").disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
