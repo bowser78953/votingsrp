@@ -292,7 +292,7 @@ window.SRP_DATA = {
       "photoUrl": "https://cdn.corenexis.com/f/YkQKAHwV.png",
       "name": "minimonkey20121",
       "office": "Candidate for Senator 2 of Bayside District",
-      "statement": "Candidate for Bayside senator.\n\nHello all I am Mini today I am running for Bayside senator.\nIm running because I think I would be a good candidate but that's up t KO you.\n\nThins I promise for everyone: \nEveryone will be heared\nEveryone will be treated the same.\nYou have rights\nUphold the law.\n\nI also have a few différent experience including:\n\nLCSO HR\nWild life hunters OST\n \nI will listen to all and hear you all!\n\nVote Mini for Bayside senator!"
+      "statement": "Candidate for Bayside senator.\n\nHello all, I am Mini. Today, I am running for Bayside senator.\nI'm running because I think I would be a good candidate, but that's up TO you.\n\nThings I promise for everyone: \nEveryone will be heard\nEveryone will be treated the same.\nYou have rights\nUphold the law.\n\nI also have a few different experience, including:\n\nLCSO HR\nWildlife hunters OST\n \nI will listen to all and hear you all!\n\nVote Mini for Bayside senator!"
     }
   ],
   "campaignOpen": true
