@@ -55,7 +55,7 @@ window.SRP_DATA = {
   "votingOpen": false,
   "siteOff": false,
   "showMap": true,
-  "voteRound": 10,
+  "voteRound": 11,
   "votingUrl": "",
   "ballot": [
     {
