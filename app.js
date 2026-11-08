@@ -81,16 +81,6 @@ const waitForFirebase = () => {
     b.textContent = SITE.announcement;
     h.after(b);
   }
-  const fill = (id, list, empty) => {
-    const el = document.getElementById(id);
-    if (!el || !list || !list.length) return;
-    el.textContent = "";
-    const ul = document.createElement("ul");
-    list.forEach(n => { const li = document.createElement("li"); li.textContent = n; ul.appendChild(li); });
-    el.appendChild(ul);
-  };
-  fill("senators", SITE.senators);
-  fill("reps", SITE.representatives);
 })();
 
 (function homeElectionSnapshot() {
@@ -171,18 +161,20 @@ const waitForFirebase = () => {
   });
 })();
 
+const chamberEntries = members => (Array.isArray(members) ? members : []).map(entry => {
+  const text = String(entry || "").trim();
+  const separator = text.indexOf(":");
+  const area = separator >= 0 ? text.slice(0, separator).trim() : "";
+  const holder = (separator >= 0 ? text.slice(separator + 1) : text).trim();
+  return { text, area, holder: /^(enrol+ment in progress|election in progress|vacant|n\/a)$/i.test(holder) ? "" : holder };
+}).filter(entry => entry.text);
+
 (function homeChambers() {
   const render = (id, detailsId, members, seatCount) => {
     const root = document.getElementById(id);
     if (!root) return;
     const details = document.getElementById(detailsId);
-    const entries = (Array.isArray(members) ? members : []).map(entry => {
-      const text = String(entry || "").trim();
-      const separator = text.indexOf(":");
-      const area = separator >= 0 ? text.slice(0, separator).trim() : "";
-      const holder = (separator >= 0 ? text.slice(separator + 1) : text).trim();
-      return { area, holder: /^(enrol+ment in progress|election in progress|vacant|n\/a)$/i.test(holder) ? "" : holder };
-    }).filter(entry => entry.area || entry.holder);
+    const entries = chamberEntries(members).filter(entry => entry.area || entry.holder);
     const rows = seatCount === 14 ? [8, 6] : [9, 7];
     let index = 0;
     rows.forEach((count, row) => {
@@ -190,8 +182,8 @@ const waitForFirebase = () => {
       for (let position = 0; position < count; position++, index++) {
         const member = entries[index];
         const description = member
-          ? [member.area, member.holder || "Election in progress"].filter(Boolean).join(": ")
-          : "Election in progress";
+          ? [member.area, member.holder || "No member listed"].filter(Boolean).join(": ")
+          : "No member listed";
         const angle = Math.PI - (Math.PI * position / (count - 1));
         const seat = document.createElement("button");
         seat.type = "button";
@@ -204,7 +196,7 @@ const waitForFirebase = () => {
           const label = document.createElement("span");
           label.textContent = member && member.area ? member.area.toUpperCase() : "SEAT DETAILS";
           const name = document.createElement("strong");
-          name.textContent = member && member.holder ? member.holder : "Election in progress";
+          name.textContent = member && member.holder ? member.holder : "No member listed";
           details.replaceChildren(label, name);
         };
         seat.addEventListener("mouseenter", show);
@@ -222,6 +214,39 @@ const waitForFirebase = () => {
   };
   render("senateSeats", "senateSeatDetails", SITE.senators, 14);
   render("houseSeats", "houseSeatDetails", SITE.representatives, 16);
+})();
+
+(function chamberDirectory() {
+  const root = document.querySelector("[data-chamber-directory]");
+  if (!root) return;
+  const members = root.dataset.chamberDirectory === "senate" ? SITE.senators : SITE.representatives;
+  const entries = chamberEntries(members);
+  const list = root.querySelector(".member-list");
+  const search = root.querySelector(".member-search");
+  const status = root.querySelector(".member-search-status");
+  const count = document.getElementById("chamberPublishedCount");
+  count.textContent = String(entries.length);
+  document.getElementById("chamberNamedCount").textContent = String(entries.filter(entry => entry.holder).length);
+  const items = entries.map(entry => {
+    const item = document.createElement("li");
+    item.textContent = entry.text;
+    list.appendChild(item);
+    return { item, text: entry.text.toLocaleLowerCase() };
+  });
+  const update = () => {
+    const query = search.value.trim().toLocaleLowerCase();
+    let visible = 0;
+    items.forEach(entry => {
+      const matches = entry.text.includes(query);
+      entry.item.hidden = !matches;
+      if (matches) visible++;
+    });
+    status.textContent = !entries.length ? "No member entries have been published yet."
+      : !visible ? "No member entries match your search."
+      : "Showing " + visible + " of " + entries.length + " published entries.";
+  };
+  search.addEventListener("input", update);
+  update();
 })();
 
 (function homeProjections() {
@@ -307,13 +332,25 @@ const pages = [
   const nav = document.querySelector("nav");
   if (!nav) return;
   const here = location.pathname.split("/").pop() || "index.html";
-  let html = '<button class="burger" aria-label="Menu" onclick="this.parentElement.classList.toggle(\'open\')">&#9776;</button>';
+  let html = '<button class="burger" type="button" aria-label="Menu" aria-expanded="false">&#9776;</button>';
   pages.forEach(([href, label, cls]) => {
     const active = cls !== "main" && href === here && cls !== "cta" && cls !== "live" ? " active" : "";
     const extra = cls === "cta" || cls === "live" ? " " + cls : "";
     html += '<a href="' + href + '" class="' + (active + extra).trim() + '">' + label + "</a>";
   });
   nav.innerHTML = html;
+  const menu = nav.querySelector(".burger");
+  menu.addEventListener("click", () => {
+    const open = nav.classList.toggle("open");
+    menu.setAttribute("aria-expanded", String(open));
+  });
+  nav.addEventListener("keydown", event => {
+    if (event.key === "Escape" && nav.classList.contains("open")) {
+      nav.classList.remove("open");
+      menu.setAttribute("aria-expanded", "false");
+      menu.focus();
+    }
+  });
 })();
 
 (function campaignsPage() {

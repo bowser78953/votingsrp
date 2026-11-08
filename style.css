@@ -961,3 +961,41 @@ main:has(.home-start)>.home-start,main:has(.home-start)>.home-election,main:has(
   .page-hero .home-hero-inner{gap:28px}
   .page-hero h2{font-size:clamp(2.8rem,11vw,4rem)}
 }
+
+/* Shared civic details */
+main > *{min-width:0}
+.grid2{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.card{border-color:#dbe5e1;box-shadow:0 10px 32px rgba(20,46,61,.06)}
+.card h2,.card h3{letter-spacing:-.02em}
+nav a:focus-visible,.burger:focus-visible{outline-color:#efd495;outline-offset:-3px}
+.btn:focus-visible{outline:3px solid #c09b54;outline-offset:3px}
+footer{line-height:1.6}
+
+/* Chamber pages */
+.chamber-page-intro{display:flex;align-items:end;justify-content:space-between;gap:28px;padding:8px 0}
+.chamber-page-intro h2{margin:0;color:var(--navy);font:700 clamp(2rem,3vw,2.7rem)/1.12 Georgia,serif;letter-spacing:-.03em}
+.chamber-page-intro p:not(.home-eyebrow){max-width:560px;margin:12px 0 0;color:#526b74;line-height:1.6}
+.chamber-page-metrics{display:flex;gap:12px;flex:none}
+.chamber-page-metrics div{width:120px;padding:16px;border:1px solid #dce8e2;border-radius:10px;background:#fff}
+.chamber-page-metrics strong,.chamber-page-metrics span{display:block}
+.chamber-page-metrics strong{color:#173b4c;font:700 1.8rem Georgia,serif}
+.chamber-page-metrics span{max-width:130px;margin-top:5px;color:#586e75;font-size:.75rem;line-height:1.4}
+.chamber-role-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.chamber-role-grid article{padding:22px;border:1px solid #dce8e2;border-top:3px solid #c5a15d;border-radius:12px;background:#fff}
+.chamber-role-grid span{color:#9a783b;font-size:.75rem;font-weight:800;letter-spacing:.1em}
+.chamber-role-grid h3{margin:10px 0 8px;color:#173650;font:700 1.2rem Georgia,serif}
+.chamber-role-grid p{margin:0;color:#526b74;font-size:.91rem;line-height:1.6}
+.chamber-page-panel>.chamber{max-width:650px;margin:24px auto 0;background:#f1f7f5;border-color:#dce8e2}
+.chamber-page-panel .chamber-heading{flex-wrap:wrap}
+.chamber-page-panel .chamber-note{margin-top:20px}
+.chamber-directory input{margin-top:0}
+.chamber-directory .member-search-status{margin:12px 0;color:#526b74;font-size:.86rem}
+.member-list{list-style:none;padding:0;margin:0}
+.member-list li{padding:11px 0;border-top:1px solid #e0e9e5;color:#284754;line-height:1.5;overflow-wrap:anywhere}
+.member-list li[hidden]{display:none}
+@media(max-width:700px){
+  .chamber-page-intro{display:block}
+  .chamber-page-metrics{margin-top:18px}
+  .chamber-page-metrics div{min-width:0;flex:1}
+  .chamber-role-grid{grid-template-columns:1fr}
+}

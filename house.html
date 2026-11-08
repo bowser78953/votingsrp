@@ -30,6 +30,26 @@
   </div>
 </section>
 <main>
+  <section class="chamber-page-intro" aria-labelledby="house-overview-heading">
+    <div><p class="home-eyebrow">HOW THE HOUSE SERVES</p><h2 id="house-overview-heading">Your community in government.</h2><p>Explore the chamber, the people listed to serve, and the work representatives do for Springfield.</p></div>
+    <div class="chamber-page-metrics"><div><strong>16</strong><span>Chamber seats</span></div><div><strong id="chamberNamedCount">—</strong><span>Entries with a named member</span></div><div><strong id="chamberPublishedCount">—</strong><span>Published member entries</span></div></div>
+  </section>
+  <section class="chamber-role-grid" aria-label="House responsibilities">
+    <article><span>01</span><h3>Voice community concerns</h3><p>Bring local interests and feedback into government discussions.</p></article>
+    <article><span>02</span><h3>Shape legislation</h3><p>Introduce, review, debate, and vote on proposed laws.</p></article>
+    <article><span>03</span><h3>Stay engaged</h3><p>Communicate community concerns and participate in legislative proceedings.</p></article>
+  </section>
+  <section class="card chamber-page-panel" aria-labelledby="house-diagram-heading">
+    <p class="home-eyebrow">INSIDE THE CHAMBER</p><h2 id="house-diagram-heading">Explore the House seats</h2>
+    <p>Select or focus a seat to see its published member details.</p>
+    <article class="chamber">
+      <div class="chamber-heading"><div><p class="chamber-kicker">LOWER CHAMBER</p><h3>House of Representatives</h3></div><span class="chamber-badge">16 SEATS</span></div>
+      <div class="chamber-visual"><div id="houseSeats" class="chamber-seats"></div><div class="chamber-count"><strong>16</strong><span>SEATS</span></div></div>
+      <div class="chamber-legend"><span><i class="occupied"></i>Current member</span><span><i class="unfilled"></i>No member listed</span></div>
+      <div id="houseSeatDetails" class="chamber-details" aria-live="polite"><span>SEAT DETAILS</span><strong>Select a seat to see its member</strong></div>
+    </article>
+    <p class="chamber-note">Positions shown are illustrative and follow the published member list. They do not establish an official seating arrangement.</p>
+  </section>
   <section class="card reveal">
     <h2>What is The House of Representatives?</h2>
     <p>The Springfield Roleplay House of Representatives is a legislative institution within the Springfield Roleplay (SRP) government, serving as a direct representative body for the citizens and communities of Springfield. Operating within the Emergency Response: Liberty County (ER:LC) roleplay environment, the House of Representatives provides an organized platform where elected or appointed Representatives can voice public concerns, introduce legislation, debate proposed bills, and participate in decisions that influence the development and future of Springfield.</p>
@@ -41,8 +61,8 @@
     <p>The House of Representatives is where the people gain a voice in government, where communities receive representation, and where their concerns can become the foundation for meaningful legislative action.</p>
   </section>
   <div class="grid2">
-    <section class="card gold reveal"><h3>Current Representatives</h3><div id="reps"><p>The list of representatives will be posted here after the next election.</p></div></section>
-    <section class="card gold reveal"><h3>Upcoming Election</h3><p>Election dates will be announced here. Register to be ready to vote.</p><a class="btn blue" href="register.html">Register</a></section>
+    <section class="card gold chamber-directory" id="reps" data-chamber-directory="house"><p class="home-eyebrow">YOUR REPRESENTATIVES</p><h3>Current Representatives</h3><label for="houseSearch">Search by name or area</label><input id="houseSearch" class="member-search" type="search" placeholder="Search representatives"><p class="member-search-status" role="status" aria-live="polite">Loading member list...</p><ul class="member-list"></ul></section>
+    <section class="card gold reveal"><h3>Election Information</h3><p>Review the published election schedule and registration details.</p><a class="btn blue" href="election-info.html">View election information</a></section>
   </div>
 </main>
 <footer>&copy; Springfield Roleplay Government Voting</footer>
