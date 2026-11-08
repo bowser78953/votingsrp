@@ -109,7 +109,7 @@ window.SRP_DATA = {
       "pick": 1,
       "candidates": [
         "spunkycris09",
-        "N/A"
+        "MegaBobstar"
       ],
       "map": "county"
     },
