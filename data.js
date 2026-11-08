@@ -251,7 +251,7 @@ window.SRP_DATA = {
   "colors": {
     "805_North": "#C04000",
     "minimonkey20121": "#0ECC0A",
-    "Godzilla_Iraq": "",
+    "Godzilla_Iraq": "#B51D02",
     "spiderx15310": "#428c8e",
     "Deancena9": "#5539CC",
     "eaglesfly409": "#6827F5",
@@ -266,7 +266,7 @@ window.SRP_DATA = {
     "vipvishnukvk_17": "#B79148",
     "Alfies609": "#367588",
     "spunkycris09": "#191970",
-    "johnathonisthebeast": ""
+    "johnathonisthebeast": "#C09C52"
   },
   "electionSchedule": {
     "campaigningOpens": "2026-11-07 16:45",
