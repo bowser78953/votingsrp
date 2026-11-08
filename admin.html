@@ -148,7 +148,8 @@
           <label for="campaignOffice">Position</label>
           <input id="campaignOffice" required>
           <label for="campaignStatement">Campaign statement</label>
-          <textarea id="campaignStatement" rows="10" required placeholder="Paste the full campaign statement here. Multiple paragraphs are supported."></textarea>
+          <textarea id="campaignStatement" rows="10" required aria-describedby="campaignFormattingHelp" placeholder="Paste the full campaign statement here. Multiple paragraphs are supported."></textarea>
+          <p id="campaignFormattingHelp">Formatting: start a line with <code># Heading</code> for larger text. Wrap text in <code>*italics*</code>, <code>**bold**</code>, or <code>***bold italics***</code>. Use matching marks on the same line.</p>
           <p id="campaignError" class="warn hidden" role="alert"></p>
           <button class="btn blue" type="submit" id="campaignSave">Add Campaign to Draft</button>
           <button class="btn ghost-dark hidden" type="button" id="campaignCancel">Cancel Editing</button>

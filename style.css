@@ -933,6 +933,8 @@ main:has(.home-start)>.home-start,main:has(.home-start)>.home-election,main:has(
 .campaign-content{padding:24px 28px 28px}
 .campaign-content h4{margin:0 0 12px;color:#806939;font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
 .campaigns-directory .campaign-statement{color:#344e5a;line-height:1.75}
+.campaign-statement-line{min-height:1.75em}
+.campaigns-directory .campaign-statement-heading{margin:0;color:#173650;font:700 1.35rem/1.5 Georgia,serif;overflow-wrap:anywhere}
 .campaigns-guide{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:30px 34px;border-radius:14px;background:#15394a}
 .campaigns-guide .home-eyebrow{color:#efd495!important}
 .campaigns-guide h2{color:#fff;font-size:1.8rem}

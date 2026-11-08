@@ -341,6 +341,31 @@ const pages = [
   const officeFilter = document.getElementById("campaignOffice");
   const results = document.getElementById("campaignResults");
   const sorted = campaigns.slice().sort((a, b) => String(a.office).localeCompare(String(b.office)) || String(a.name).localeCompare(String(b.name)));
+  const renderStatement = (root, text) => {
+    String(text).split(/\r\n|\r|\n/).forEach(line => {
+      const heading = /^ {0,3}# +(.+)$/.exec(line);
+      const row = document.createElement(heading ? "h5" : "div");
+      row.className = heading ? "campaign-statement-heading" : "campaign-statement-line";
+      const content = heading ? heading[1] : line;
+      const format = /(?<!\*)(\*{1,3})([^*\n]+?)\1(?!\*)/g;
+      let end = 0;
+      for (const match of content.matchAll(format)) {
+        row.appendChild(document.createTextNode(content.slice(end, match.index)));
+        const styled = document.createElement(match[1].length === 1 ? "em" : "strong");
+        if (match[1].length === 3) {
+          const italic = document.createElement("em");
+          italic.textContent = match[2];
+          styled.appendChild(italic);
+        } else {
+          styled.textContent = match[2];
+        }
+        row.appendChild(styled);
+        end = match.index + match[0].length;
+      }
+      row.appendChild(document.createTextNode(content.slice(end)));
+      root.appendChild(row);
+    });
+  };
   [...new Set(sorted.map(campaign => String(campaign.office)))].forEach(office => {
     officeFilter.add(new Option(office, office));
   });
@@ -383,9 +408,9 @@ const pages = [
     content.className = "campaign-content";
     const statementLabel = document.createElement("h4");
     statementLabel.textContent = "Candidate statement";
-    const statement = document.createElement("p");
+    const statement = document.createElement("div");
     statement.className = "campaign-statement";
-    statement.textContent = campaign.statement;
+    renderStatement(statement, campaign.statement);
     content.append(statementLabel, statement);
     card.append(header, content);
     list.appendChild(card);
