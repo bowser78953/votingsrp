@@ -952,3 +952,12 @@ main:has(.home-start)>.home-start,main:has(.home-start)>.home-election,main:has(
   .campaigns-guide{padding:25px 22px}
   .campaigns-guide .btn{margin-top:18px}
 }
+
+/* Page introductions */
+.page-hero .home-hero-inner{gap:64px}
+.page-hero h2{font-size:clamp(3rem,5vw,4.7rem);overflow-wrap:anywhere}
+.page-hero .home-hero-panel h3{font-size:1.75rem}
+@media(max-width:700px){
+  .page-hero .home-hero-inner{gap:28px}
+  .page-hero h2{font-size:clamp(2.8rem,11vw,4rem)}
+}
