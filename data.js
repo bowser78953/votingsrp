@@ -163,7 +163,7 @@ window.SRP_DATA = {
       "area": "Fairview Congressional District 3",
       "pick": 1,
       "candidates": [
-        "N/A",
+        "Alfies609",
         "N/A"
       ],
       "map": "district"
@@ -263,7 +263,8 @@ window.SRP_DATA = {
     "statepolice979": "#0015BC",
     "starhamud": "#000000",
     "gaming_jod1123": "#8C3E03",
-    "vipvishnukvk_17": "#B79148"
+    "vipvishnukvk_17": "#B79148",
+    "Alfies609": "#367588"
   },
   "electionSchedule": {
     "campaigningOpens": "2026-11-07 16:45",
