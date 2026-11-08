@@ -76,7 +76,7 @@ window.SRP_DATA = {
       "pick": 1,
       "candidates": [
         "805_North",
-        "N/A"
+        "Cernyb"
       ],
       "map": "county"
     },
@@ -256,8 +256,9 @@ window.SRP_DATA = {
     "eaglesfly409": "#6827F5",
     "ERLC_2077": "#5BA5F5",
     "SonnyManny9": "#2E8B57",
-    "kxkgy": "",
-    "Honeyking21": "#CC0808"
+    "kxkgy": "#8ad3ff",
+    "Honeyking21": "#CC0808",
+    "Cernyb": "#ff7100"
   },
   "electionSchedule": {
     "campaigningOpens": "2026-11-07 16:45",
