@@ -51,7 +51,7 @@ window.SRP_DATA = {
       "hash": "081b9096cd1a0c6f176319f326a147eba47710410e12cf1dab4bd7f93188901a"
     }
   ],
-  "registrationOpen": false,
+  "registrationOpen": true,
   "votingOpen": false,
   "siteOff": false,
   "showMap": true,

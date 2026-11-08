@@ -14,6 +14,15 @@ service cloud.firestore {
       return /databases/$(database)/documents/elections/$(roundId)/profiles/$(uid);
     }
 
+    function registrationPath(roundId, uid) {
+      return /databases/$(database)/documents/elections/$(roundId)/registrations/$(uid);
+    }
+
+    function registrationCounterOwner() {
+      let path = /databases/$(database)/documents/privateSettings/registrationCounter;
+      return googleSignedIn() && exists(path) && get(path).data.uid == request.auth.uid;
+    }
+
     function configPath() {
       return /databases/$(database)/documents/ballotConfig/current;
     }
@@ -117,7 +126,27 @@ service cloud.firestore {
         request.resource.data.county is string &&
         request.resource.data.district is string &&
         validDistrict(request.resource.data.county, request.resource.data.district) &&
+        (!exists(registrationPath(roundId, uid)) ||
+          (get(registrationPath(roundId, uid)).data.county == request.resource.data.county &&
+           get(registrationPath(roundId, uid)).data.district == request.resource.data.district)) &&
         request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+
+    match /elections/{roundId}/registrations/{uid} {
+      allow get: if googleSignedIn() && (request.auth.uid == uid || registrationCounterOwner());
+      allow list: if registrationCounterOwner();
+      allow create: if googleSignedIn() && request.auth.uid == uid &&
+        request.resource.data.keys().hasOnly(["uid", "county", "district", "createdAt"]) &&
+        request.resource.data.keys().hasAll(["uid", "county", "district", "createdAt"]) &&
+        request.resource.data.uid == uid &&
+        request.resource.data.county is string &&
+        request.resource.data.district is string &&
+        validDistrict(request.resource.data.county, request.resource.data.district) &&
+        request.resource.data.createdAt == request.time &&
+        (!exists(profilePath(roundId, uid)) ||
+          (get(profilePath(roundId, uid)).data.county == request.resource.data.county &&
+           get(profilePath(roundId, uid)).data.district == request.resource.data.district));
       allow update, delete: if false;
     }
 

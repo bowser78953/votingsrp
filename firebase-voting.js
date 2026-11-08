@@ -248,6 +248,28 @@
   };
 
   const loadUser = async (services, user, roundId) => {
+    if (registration.uid && registration.uid !== user.uid) {
+      box.replaceChildren();
+      const message = document.createElement("p");
+      message.className = "ballot-error";
+      message.setAttribute("role", "alert");
+      message.textContent = "This browser's registration belongs to a different Google account. Sign out and use the account you registered with.";
+      const button = document.createElement("button");
+      button.className = "btn blue";
+      button.type = "button";
+      button.textContent = "Sign out of Google";
+      button.addEventListener("click", async () => {
+        button.disabled = true;
+        try {
+          await services.signOut(services.auth);
+        } catch (error) {
+          message.textContent = firebaseError(error);
+          button.disabled = false;
+        }
+      });
+      box.append(message, button);
+      return;
+    }
     const profileRef = services.doc(services.db, "elections", roundId, "profiles", user.uid);
     const profileSnapshot = await services.getDoc(profileRef);
     if (!profileSnapshot.exists()) {
@@ -507,7 +529,7 @@
   loading.textContent = "Connecting to shared poll...";
   box.appendChild(loading);
   waitForFirebase().then(services => {
-    const roundId = String(SITE.voteRound || 1);
+    const roundId = String(SITE.voteRound || 0);
     services.onAuthStateChanged(services.auth, user => {
       if (!user) {
         renderSignIn(services);

@@ -55,6 +55,7 @@
       <button class="btn blue" id="registrationOwnerSignIn" type="button">Sign in with owner Google account</button>
       <button class="btn ghost hidden" id="registrationOwnerSignOut" type="button">Sign out of Google</button>
       <p>Only new shared registrations are counted. Earlier browser-only registrations are not included. One Google account is not proof of one person.</p>
+      <p>The registration switch controls the website form, not direct Firebase requests. The count is not protected against registrations submitted outside the form or with multiple Google accounts.</p>
       <p>Setup: a Firebase project administrator must publish the registration rules and set <code>privateSettings/registrationCounter</code> in Firestore with a string field <code>uid</code> equal to the intended owner's Firebase UID shown above. Never allow clients to edit that document.</p>
       <p>The live counter reads the registration documents in this round; Firestore read usage increases with the number of registrations and dashboard visits.</p>
     </section>

@@ -1047,6 +1047,7 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
   const county = f.elements.county, district = f.elements.district, summary = document.getElementById("regsummary");
   const submit = f.querySelector('[type="submit"]');
   const ok = document.getElementById("ok");
+  const errorBox = document.getElementById("regerror");
   const lockRegistration = () => {
     f.querySelectorAll("input, select, textarea").forEach(field => { field.disabled = true; });
     submit.disabled = true;
@@ -1075,8 +1076,9 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
     throw new Error("Could not read the saved local registration.", { cause: error });
   }
   if (!SITE.registrationOpen && !savedRegistration) {
-    f.parentElement.innerHTML = '<div class="closed"><h2>Registration is currently CLOSED</h2><p>Check back before the next election round.</p></div>';
-    return;
+    f.parentElement.querySelector(".registration-intro").textContent =
+      "Registration is currently closed. If you already registered with Google this round, enter your details and original area to restore your registration on this browser.";
+    submit.textContent = "Sign in with Google & Restore Registration";
   }
   if (savedRegistration) {
     f.elements.name.value = savedRegistration.name || "";
@@ -1091,10 +1093,12 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
       summary.style.display = "block";
     }
     lockRegistration();
-    ok.textContent = "Registration submitted. Your details are read-only for this election round.";
+    ok.textContent = savedRegistration.uid
+      ? "Registration submitted. Your details are read-only for this election round."
+      : "This earlier registration is saved only in this browser and is not included in the shared registration count.";
     ok.style.display = "block";
   }
-  f.addEventListener("submit", e => {
+  f.addEventListener("submit", async e => {
     e.preventDefault();
     const d = new FormData(f);
     const registration = {
@@ -1104,12 +1108,47 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
       district: String(d.get("district") || ""),
       notes: String(d.get("notes") || "").trim()
     };
-    localStorage.setItem("srp_reg", JSON.stringify(registration));
-    localStorage.removeItem("srp_reg_approved");
-    lockRegistration();
-    summary.textContent = "Registered area: " + registration.county + " County, District " + registration.district + ". Submitted registrations cannot be changed this round.";
-    summary.style.display = "block";
-    ok.textContent = "Registration complete and saved in this browser. Your details are read-only for this election round.";
-    ok.style.display = "block";
+    submit.disabled = true;
+    errorBox.classList.add("hidden");
+    try {
+      const services = await waitForFirebase();
+      const credential = await services.signInWithPopup(services.auth, new services.GoogleAuthProvider());
+      const uid = credential.user.uid;
+      const round = String(SITE.voteRound || 0);
+      const registrationRef = services.doc(services.db, "elections", round, "registrations", uid);
+      const profileRef = services.doc(services.db, "elections", round, "profiles", uid);
+      const [existing, profile] = await Promise.all([
+        services.getDoc(registrationRef),
+        services.getDoc(profileRef)
+      ]);
+      const sameArea = record => record.county === registration.county && record.district === registration.district;
+      if (existing.exists() && !sameArea(existing.data())) {
+        throw new Error("This Google account is already registered in a different area this round. Select its original area to restore your local registration.");
+      }
+      if (profile.exists() && !sameArea(profile.data())) {
+        throw new Error("This Google account already has a ballot profile in a different area this round. Select its original area.");
+      }
+      if (!existing.exists()) {
+        if (!SITE.registrationOpen) {
+          throw new Error("Registration is closed and no shared registration was found for this Google account.");
+        }
+        await services.setDoc(registrationRef, {
+          uid, county: registration.county, district: registration.district,
+          createdAt: services.serverTimestamp()
+        });
+      }
+      registration.uid = uid;
+      localStorage.setItem("srp_reg", JSON.stringify(registration));
+      localStorage.removeItem("srp_reg_approved");
+      lockRegistration();
+      summary.textContent = "Registered area: " + registration.county + " County, District " + registration.district + ". Submitted registrations cannot be changed this round.";
+      summary.style.display = "block";
+      ok.textContent = "Registration complete. Your area is stored with your Google account; your other details are saved in this browser.";
+      ok.style.display = "block";
+    } catch (error) {
+      errorBox.textContent = "Registration could not be completed: " + (error.message || "Please try again.");
+      errorBox.classList.remove("hidden");
+      submit.disabled = false;
+    }
   });
 })();
