@@ -13,18 +13,33 @@
   <h1><small>Official Site</small>Springfield Roleplay Government Voting</h1>
 </header>
 <nav></nav>
-<section class="hero small">
-  <h2>Campaigns</h2>
-  <p>Read candidate-submitted campaigns approved by election administration.</p>
+<section class="hero small campaigns-hero">
+  <p class="hero-kicker">SPRINGFIELD ELECTIONS</p>
+  <h2>Meet the candidates.</h2>
+  <p>Explore the ideas and priorities shared by candidates in their own words.</p>
 </section>
-<main>
-  <section class="card">
-    <h2>Candidate Campaigns</h2>
-    <p>Campaigns appear during the official campaign period. Statements are presented without endorsement.</p>
+<main class="campaigns-main">
+  <section class="campaigns-directory" aria-labelledby="campaigns-heading">
+    <div class="campaigns-directory-header">
+      <div>
+        <p class="home-eyebrow">CANDIDATE VOICES</p>
+        <h2 id="campaigns-heading">Campaigns &amp; statements</h2>
+        <p>Candidate-submitted campaigns approved by election administration. Statements are presented without endorsement and appear during the official campaign period.</p>
+      </div>
+      <a href="policies.html#s5">Campaign rules <span aria-hidden="true">&rarr;</span></a>
+    </div>
     <p id="campaignStatus" class="notice" role="status"></p>
+    <div id="campaignTools" class="campaign-tools" hidden>
+      <div class="campaign-filter"><label for="campaignSearch">Search candidates or positions</label><input id="campaignSearch" type="search" placeholder="Search by name or position" autocomplete="off"></div>
+      <div class="campaign-filter"><label for="campaignOffice">Filter by position</label><select id="campaignOffice"><option value="">All positions</option></select></div>
+      <p id="campaignResults" class="campaign-results" role="status" aria-live="polite"></p>
+    </div>
     <div id="campaignsList" class="campaign-list"></div>
-    <p><a class="more" href="policies.html#s5">Campaign rules and candidate responsibilities &rarr;</a></p>
   </section>
+  <aside class="campaigns-guide">
+    <div><p class="home-eyebrow">STAY INFORMED</p><h2>Ready to learn more?</h2><p>Review the published ballot and election schedule before you participate.</p></div>
+    <a class="btn gold" href="election-info.html">Election information <span aria-hidden="true">&rarr;</span></a>
+  </aside>
 </main>
 <footer>&copy; Springfield Roleplay Government Voting</footer>
 <script src="data.js"></script>

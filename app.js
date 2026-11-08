@@ -336,9 +336,23 @@ const pages = [
     return;
   }
   status.hidden = true;
-  campaigns.slice().sort((a, b) => String(a.office).localeCompare(String(b.office)) || String(a.name).localeCompare(String(b.name))).forEach(campaign => {
+  const tools = document.getElementById("campaignTools");
+  const search = document.getElementById("campaignSearch");
+  const officeFilter = document.getElementById("campaignOffice");
+  const results = document.getElementById("campaignResults");
+  const sorted = campaigns.slice().sort((a, b) => String(a.office).localeCompare(String(b.office)) || String(a.name).localeCompare(String(b.name)));
+  [...new Set(sorted.map(campaign => String(campaign.office)))].forEach(office => {
+    officeFilter.add(new Option(office, office));
+  });
+  const cards = sorted.map(campaign => {
     const card = document.createElement("article");
     card.className = "campaign-card";
+    const header = document.createElement("div");
+    header.className = "campaign-card-header";
+    const avatar = document.createElement("div");
+    avatar.className = "campaign-avatar";
+    avatar.setAttribute("aria-hidden", "true");
+    avatar.textContent = String(campaign.name).trim().charAt(0).toUpperCase();
     const photoUrl = httpsUrl(campaign.photoUrl);
     if (photoUrl) {
       const photo = document.createElement("img");
@@ -347,21 +361,54 @@ const pages = [
       photo.alt = "Photo of " + campaign.name;
       photo.loading = "lazy";
       photo.referrerPolicy = "no-referrer";
-      card.appendChild(photo);
+      photo.addEventListener("error", () => {
+        console.warn("A candidate campaign photo could not be loaded.");
+        photo.remove();
+      });
+      avatar.appendChild(photo);
     }
-    const content = document.createElement("div");
+    const identity = document.createElement("div");
+    identity.className = "campaign-identity";
+    const label = document.createElement("span");
+    label.className = "campaign-label";
+    label.textContent = "CANDIDATE CAMPAIGN";
     const heading = document.createElement("h3");
     heading.textContent = campaign.name;
     const office = document.createElement("p");
     office.className = "campaign-office";
     office.textContent = campaign.office;
+    identity.append(label, heading, office);
+    header.append(avatar, identity);
+    const content = document.createElement("div");
+    content.className = "campaign-content";
+    const statementLabel = document.createElement("h4");
+    statementLabel.textContent = "Candidate statement";
     const statement = document.createElement("p");
     statement.className = "campaign-statement";
     statement.textContent = campaign.statement;
-    content.append(heading, office, statement);
-    card.appendChild(content);
+    content.append(statementLabel, statement);
+    card.append(header, content);
     list.appendChild(card);
+    return { card, name: String(campaign.name), office: String(campaign.office) };
   });
+  const updateResults = () => {
+    const query = search.value.trim().toLocaleLowerCase();
+    const selectedOffice = officeFilter.value;
+    let visible = 0;
+    cards.forEach(item => {
+      const matches = (!selectedOffice || item.office === selectedOffice) &&
+        (item.name.toLocaleLowerCase().includes(query) || item.office.toLocaleLowerCase().includes(query));
+      item.card.hidden = !matches;
+      if (matches) visible++;
+    });
+    results.textContent = visible
+      ? "Showing " + visible + " of " + cards.length + (cards.length === 1 ? " campaign" : " campaigns")
+      : "No campaigns match your search or position filter.";
+  };
+  search.addEventListener("input", updateResults);
+  officeFilter.addEventListener("change", updateResults);
+  tools.hidden = false;
+  updateResults();
 })();
 
 (function electionInfo() {

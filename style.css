@@ -899,3 +899,54 @@ main:has(.home-start)>.home-start,main:has(.home-start)>.home-election,main:has(
   .registration-form-heading{margin-top:18px}
   #registrationCard .form-actions .btn{width:100%;padding-inline:12px}
 }
+
+/* Campaign directory */
+.campaigns-hero{padding:65px 24px 70px!important;background:radial-gradient(circle at 75% 20%,rgba(97,155,148,.3),transparent 40%),linear-gradient(115deg,#183d54,#10283b 72%)}
+.campaigns-hero .hero-kicker{margin:0 0 14px;color:#efd495;font-size:.7rem;font-weight:800;letter-spacing:.16em}
+.campaigns-hero h2{font-size:clamp(2.6rem,5vw,4.2rem);letter-spacing:-.04em}
+.campaigns-hero p:last-child{margin:14px auto 0;color:#d9e7e9;font-size:1.04rem}
+.campaigns-main{max-width:1000px;gap:22px}
+.campaigns-directory{min-width:0}
+.campaigns-directory-header{display:flex;align-items:end;justify-content:space-between;gap:24px;margin:8px 0 25px}
+.campaigns-directory-header h2,.campaigns-guide h2{margin:0;color:var(--navy);font:700 clamp(1.9rem,3vw,2.7rem)/1.15 Georgia,serif;letter-spacing:-.03em}
+.campaigns-directory-header p:not(.home-eyebrow){max-width:690px;margin:10px 0 0;color:#536c74;line-height:1.65}
+.campaigns-directory-header>a{flex:none;color:#285a70;font-size:.9rem;font-weight:750;text-decoration:none}
+.campaigns-directory-header>a:hover{text-decoration:underline}
+.campaigns-directory #campaignStatus{margin:0;padding:20px 22px}
+.campaigns-directory [hidden]{display:none}
+.campaign-tools{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px 18px;margin-bottom:20px;padding:20px 22px;border:1px solid #dfe8e4;border-radius:12px;background:#fff}
+.campaign-filter{min-width:0}
+.campaign-filter label{display:block;margin-bottom:7px;color:#294654;font-size:.82rem;font-weight:750}
+.campaign-filter input,.campaign-filter select{width:100%;min-height:46px;padding:10px 12px;border:1px solid #cbd9d4;border-radius:8px;background:#fbfcfb;color:#213b49;font:inherit}
+.campaign-filter input:focus-visible,.campaign-filter select:focus-visible{outline:3px solid rgba(57,119,119,.25);border-color:#397777}
+.campaign-results{grid-column:1/-1;margin:0;color:#536c74;font-size:.85rem;font-weight:650}
+.campaigns-directory .campaign-list{gap:16px}
+.campaigns-directory .campaign-card{display:block;min-width:0;padding:0;overflow:hidden;border:1px solid #dce8e2;border-radius:14px;background:#fff;box-shadow:0 8px 26px rgba(20,46,61,.05)}
+.campaigns-directory .campaign-card[hidden]{display:none}
+.campaigns-directory .campaign-card-header{display:flex;align-items:center;gap:18px;padding:24px 28px;background:#eff5f1;border-bottom:1px solid #dce8e2}
+.campaign-avatar{position:relative;display:grid;place-items:center;flex:none;width:84px;height:84px;overflow:hidden;border:3px solid #fff;border-radius:50%;background:#d6e5df;color:#285f5c;font:700 2rem Georgia,serif;box-shadow:0 0 0 1px #cbded6}
+.campaigns-directory .campaign-photo{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;object-fit:cover}
+.campaign-identity{min-width:0;overflow-wrap:anywhere}
+.campaign-label{display:block;margin-bottom:7px;color:#866c39;font-size:.65rem;font-weight:800;letter-spacing:.13em}
+.campaigns-directory .campaign-identity h3{margin:0;color:#173650;font:700 clamp(1.35rem,2.5vw,1.8rem) Georgia,serif}
+.campaigns-directory .campaign-office{margin:6px 0 0;color:#476971;font-size:.9rem;line-height:1.5}
+.campaign-content{padding:24px 28px 28px}
+.campaign-content h4{margin:0 0 12px;color:#806939;font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.campaigns-directory .campaign-statement{color:#344e5a;line-height:1.75}
+.campaigns-guide{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:30px 34px;border-radius:14px;background:#15394a}
+.campaigns-guide .home-eyebrow{color:#efd495!important}
+.campaigns-guide h2{color:#fff;font-size:1.8rem}
+.campaigns-guide p:not(.home-eyebrow){margin:8px 0 0;color:#d9e7e9;line-height:1.6}
+.campaigns-guide .btn{flex:none;margin:0}
+@media(max-width:700px){
+  .campaigns-hero{padding:45px 20px 50px!important}
+  .campaigns-directory-header,.campaigns-guide{display:block}
+  .campaigns-directory-header>a{display:inline-block;margin-top:16px}
+  .campaign-tools{grid-template-columns:1fr;padding:18px}
+  .campaign-results{grid-column:auto}
+  .campaigns-directory .campaign-card-header{padding:20px;gap:14px}
+  .campaign-avatar{width:68px;height:68px}
+  .campaign-content{padding:22px 20px}
+  .campaigns-guide{padding:25px 22px}
+  .campaigns-guide .btn{margin-top:18px}
+}
