@@ -266,7 +266,8 @@ window.SRP_DATA = {
     "vipvishnukvk_17": "#B79148",
     "Alfies609": "#367588",
     "spunkycris09": "#191970",
-    "johnathonisthebeast": "#C09C52"
+    "johnathonisthebeast": "#C09C52",
+    "MegaBobstar": "#7e93ab"
   },
   "electionSchedule": {
     "campaigningOpens": "2026-11-07 16:45",
