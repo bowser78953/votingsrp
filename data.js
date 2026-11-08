@@ -119,7 +119,7 @@ window.SRP_DATA = {
       "area": "Agriculture",
       "pick": 1,
       "candidates": [
-        "N/A",
+        "vipvishnukvk_17",
         "N/A"
       ],
       "map": "county"
@@ -262,7 +262,8 @@ window.SRP_DATA = {
     "Cernyb": "#ff7100",
     "statepolice979": "#0015BC",
     "starhamud": "#000000",
-    "gaming_jod1123": "#8C3E03"
+    "gaming_jod1123": "#8C3E03",
+    "vipvishnukvk_17": "#B79148"
   },
   "electionSchedule": {
     "campaigningOpens": "2026-11-07 16:45",
