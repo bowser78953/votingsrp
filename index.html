@@ -48,15 +48,20 @@
     </div>
   </section>
   <section class="card gold home-election reveal" aria-labelledby="home-election-heading">
-    <div class="home-section-heading">
-      <div><p class="home-eyebrow">THE ELECTION DESK</p><h2 id="home-election-heading">Election at a glance</h2></div>
-      <span class="home-status-pill" id="homeElectionState">CHECKING</span>
+    <div class="home-election-header">
+      <div class="home-section-heading">
+        <div><p class="home-eyebrow">THE ELECTION DESK</p><h2 id="home-election-heading">Election at a glance</h2></div>
+        <span class="home-status-pill" id="homeElectionState">CHECKING</span>
+      </div>
+      <p id="homeElectionMessage" aria-live="polite"></p>
     </div>
-    <p id="homeElectionMessage" aria-live="polite"></p>
-    <div id="homeRaceList" class="home-race-list"></div>
-    <div class="home-actions">
-      <a class="btn blue" href="election-info.html">View Election Information</a>
-      <a class="btn ghost-dark" href="vote.html">Voting Details</a>
+    <div class="home-election-body">
+      <div class="home-list-heading"><div><p class="home-eyebrow">EXPLORE THE BALLOT</p><h3>Published contests</h3></div><p>Review the races and candidates listed for this election.</p></div>
+      <div id="homeRaceList" class="home-race-list"></div>
+      <div class="home-actions">
+        <a class="btn blue" href="election-info.html">View Election Information</a>
+        <a class="btn ghost-dark" href="vote.html">Voting Details</a>
+      </div>
     </div>
   </section>
   <section class="home-schedule reveal" aria-labelledby="home-schedule-heading">
@@ -81,9 +86,10 @@
     </div>
   </section>
   <section class="card home-chambers" aria-labelledby="home-chambers-heading">
-    <p class="home-eyebrow">YOUR REPRESENTATIVES</p>
-    <h2 id="home-chambers-heading">Inside the Chambers</h2>
-    <p class="chambers-intro">Meet the people representing Springfield. Hover over or select a seat to see its member.</p>
+    <div class="home-chambers-header">
+      <div><p class="home-eyebrow">YOUR REPRESENTATIVES</p><h2 id="home-chambers-heading">Inside the Chambers</h2></div>
+      <p class="chambers-intro">Meet the people representing Springfield. Hover over or select a seat to see its member.</p>
+    </div>
     <div class="chamber-grid">
       <article class="chamber" aria-labelledby="senate-seats-heading">
         <div class="chamber-heading"><div><p class="chamber-kicker">UPPER CHAMBER</p><h3 id="senate-seats-heading">SRP Senate</h3></div><span class="chamber-badge">14 SEATS</span></div>
@@ -102,12 +108,16 @@
     </div>
     <p class="chamber-note">The current member lists identify counties, not specific districts or numbered seats. Positions shown are illustrative.</p>
     <div class="chamber-projections" aria-labelledby="projection-heading">
-      <p class="home-eyebrow">LIVE POLL</p>
-      <h3 id="projection-heading">Tentative race projections</h3>
-      <p>A projection appears only after at least 10 votes have been cast in the race and the leader is ahead by at least 10 votes. These are current poll leaders—not statistical forecasts or official results—and can change as votes arrive.</p>
-      <p id="projectionStatus" class="projection-status" role="status">Connecting to shared results...</p>
-      <div id="projectionList" class="projection-list"></div>
-      <a class="chamber-link" href="live.html">Explore the live map <span aria-hidden="true">&rarr;</span></a>
+      <div class="projection-intro">
+        <p class="home-eyebrow">LIVE POLL</p>
+        <h3 id="projection-heading">Tentative race projections</h3>
+        <p>A projection appears only after at least 10 votes have been cast in the race and the leader is ahead by at least 10 votes. These are current poll leaders—not statistical forecasts or official results—and can change as votes arrive.</p>
+      </div>
+      <div class="projection-content">
+        <p id="projectionStatus" class="projection-status" role="status">Connecting to shared results...</p>
+        <div id="projectionList" class="projection-list"></div>
+        <a class="chamber-link" href="live.html">Explore the live map <span aria-hidden="true">&rarr;</span></a>
+      </div>
     </div>
   </section>
   <section class="home-grid" aria-label="Learn about SRP government">

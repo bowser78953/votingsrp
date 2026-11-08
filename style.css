@@ -808,3 +808,58 @@ main:has(.home-start)>.home-start,main:has(.home-start)>.home-election,main:has(
   .home-government-image img{width:180px;max-width:70%}
   .home-map-copy{padding:28px 22px}
 }
+
+/* Homepage election and representation panels */
+.home-election{overflow:hidden;padding:0;border-top:0}
+.home-election-header{padding:32px 36px;background:radial-gradient(circle at 90% 0,rgba(101,152,145,.28),transparent 40%),#15394a}
+.home-election-header .home-eyebrow,.projection-intro .home-eyebrow{color:#efd495!important}
+.home-election-header h2{color:#fff;font-size:clamp(2rem,3vw,2.7rem);line-height:1.15;letter-spacing:-.03em}
+.home-election-header #homeElectionMessage{max-width:740px;margin:12px 0 0;color:#dce9e7;font-size:.98rem}
+.home-election-header .home-status-pill{border-color:rgba(255,255,255,.25);background:#294b58;color:#fff}
+.home-election-header .home-status-pill.is-open{border-color:#a6d8bf;background:#e2f4e9;color:#22583b}
+.home-election-body{padding:30px 36px 36px}
+.home-list-heading{display:flex;align-items:end;justify-content:space-between;gap:20px}
+.home-list-heading h3{margin:0;color:var(--navy);font:700 1.4rem Georgia,serif}
+.home-list-heading>p{max-width:320px;margin:0;color:#596e77;font-size:.88rem;text-align:right}
+.home-race-list{grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px;margin:20px 0 24px}
+.home-race{position:relative;min-width:0;gap:10px;padding:17px 18px 17px 20px;border:1px solid #dfe8e4;border-radius:10px;background:#f7faf8;overflow-wrap:anywhere}
+.home-race::before{content:"";position:absolute;top:17px;bottom:17px;left:0;width:3px;border-radius:0 3px 3px 0;background:#c5a15d}
+.home-race strong{font-size:.92rem;line-height:1.4}
+.home-race span{color:#526a73;font-size:.88rem;line-height:1.5}
+.home-chambers{padding:36px}
+.home-chambers-header{display:flex;align-items:end;justify-content:space-between;gap:24px}
+.home-chambers-header h2{font-size:clamp(2rem,3vw,2.7rem);line-height:1.15;letter-spacing:-.03em}
+.home-chambers-header .chambers-intro{max-width:360px;margin:0;color:#596e77;font-size:.95rem}
+.home-chambers .chamber-grid{gap:16px;margin-top:24px}
+.home-chambers .chamber{padding:24px;background:linear-gradient(145deg,#f1f7f5,#f8faf9);border-color:#dbe8e2}
+.home-chambers .chamber h3{font:700 1.35rem Georgia,serif}
+.home-chambers .chamber-kicker{color:#846a37;font-size:.7rem}
+.home-chambers .chamber-badge{background:#deebe6;color:#285d55}
+.home-chambers .chamber-visual{margin-top:30px}
+.home-chambers .chamber-seat.occupied,.home-chambers .chamber-legend .occupied{background:#286374}
+.home-chambers .chamber-seat.unfilled,.home-chambers .chamber-legend .unfilled{background:#bdcbc9}
+.home-chambers .chamber-seat{border-color:#f8faf9}
+.home-chambers .chamber-details{border-color:#dce7e1}
+.home-chambers .chamber-link{color:#23586e}
+.home-chambers .chamber-note{margin-top:16px;font-size:.84rem}
+.home-chambers .chamber-projections{margin-top:30px;padding:0;overflow:hidden;border:1px solid #dfe8e4;border-radius:12px;background:#f7faf8}
+.projection-intro{padding:25px 28px;background:#173c4b}
+.projection-intro h3{margin:0 0 10px;color:#fff;font:700 1.6rem Georgia,serif}
+.projection-intro>p:not(.home-eyebrow){max-width:850px;margin:0;color:#dce9e7;font-size:.9rem;line-height:1.65}
+.projection-content{padding:22px 28px 26px}
+.home-chambers .projection-status{margin:0 0 16px;color:#405c64;font-size:.88rem}
+.projection-list{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:10px}
+.projection-card{padding:15px 16px;border-color:#dce7e1;background:#fff}
+.projection-card strong{line-height:1.4}
+.projection-card span{line-height:1.45}
+.projection-content .chamber-link{justify-content:flex-start;gap:10px;margin-top:20px}
+@media(max-width:700px){
+  .home-election{padding:0}
+  .home-election-header,.home-election-body{padding:24px 20px}
+  .home-list-heading,.home-chambers-header{display:block}
+  .home-list-heading>p,.home-chambers-header .chambers-intro{margin-top:10px;text-align:left}
+  .home-chambers{padding:24px 20px}
+  .home-chambers .chamber{padding:20px}
+  .home-chambers .chamber-heading{flex-wrap:wrap}
+  .projection-intro,.projection-content{padding:22px 20px}
+}
