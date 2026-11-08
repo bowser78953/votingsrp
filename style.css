@@ -303,6 +303,34 @@ input,select,textarea{border-radius:3px!important}
 .ghost-dark{border-color:var(--navy);color:var(--navy)}
 .election-status{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:18px 0}
 .election-status>div{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;background:#f3f6fc;border:1px solid #dbe5f7;border-radius:10px}
+.registration-counter{overflow:hidden}
+#registrationCounter .hidden{display:none}
+.registration-counter-header{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+.registration-counter-eyebrow{margin:0 0 7px!important;color:#8a6e34;font-size:.7rem;font-weight:800;letter-spacing:.14em}
+.registration-counter-header h3{margin:0;color:var(--navy);font-size:1.55rem}
+.registration-counter-intro{margin:6px 0 0!important;color:#637286;font-size:.92rem}
+.registration-counter-round{flex:none;padding:7px 12px;border:1px solid #e8dfcb;border-radius:999px;background:#fbf8f0;color:#745c2e;font-size:.7rem;font-weight:800;letter-spacing:.08em;white-space:nowrap}
+.registration-counter-round strong{margin-left:3px;font-size:.84rem}
+.registration-counter-content{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);margin:22px 0 16px;border:1px solid #e0e8ef;border-radius:12px;overflow:hidden}
+.registration-counter-metric,.registration-counter-access{min-width:0;padding:22px 24px}
+.registration-counter-metric{background:linear-gradient(135deg,#f1f6fa,#f8fafb)}
+.registration-counter-access{border-left:1px solid #e0e8ef;background:#fff}
+.registration-counter-label{display:block;color:#6b7b8d;font-size:.68rem;font-weight:800;letter-spacing:.12em}
+.registration-counter-metric strong{display:block;margin:8px 0 2px;color:var(--navy);font-size:clamp(1.7rem,4vw,2.7rem);font-weight:750;line-height:1.2;overflow-wrap:anywhere}
+.registration-counter-metric p,.registration-counter-access p{margin:6px 0 0;color:#617186;font-size:.88rem;line-height:1.55}
+.registration-counter-actions{margin-top:16px}
+.registration-counter-actions .btn{margin:0;padding:10px 16px;font-size:.85rem}
+.registration-counter-actions .btn.ghost{color:var(--navy);border-color:#b9c9d8;background:#fff}
+.registration-counter-details{border-top:1px solid #e7ebef}
+.registration-counter-details summary{padding:15px 0 2px;color:#365b7f;font-size:.88rem;font-weight:700;cursor:pointer}
+.registration-counter-details div{padding:2px 0 0;color:#5a6a7c;font-size:.85rem}
+.registration-counter-details p{margin:10px 0;line-height:1.55}
+@media(max-width:600px){
+  .registration-counter-header{flex-wrap:wrap}
+  .registration-counter-content{grid-template-columns:1fr}
+  .registration-counter-metric,.registration-counter-access{padding:18px}
+  .registration-counter-access{border-left:0;border-top:1px solid #e0e8ef}
+}
 .election-state{font-size:.82rem;letter-spacing:.08em;font-weight:800}
 .election-state.state-open{color:#18743c}
 .election-state.state-closed{color:#58647b}

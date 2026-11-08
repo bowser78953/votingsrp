@@ -46,17 +46,39 @@
       <p>Applications are reviewed manually. Publish candidate profiles only after eligibility and policy review; link results only after officials verify and certify them. This static panel does not create audit logs or verify voters.</p>
     </section>
 
-    <section class="card hidden" id="registrationCounter" data-p="settings">
-      <h3>Live Registrations</h3>
-      <p>Current published election round: <strong id="registrationRound"></strong></p>
-      <p>Registrations: <strong id="registrationTotal">Sign in to view</strong></p>
-      <p id="registrationCounterStatus" role="status" aria-live="polite">A separate owner Google sign-in is required.</p>
-      <button class="btn blue" id="registrationOwnerSignIn" type="button">Sign in with owner Google account</button>
-      <button class="btn ghost hidden" id="registrationOwnerSignOut" type="button">Sign out of Google</button>
-      <p>Only new shared registrations are counted. Earlier browser-only registrations are not included. One Google account is not proof of one person.</p>
-      <p>The registration switch controls the website form, not direct Firebase requests. The count is not protected against registrations submitted outside the form or with multiple Google accounts.</p>
-      <p>The dashboard requests only the registration count, refreshing every 30 seconds. Firebase administrators and the authorized counter account can still access individual registration records outside the dashboard; Firebase administrators can also access account information.</p>
-      <p>Firestore usage increases with the number of registrations and counter refreshes.</p>
+    <section class="card registration-counter hidden" id="registrationCounter" data-p="settings" aria-labelledby="registrationCounterTitle">
+      <div class="registration-counter-header">
+        <div>
+          <p class="registration-counter-eyebrow">ELECTION OVERVIEW</p>
+          <h3 id="registrationCounterTitle">Registrations</h3>
+          <p class="registration-counter-intro">Track registrations for the current election.</p>
+        </div>
+        <span class="registration-counter-round">ROUND <strong id="registrationRound"></strong></span>
+      </div>
+      <div class="registration-counter-content">
+        <div class="registration-counter-metric">
+          <span class="registration-counter-label">TOTAL REGISTRATIONS</span>
+          <strong id="registrationTotal">Sign in to view</strong>
+          <p>New shared registrations this round</p>
+        </div>
+        <div class="registration-counter-access">
+          <span class="registration-counter-label">COUNTER STATUS</span>
+          <p id="registrationCounterStatus" role="status" aria-live="polite">A separate owner Google sign-in is required.</p>
+          <div class="registration-counter-actions">
+            <button class="btn blue" id="registrationOwnerSignIn" type="button">Sign in with Google</button>
+            <button class="btn ghost hidden" id="registrationOwnerSignOut" type="button">Sign out of Google</button>
+          </div>
+        </div>
+      </div>
+      <details class="registration-counter-details">
+        <summary>About this count &amp; privacy</summary>
+        <div>
+          <p>Only new shared registrations are counted. Earlier browser-only registrations are not included. One Google account is not proof of one person.</p>
+          <p>The registration switch controls the website form, not direct Firebase requests. The count is not protected against registrations submitted outside the form or with multiple Google accounts.</p>
+          <p>The dashboard requests only the registration count, refreshing every 30 seconds. Firebase administrators and the authorized counter account can still access individual registration records outside the dashboard; Firebase administrators can also access account information.</p>
+          <p>Firestore usage increases with the number of registrations and counter refreshes.</p>
+        </div>
+      </details>
     </section>
 
     <section class="card" data-p="settings">
