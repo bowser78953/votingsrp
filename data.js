@@ -131,7 +131,7 @@ window.SRP_DATA = {
       "pick": 1,
       "candidates": [
         "Honeyking21",
-        "N/A"
+        "kxkgy"
       ],
       "map": "county"
     },
@@ -256,6 +256,7 @@ window.SRP_DATA = {
     "eaglesfly409": "#6827F5",
     "ERLC_2077": "#5BA5F5",
     "SonnyManny9": "#2E8B57",
+    "kxkgy": "",
     "Honeyking21": "#CC0808"
   },
   "electionSchedule": {
@@ -293,6 +294,18 @@ window.SRP_DATA = {
       "name": "minimonkey20121",
       "office": "Candidate for Senator 2 of Bayside District",
       "statement": "Candidate for Bayside senator.\n\nHello all, I am Mini. Today, I am running for Bayside senator.\nI'm running because I think I would be a good candidate, but that's up TO you.\n\nThings I promise for everyone: \nEveryone will be heard\nEveryone will be treated the same.\nYou have rights\nUphold the law.\n\nI also have a few different experience, including:\n\nLCSO HR\nWildlife hunters OST\n \nI will listen to all and hear you all!\n\nVote Mini for Bayside senator!"
+    },
+    {
+      "photoUrl": "https://cdn.corenexis.com/f/gQzYcOnY.png",
+      "name": "ERLC_2077",
+      "office": "Candidate for Senator 2 of Springfield",
+      "statement": "DO YOU HAVE A VOICE THAT HASN’T BEEN HEARD?!\nTHIS SENATOR - ELECTEE HAS GOT YOUR BACK!\n\nHey there! I’ve chosen to run for Senator 2 of Springfield, to spark change in the population, create jobs, create new minds, start a new community…. And it all starts with you.\n\nMy promises to Springfield:\nTruthful telling. There will not be as much as a white lie that comes from me, it will be the truth and nothing but it.\nLeadership. Being able to uphold the value of what we represent in Springfield, you’ll get 130% from me.\nAccountability. Knowing how errors can be improved, building the trust from me to you.\nIncreased opportunities. Times are hard, and have never been more. Increased wages and jobs meaning all citizens have a job that suits them.\nSteps to community protection. Increased night patrols, revised police training, and gun policy reforms to protect YOU.\nCheaper housing. Let’s get you into a house that YOU OWN!\n\n“What is the TRUE Springfield? Spring, a community that flourishes and strides with purpose. Field, the bond that can never be broken.”\n\nONE COMMUNITY. AN UNTOUCHED VOICE. THE FUTURE AWAITS.\n\nLet’s get out and VOTE!\n\nVOTE 1 ERLC_2077 for Senator 2 of Springfield.\n\nI have the honour to be your obedient servant,\nERLC_2077"
+    },
+    {
+      "photoUrl": "https://cdn.corenexis.com/f/3c173k0w.png",
+      "name": "SonnyManny9",
+      "office": "Candidate for Senator 2 of Springfield",
+      "statement": "Heya! I am running for Senator of Springfield, because I have a promise to make.\n\nThat promise is to....\n\n・Promote Equal Rights\n・Keep Springfield Safe by increasing and adding roles\n・Make fair wages for everyone and support every business\n・Be active and listen to the public's suggestions\n\nWith that being said... It's YOUR choice to vote!\n\nVote SONNY for Springfield Senator!"
     }
   ],
   "campaignOpen": true
