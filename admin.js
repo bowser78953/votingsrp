@@ -16,6 +16,90 @@
   const save = () => { localStorage.setItem(DRAFT, JSON.stringify(data)); localStorage.setItem(DRAFT + "_admins", JSON.stringify(data.admins)); renderOut(); };
   let session = null;
   const isOwner = () => !!session && session.role === "owner";
+  let stopAuth = null;
+  let stopCounter = null;
+  let counterGeneration = 0;
+
+  function stopRegistrationCounter() {
+    counterGeneration++;
+    if (stopAuth) stopAuth();
+    if (stopCounter) stopCounter();
+    stopAuth = null;
+    stopCounter = null;
+    $("registrationTotal").textContent = "Sign in to view";
+    $("registrationCounterStatus").textContent = "A separate owner Google sign-in is required.";
+    $("registrationOwnerUid").classList.add("hidden");
+    $("registrationOwnerSignIn").classList.remove("hidden");
+    $("registrationOwnerSignOut").classList.add("hidden");
+  }
+
+  async function startRegistrationCounter() {
+    stopRegistrationCounter();
+    if (!isOwner()) return;
+    const generation = counterGeneration;
+    $("registrationRound").textContent = String(window.SRP_DATA.voteRound || 0);
+    $("registrationCounterStatus").textContent = "Connecting to Firebase...";
+    try {
+      const services = await waitForFirebase();
+      if (generation !== counterGeneration) return;
+      stopAuth = services.onAuthStateChanged(services.auth, user => {
+        if (stopCounter) stopCounter();
+        stopCounter = null;
+        $("registrationTotal").textContent = "Sign in to view";
+        $("registrationOwnerSignIn").classList.toggle("hidden", !!user);
+        $("registrationOwnerSignOut").classList.toggle("hidden", !user);
+        $("registrationOwnerUid").classList.toggle("hidden", !user);
+        if (!user) {
+          $("registrationCounterStatus").textContent = "A separate owner Google sign-in is required.";
+          return;
+        }
+        $("registrationOwnerUid").textContent = "Google account Firebase UID: " + user.uid;
+        $("registrationCounterStatus").textContent = "Checking access...";
+        const registrations = services.collection(services.db, "elections",
+          String(window.SRP_DATA.voteRound || 0), "registrations");
+        stopCounter = services.onSnapshot(registrations, { includeMetadataChanges: true }, snapshot => {
+          if (snapshot.metadata.fromCache) {
+            $("registrationTotal").textContent = "Unavailable";
+            $("registrationCounterStatus").textContent = "Waiting for a server connection; cached totals are not shown.";
+            return;
+          }
+          $("registrationTotal").textContent = String(snapshot.size);
+          $("registrationCounterStatus").textContent = "Live count for the published election round.";
+        }, error => {
+          $("registrationTotal").textContent = "Unavailable";
+          $("registrationCounterStatus").textContent = "Unable to load registrations: " +
+            (error.code === "permission-denied"
+              ? "This Google account is not authorized for the counter, or the Firestore rules have not been set up."
+              : error.message);
+        });
+      }, error => {
+        $("registrationCounterStatus").textContent = "Google sign-in failed: " + error.message;
+      });
+    } catch (error) {
+      if (generation === counterGeneration) $("registrationCounterStatus").textContent = "Firebase unavailable: " + error.message;
+    }
+  }
+
+  $("registrationOwnerSignIn").addEventListener("click", async () => {
+    const button = $("registrationOwnerSignIn");
+    button.disabled = true;
+    try {
+      const services = await waitForFirebase();
+      await services.signInWithPopup(services.auth, new services.GoogleAuthProvider());
+    } catch (error) {
+      $("registrationCounterStatus").textContent = "Google sign-in failed: " + error.message;
+    } finally {
+      button.disabled = false;
+    }
+  });
+  $("registrationOwnerSignOut").addEventListener("click", async () => {
+    try {
+      const services = await waitForFirebase();
+      await services.signOut(services.auth);
+    } catch (error) {
+      $("registrationCounterStatus").textContent = "Google sign-out failed: " + error.message;
+    }
+  });
 
   function show() {
     $("login").classList.toggle("hidden", !!session);
@@ -26,6 +110,7 @@
     $("adminstab").classList.toggle("hidden", session.role !== "owner");
     $("publishtab").classList.toggle("hidden", !isOwner());
     $("campaignManager").classList.toggle("hidden", !isOwner() || !document.querySelector('[data-t="settings"]').classList.contains("on"));
+    $("registrationCounter").classList.toggle("hidden", !isOwner() || !document.querySelector('[data-t="settings"]').classList.contains("on"));
     document.querySelector('[data-p="publish"]').classList.toggle("hidden", !isOwner());
     $("ghToken").value = isOwner() ? localStorage.getItem("srp_gh") || "" : "";
     ["announcement", "registerFormUrl", "liveStreamUrl", "contactEmail", "votingUrl"].forEach(k => $(k).value = data[k] || "");
@@ -64,16 +149,17 @@
     session = { user: a.user, role: a.role };
     $("p").value = "";
     show();
+    startRegistrationCounter();
   });
 
-  $("logout").addEventListener("click", () => { session = null; show(); });
+  $("logout").addEventListener("click", () => { stopRegistrationCounter(); session = null; show(); });
 
   $("tabs").addEventListener("click", e => {
     const t = e.target.dataset.t;
     if (!t) return;
     if (t === "publish" && !isOwner()) return;
     document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b === e.target));
-    document.querySelectorAll("[data-p]").forEach(p => p.classList.toggle("hidden", p.dataset.p !== t || (p.id === "campaignManager" && !isOwner())));
+    document.querySelectorAll("[data-p]").forEach(p => p.classList.toggle("hidden", p.dataset.p !== t || (["campaignManager", "registrationCounter"].includes(p.id) && !isOwner())));
     if (t === "publish") renderOut();
   });
 

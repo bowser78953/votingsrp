@@ -46,6 +46,19 @@
       <p>Applications are reviewed manually. Publish candidate profiles only after eligibility and policy review; link results only after officials verify and certify them. This static panel does not create audit logs or verify voters.</p>
     </section>
 
+    <section class="card hidden" id="registrationCounter" data-p="settings">
+      <h3>Live Registrations</h3>
+      <p>Current published election round: <strong id="registrationRound"></strong></p>
+      <p>Registered Google accounts: <strong id="registrationTotal">Sign in to view</strong></p>
+      <p id="registrationCounterStatus" role="status" aria-live="polite">A separate owner Google sign-in is required.</p>
+      <p id="registrationOwnerUid" class="hidden"></p>
+      <button class="btn blue" id="registrationOwnerSignIn" type="button">Sign in with owner Google account</button>
+      <button class="btn ghost hidden" id="registrationOwnerSignOut" type="button">Sign out of Google</button>
+      <p>Only new shared registrations are counted. Earlier browser-only registrations are not included. One Google account is not proof of one person.</p>
+      <p>Setup: a Firebase project administrator must publish the registration rules and set <code>privateSettings/registrationCounter</code> in Firestore with a string field <code>uid</code> equal to the intended owner's Firebase UID shown above. Never allow clients to edit that document.</p>
+      <p>The live counter reads the registration documents in this round; Firestore read usage increases with the number of registrations and dashboard visits.</p>
+    </section>
+
     <section class="card" data-p="settings">
       <h3>Registration &amp; Voting</h3>
       <div class="switches">
@@ -156,6 +169,7 @@
 </main>
 <footer>&copy; Springfield Roleplay Government Voting</footer>
 <script src="data.js"></script>
+<script type="module" src="firebase-config.js"></script>
 <script src="app.js"></script>
 <script src="admin.js"></script>
 </body>
