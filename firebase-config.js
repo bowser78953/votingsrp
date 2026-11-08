@@ -26,11 +26,12 @@ window.SRP_FIREBASE_READY = (async () => {
       collection: firestoreSdk.collection,
       doc: firestoreSdk.doc,
       getDoc: firestoreSdk.getDoc,
-      getCountFromServer: firestoreSdk.getCountFromServer,
       onSnapshot: firestoreSdk.onSnapshot,
       runTransaction: firestoreSdk.runTransaction,
       serverTimestamp: firestoreSdk.serverTimestamp,
-      setDoc: firestoreSdk.setDoc
+      setDoc: firestoreSdk.setDoc,
+      increment: firestoreSdk.increment,
+      writeBatch: firestoreSdk.writeBatch
     };
     window.SRP_FIREBASE = services;
     window.dispatchEvent(new Event("srp-firebase-ready"));

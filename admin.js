@@ -19,7 +19,6 @@
   let stopAuth = null;
   let stopCounter = null;
   let counterGeneration = 0;
-  const counterRefreshMs = 30000;
 
   function stopRegistrationCounter() {
     counterGeneration++;
@@ -28,14 +27,14 @@
     stopAuth = null;
     stopCounter = null;
     $("registrationTotal").textContent = "Sign in to view";
-    $("registrationCounterStatus").textContent = "A separate owner Google sign-in is required.";
+    $("registrationCounterStatus").textContent = "Sign in with an authorized Google account to view the count.";
     $("registrationOwnerSignIn").classList.remove("hidden");
     $("registrationOwnerSignOut").classList.add("hidden");
   }
 
   async function startRegistrationCounter() {
     stopRegistrationCounter();
-    if (!isOwner()) return;
+    if (!session) return;
     const generation = counterGeneration;
     $("registrationRound").textContent = String(window.SRP_DATA.voteRound || 0);
     $("registrationCounterStatus").textContent = "Connecting to Firebase...";
@@ -49,35 +48,33 @@
         $("registrationOwnerSignIn").classList.toggle("hidden", !!user);
         $("registrationOwnerSignOut").classList.toggle("hidden", !user);
         if (!user) {
-          $("registrationCounterStatus").textContent = "A separate owner Google sign-in is required.";
+          $("registrationCounterStatus").textContent = "Sign in with an authorized Google account to view the count.";
           return;
         }
         $("registrationCounterStatus").textContent = "Checking access...";
-        const registrations = services.collection(services.db, "elections",
-          String(window.SRP_DATA.voteRound || 0), "registrations");
-        let active = true;
-        let timer = null;
-        stopCounter = () => {
-          active = false;
-          clearTimeout(timer);
-        };
-        const refreshCount = async () => {
-          try {
-            const snapshot = await services.getCountFromServer(registrations);
-            if (!active) return;
-            $("registrationTotal").textContent = String(snapshot.data().count);
-            $("registrationCounterStatus").textContent = "Count for the published election round. Refreshes every 30 seconds.";
-          } catch (error) {
-            if (!active) return;
+        const summary = services.doc(services.db, "elections",
+          String(window.SRP_DATA.voteRound || 0), "registrationSummary", "total");
+        stopCounter = services.onSnapshot(summary, { includeMetadataChanges: true }, snapshot => {
+          if (snapshot.metadata.fromCache) {
             $("registrationTotal").textContent = "Unavailable";
-            $("registrationCounterStatus").textContent = "Unable to load registrations: " +
-              (error.code === "permission-denied"
-                ? "This Google account is not authorized for the counter, or the Firestore rules have not been set up."
-                : error.message);
+            $("registrationCounterStatus").textContent = "Waiting for a server connection; cached totals are not shown.";
+            return;
           }
-          if (active) timer = setTimeout(refreshCount, counterRefreshMs);
-        };
-        refreshCount();
+          const count = snapshot.exists() ? snapshot.data().count : 0;
+          if (!Number.isSafeInteger(count) || count < 0) {
+            $("registrationTotal").textContent = "Unavailable";
+            $("registrationCounterStatus").textContent = "The registration total is invalid. Contact a Firebase administrator.";
+            return;
+          }
+          $("registrationTotal").textContent = String(count);
+          $("registrationCounterStatus").textContent = "Live count for the published election round.";
+        }, error => {
+          $("registrationTotal").textContent = "Unavailable";
+          $("registrationCounterStatus").textContent = "Unable to load registrations: " +
+            (error.code === "permission-denied"
+              ? "This Google account is not authorized to view the counter."
+              : error.message);
+        });
       }, error => {
         $("registrationCounterStatus").textContent = "Google sign-in failed: " + error.message;
       });
@@ -116,7 +113,7 @@
     $("adminstab").classList.toggle("hidden", session.role !== "owner");
     $("publishtab").classList.toggle("hidden", !isOwner());
     $("campaignManager").classList.toggle("hidden", !isOwner() || !document.querySelector('[data-t="settings"]').classList.contains("on"));
-    $("registrationCounter").classList.toggle("hidden", !isOwner() || !document.querySelector('[data-t="settings"]').classList.contains("on"));
+    $("registrationCounter").classList.toggle("hidden", !document.querySelector('[data-t="settings"]').classList.contains("on"));
     document.querySelector('[data-p="publish"]').classList.toggle("hidden", !isOwner());
     $("ghToken").value = isOwner() ? localStorage.getItem("srp_gh") || "" : "";
     ["announcement", "registerFormUrl", "liveStreamUrl", "contactEmail", "votingUrl"].forEach(k => $(k).value = data[k] || "");
@@ -165,7 +162,7 @@
     if (!t) return;
     if (t === "publish" && !isOwner()) return;
     document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b === e.target));
-    document.querySelectorAll("[data-p]").forEach(p => p.classList.toggle("hidden", p.dataset.p !== t || (["campaignManager", "registrationCounter"].includes(p.id) && !isOwner())));
+    document.querySelectorAll("[data-p]").forEach(p => p.classList.toggle("hidden", p.dataset.p !== t || (p.id === "campaignManager" && !isOwner())));
     if (t === "publish") renderOut();
   });
 

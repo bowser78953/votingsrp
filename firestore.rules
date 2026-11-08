@@ -23,6 +23,32 @@ service cloud.firestore {
       return googleSignedIn() && exists(path) && get(path).data.uid == request.auth.uid;
     }
 
+    function registrationCounterViewer() {
+      return googleSignedIn() &&
+        (registrationCounterOwner() ||
+          exists(/databases/$(database)/documents/privateSettings/registrationCounter/viewers/$(request.auth.uid)));
+    }
+
+    function registrationSummaryPath(roundId) {
+      return /databases/$(database)/documents/elections/$(roundId)/registrationSummary/total;
+    }
+
+    function registrationIncrementsSummary(roundId) {
+      let path = registrationSummaryPath(roundId);
+      return existsAfter(path) &&
+        getAfter(path).data.count is int &&
+        (exists(path)
+          ? getAfter(path).data.count == get(path).data.count + 1
+          : getAfter(path).data.count == 1);
+    }
+
+    function summaryHasNewRegistration(roundId, uid) {
+      let path = registrationPath(roundId, uid);
+      return !exists(path) && existsAfter(path) &&
+        getAfter(path).data.uid == uid &&
+        getAfter(path).data.createdAt == request.time;
+    }
+
     function configPath() {
       return /databases/$(database)/documents/ballotConfig/current;
     }
@@ -134,8 +160,8 @@ service cloud.firestore {
     }
 
     match /elections/{roundId}/registrations/{uid} {
-      allow get: if googleSignedIn() && (request.auth.uid == uid || registrationCounterOwner());
-      allow list: if registrationCounterOwner();
+      allow get: if googleSignedIn() && request.auth.uid == uid;
+      allow list: if false;
       allow create: if googleSignedIn() && request.auth.uid == uid &&
         request.resource.data.keys().hasOnly(["uid", "county", "district", "createdAt"]) &&
         request.resource.data.keys().hasAll(["uid", "county", "district", "createdAt"]) &&
@@ -146,8 +172,24 @@ service cloud.firestore {
         request.resource.data.createdAt == request.time &&
         (!exists(profilePath(roundId, uid)) ||
           (get(profilePath(roundId, uid)).data.county == request.resource.data.county &&
-           get(profilePath(roundId, uid)).data.district == request.resource.data.district));
+           get(profilePath(roundId, uid)).data.district == request.resource.data.district)) &&
+        registrationIncrementsSummary(roundId);
       allow update, delete: if false;
+    }
+
+    match /elections/{roundId}/registrationSummary/{summaryId} {
+      allow get: if summaryId == "total" && registrationCounterViewer();
+      allow list: if false;
+      allow create: if summaryId == "total" && googleSignedIn() &&
+        request.resource.data.keys().hasOnly(["count"]) &&
+        request.resource.data.count is int && request.resource.data.count == 1 &&
+        summaryHasNewRegistration(roundId, request.auth.uid);
+      allow update: if summaryId == "total" && googleSignedIn() &&
+        request.resource.data.keys().hasOnly(["count"]) &&
+        resource.data.count is int && request.resource.data.count is int &&
+        request.resource.data.count == resource.data.count + 1 &&
+        summaryHasNewRegistration(roundId, request.auth.uid);
+      allow delete: if false;
     }
 
     match /elections/{roundId}/votes/{uid}/contests/{raceId} {

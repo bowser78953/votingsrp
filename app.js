@@ -1132,10 +1132,14 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
         if (!SITE.registrationOpen) {
           throw new Error("Registration is closed and no shared registration was found for this Google account.");
         }
-        await services.setDoc(registrationRef, {
+        const batch = services.writeBatch(services.db);
+        batch.set(registrationRef, {
           uid, county: registration.county, district: registration.district,
           createdAt: services.serverTimestamp()
         });
+        batch.set(services.doc(services.db, "elections", round, "registrationSummary", "total"),
+          { count: services.increment(1) }, { merge: true });
+        await batch.commit();
       }
       registration.uid = uid;
       localStorage.setItem("srp_reg", JSON.stringify(registration));

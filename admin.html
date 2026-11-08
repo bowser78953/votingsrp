@@ -63,7 +63,7 @@
         </div>
         <div class="registration-counter-access">
           <span class="registration-counter-label">COUNTER STATUS</span>
-          <p id="registrationCounterStatus" role="status" aria-live="polite">A separate owner Google sign-in is required.</p>
+          <p id="registrationCounterStatus" role="status" aria-live="polite">Sign in with an authorized Google account to view the count.</p>
           <div class="registration-counter-actions">
             <button class="btn blue" id="registrationOwnerSignIn" type="button">Sign in with Google</button>
             <button class="btn ghost hidden" id="registrationOwnerSignOut" type="button">Sign out of Google</button>
@@ -75,8 +75,8 @@
         <div>
           <p>Only new shared registrations are counted. Earlier browser-only registrations are not included. One Google account is not proof of one person.</p>
           <p>The registration switch controls the website form, not direct Firebase requests. The count is not protected against registrations submitted outside the form or with multiple Google accounts.</p>
-          <p>The dashboard requests only the registration count, refreshing every 30 seconds. Firebase administrators and the authorized counter account can still access individual registration records outside the dashboard; Firebase administrators can also access account information.</p>
-          <p>Firestore usage increases with the number of registrations and counter refreshes.</p>
+          <p>The dashboard reads a live total without access to individual registration records. Firebase project administrators can still access registration records and Google account information in Firebase.</p>
+          <p>To authorize a site administrator, a Firebase project administrator must add a document under <code>privateSettings/registrationCounter/viewers</code> with the administrator's Firebase UID as its document ID. Removing that document revokes their counter access. The existing counter owner remains authorized separately.</p>
         </div>
       </details>
     </section>
