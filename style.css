@@ -792,6 +792,8 @@ main:has(.home-start)>.home-start,main:has(.home-start)>.home-election,main:has(
 .home-grid{grid-template-columns:1fr}
 .home-government-image{display:grid;place-items:center;min-height:260px;background:radial-gradient(circle,#315c63 0,#203f4a 50%,#182f39 100%)}
 .home-government-image img{width:min(72%,270px);height:auto;filter:drop-shadow(0 10px 20px rgba(0,0,0,.25))}
+.home-government-image .home-senate-seal{clip-path:circle(46% at 49% 53%)}
+.home-government-image .home-house-seal{clip-path:circle(47% at 50% 49%)}
 @media(max-width:700px){
   .home-hero-inner{gap:30px;padding:52px 20px 40px}
   .home-hero h2{font-size:clamp(3rem,12vw,4.2rem)}
