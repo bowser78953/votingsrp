@@ -793,7 +793,7 @@ main:has(.home-start)>.home-start,main:has(.home-start)>.home-election,main:has(
 .home-government-image{display:grid;place-items:center;min-height:260px;background:radial-gradient(circle,#315c63 0,#203f4a 50%,#182f39 100%)}
 .home-government-image img{width:min(72%,270px);height:auto;filter:drop-shadow(0 10px 20px rgba(0,0,0,.25))}
 .home-government-image .home-house-seal{clip-path:circle(47% at 50% 49%)}
-.home-map-copy .home-image-credit{margin:14px 0 0;color:#c0d0ce;font-size:.7rem;line-height:1.5}
+.home-image-credit{margin:10px 0 0;font-size:.7rem;line-height:1.5}
 .home-image-credit a{color:inherit;text-decoration:underline}
 @media(max-width:700px){
   .home-hero-inner{gap:30px;padding:52px 20px 40px}
@@ -862,4 +862,40 @@ main:has(.home-start)>.home-start,main:has(.home-start)>.home-election,main:has(
   .home-chambers .chamber{padding:20px}
   .home-chambers .chamber-heading{flex-wrap:wrap}
   .projection-intro,.projection-content{padding:22px 20px}
+}
+
+/* Voter registration */
+.registration-hero{position:relative;overflow:hidden;padding:54px 24px 62px!important}
+.registration-hero .hero-kicker{margin:0 0 12px;color:#efd495;font-size:.7rem;font-weight:800;letter-spacing:.16em}
+.registration-hero h2{font-size:clamp(2.4rem,5vw,3.8rem);letter-spacing:-.04em}
+.registration-hero p:last-child{margin:12px auto 0;color:#d9e7e9;font-size:1.05rem}
+.registration-main{padding-top:32px}
+#registrationCard{max-width:900px;padding:38px 42px;border-top:4px solid #c5a15d}
+#registrationCard>h2{font-size:clamp(1.9rem,3vw,2.4rem);letter-spacing:-.03em}
+#registrationCard>.registration-intro{max-width:680px;margin:8px 0 0;color:#526b74;font-size:1rem}
+#registrationCard .registration-note{margin:24px 0;padding:18px 20px;border:1px solid #e8dcbf;border-left:4px solid #c5a15d;background:#fbf8ef}
+.registration-note strong{display:block;margin-bottom:6px;color:#66502c;font-size:.86rem}
+#registrationCard .registration-note p{margin:0;color:#5e584a;font-size:.88rem;line-height:1.65}
+.registration-form{gap:4px 20px}
+.registration-form-heading{display:flex;align-items:flex-start;gap:14px;margin:17px 0 9px;padding-top:22px;border-top:1px solid #e2eae6}
+.registration-form-heading>span{display:grid;place-items:center;flex:none;width:38px;height:38px;border-radius:10px;background:#e8f1ed;color:#2d625b;font-size:.78rem;font-weight:800}
+#registrationCard .registration-form-heading h3{margin:0 0 4px;font:700 1.25rem Georgia,serif;color:#173650}
+#registrationCard .registration-form-heading p{margin:0;color:#61747c;font-size:.86rem;line-height:1.45}
+.registration-form .form-field label{color:#243f50;font-size:.9rem}
+#registrationCard .registration-form input,#registrationCard .registration-form select,#registrationCard .registration-form textarea{border-color:#ccdcd7;border-radius:8px;background:#fbfcfb;color:#213b49}
+#registrationCard .registration-form input:focus,#registrationCard .registration-form select:focus,#registrationCard .registration-form textarea:focus{border-color:#397777;box-shadow:0 0 0 3px rgba(57,119,119,.15)}
+#registrationCard .registration-form :disabled{background:#edf1ef;color:#667778}
+#registrationCard .form-actions{justify-content:space-between;margin-top:24px;padding:20px;border:1px solid #dce8e2;border-radius:10px;background:#f1f7f4}
+#registrationCard .form-actions>div{flex:1 1 260px}
+#registrationCard .form-actions strong,#registrationCard .form-actions span{display:block}
+#registrationCard .form-actions strong{color:#173b48;font-size:.98rem}
+#registrationCard .form-actions span{margin-top:5px;color:#5a7073;font-size:.83rem;line-height:1.5}
+#registrationCard .form-actions .btn{flex:none}
+#registrationCard .closed{padding:18px 0}
+@media(max-width:700px){
+  .registration-hero{padding:42px 20px 46px!important}
+  .registration-hero p:last-child{font-size:.96rem}
+  #registrationCard{padding:26px 20px}
+  .registration-form-heading{margin-top:18px}
+  #registrationCard .form-actions .btn{width:100%;padding-inline:12px}
 }

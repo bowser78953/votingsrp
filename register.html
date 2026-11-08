@@ -13,17 +13,24 @@
   <h1><small>Official Site</small>Springfield Roleplay Government Voting</h1>
 </header>
 <nav></nav>
-<section class="hero small">
+<section class="hero small registration-hero">
+  <p class="hero-kicker">SPRINGFIELD VOTER SERVICES</p>
   <h2>Register to Vote</h2>
-  <p>Submit your registration once. Submitted details cannot be changed during this election round.</p>
+  <p>Take the first step in participating in your community's elections.</p>
 </section>
-<main>
+<main class="registration-main">
   <section class="card gold reveal" id="registrationCard">
     <p class="form-eyebrow">VOTER SERVICES</p>
     <h2>Voter Registration</h2>
     <p class="registration-intro">Enter your details, select your county and district, and sign in with Google to register.</p>
-    <p class="notice registration-note">Your Google account ID and selected area are stored for this election round. The dashboard displays only a count; Firebase project administrators can access registration records and Google account information through Firebase. Your in-game and Discord usernames and notes stay in this browser. Registration is locked for the round and does not verify eligibility or prevent someone from using multiple Google accounts.</p>
+    <div class="registration-note notice">
+      <strong>Before you register</strong>
+      <p>Your Google account ID and selected area are stored for this election round. The dashboard displays only a count; Firebase project administrators can access registration records and Google account information through Firebase. Your in-game and Discord usernames and notes stay in this browser. Registration is locked for the round and does not verify eligibility or prevent someone from using multiple Google accounts.</p>
+    </div>
     <form id="regform" class="registration-form">
+      <div class="registration-form-heading form-field-wide">
+        <span aria-hidden="true">01</span><div><h3>Your details</h3><p>Tell us how to identify you in the community.</p></div>
+      </div>
       <div class="form-field">
         <label for="name">In-game username</label>
         <input id="name" name="name" autocomplete="username" required>
@@ -31,6 +38,9 @@
       <div class="form-field">
         <label for="discord">Discord username</label>
         <input id="discord" name="discord" required>
+      </div>
+      <div class="registration-form-heading form-field-wide">
+        <span aria-hidden="true">02</span><div><h3>Your voting area</h3><p>Choose your county first, then select your district.</p></div>
       </div>
       <div class="form-field">
         <label for="county">County</label>
@@ -46,8 +56,8 @@
         <textarea id="notes" name="notes" rows="3" placeholder="Optional note for this local registration"></textarea>
       </div>
       <div class="form-actions form-field-wide">
+        <div><strong>Review your registration</strong><span>Review your details carefully before submitting; they cannot be changed afterward.</span></div>
         <button class="btn blue" type="submit">Sign in with Google &amp; Register</button>
-        <span>Review your details carefully before submitting; they cannot be changed afterward.</span>
       </div>
     </form>
     <div class="ok" id="ok" role="status" aria-live="polite"></div>
