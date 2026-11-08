@@ -307,6 +307,12 @@ window.SRP_DATA = {
       "name": "SonnyManny9",
       "office": "Candidate for Senator 2 of Springfield",
       "statement": "Heya! I am running for Senator of Springfield, because I have a promise to make.\n\nThat promise is to....\n\n・Promote Equal Rights\n・Keep Springfield Safe by increasing and adding roles\n・Make fair wages for everyone and support every business\n・Be active and listen to the public's suggestions\n\nWith that being said... It's YOUR choice to vote!\n\nVote SONNY for Springfield Senator!"
+    },
+    {
+      "photoUrl": "https://cdn.corenexis.com/f/Nfz78XrF.png",
+      "name": "Cernyb",
+      "office": "Candidate for Senator 2 of River City",
+      "statement": "A SENATOR WHO WILL LISTEN!!!!\n\nMy Goals as Senator!!! It is to listen and have a voice about what the community wants!!! And make sure that laws helping citizens will be passed, and the ones that don’t will be voted AGAINST!!! I Promise Transparency, and I will fight for the citizens of River City so they get a vote in everything so they can be engaged in what laws are passed. I will listen to the citizens to find out what they want and not the ones that the people don’t want!!!\n\n\n\n\nA Senator that Will Fight for Good laws being passed, not the ones that won’t benefit the people of River City!!!!\n\n\n\nCERNY FOR SENATOR OF RIVER CITY!!!!!"
     }
   ],
   "campaignOpen": true
