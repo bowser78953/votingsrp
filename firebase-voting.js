@@ -4,7 +4,7 @@
 
   const notice = document.createElement("p");
   notice.className = "ballot-disclosure";
-  notice.textContent = "This is an unofficial roleplay poll. Google sign-in limits one submission per account and contest; it does not verify a person or prevent multiple accounts. Your area is self-reported and locked for this election round. Only aggregate totals are public.";
+  notice.textContent = "This is a roleplay poll. Google sign-in limits one submission per account and contest; it does not verify a person or prevent multiple accounts. Your area is self-reported and locked for this election round. Only aggregate totals are public.";
 
   const renderState = (kind, eyebrowText, titleText, descriptionText, includeNotice = false) => {
     const state = document.createElement("div");

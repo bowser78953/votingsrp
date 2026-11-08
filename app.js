@@ -930,7 +930,7 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
     });
     const mapName = countyMap ? "county" : "district";
     document.getElementById("mtitle").textContent = office.label + " — " + (countyMap ? "County" : "District") + " Map Results";
-    svg.setAttribute("aria-label", "Unofficial shared poll results for " + office.label + " by " + mapName);
+    svg.setAttribute("aria-label", "Shared poll results for " + office.label + " by " + mapName);
     let total = 0;
     const out = regions.map(region => {
       const race = groupRaces.find(item => {
@@ -990,7 +990,7 @@ const POLICY_MSG = '<div class="closed"><h2>Read the Policies first</h2><p>You m
       });
       sharedTallies = next;
       sharedResultsReady = true;
-      sharedResultsStatus = "Shared unofficial roleplay poll";
+      sharedResultsStatus = "Shared roleplay poll";
       draw();
     }, error => {
       sharedResultsReady = false;
