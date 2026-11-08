@@ -65,7 +65,7 @@ window.SRP_DATA = {
       "pick": 1,
       "candidates": [
         "SonnyManny9",
-        "N/A"
+        "ERLC_2077"
       ],
       "map": "county"
     },
@@ -130,7 +130,7 @@ window.SRP_DATA = {
       "area": "Fairview Congressional",
       "pick": 1,
       "candidates": [
-        "N/A",
+        "Honeyking21",
         "N/A"
       ],
       "map": "county"
@@ -141,8 +141,7 @@ window.SRP_DATA = {
       "area": "Springfield District 2",
       "pick": 1,
       "candidates": [
-        "spiderx15310",
-        "ERLC_2077"
+        "spiderx15310"
       ],
       "map": "district"
     },
@@ -256,7 +255,8 @@ window.SRP_DATA = {
     "Deancena9": "#5539CC",
     "eaglesfly409": "#6827F5",
     "ERLC_2077": "#5BA5F5",
-    "SonnyManny9": "#2E8B57"
+    "SonnyManny9": "#2E8B57",
+    "Honeyking21": "#CC0808"
   },
   "electionSchedule": {
     "campaigningOpens": "2026-11-07 16:45",
@@ -287,6 +287,12 @@ window.SRP_DATA = {
       "name": "805_inorth",
       "office": "Candidate for Senator 2 of River City",
       "statement": "A VOICE FOR EVERY CITIZEN OF RIVER CITY.\nA SENATOR WHO SERVES.\n\nI am running for Senator because every voice deserves to be heard, every citizen deserves equal opportunity, and every community deserves a seat at the table.\n\nMy promise to all the civilians:\n\nTransparency. I will support laws that make government spending and decisions open to the public.\nAccountability. Leaders who answer to the people.\nProtected Rights. For every person, without exception.\nDecent jobs and fair wages. I will file measures that protect workers and support small businesses.\nProtection of rights. I will defend and strengthen laws that safeguard children, seniors and workers.\n\n*Laws that work. Budgets that serve. Leaders who answer to you.*\n\nYOUR TRUST. YOUR VOICE. OUR FUTURE.\n\nVOTE **NORTH ** FOR SENATOR."
+    },
+    {
+      "photoUrl": "https://cdn.corenexis.com/f/YkQKAHwV.png",
+      "name": "minimonkey20121",
+      "office": "Candidate for Senator 2 of Bayside District",
+      "statement": "Candidate for Bayside senator.\n\nHello all I am Mini today I am running for Bayside senator.\nIm running because I think I would be a good candidate but that's up t KO you.\n\nThins I promise for everyone: \nEveryone will be heared\nEveryone will be treated the same.\nYou have rights\nUphold the law.\n\nI also have a few différent experience including:\n\nLCSO HR\nWild life hunters OST\n \nI will listen to all and hear you all!\n\nVote Mini for Bayside senator!"
     }
   ],
   "campaignOpen": true
