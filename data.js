@@ -323,6 +323,30 @@ window.SRP_DATA = {
       "name": "starhamud",
       "office": "Mayor of River City",
       "statement": "# Mayor of River City - starhamud\n\n*Hello dear citizens. I am starhamud and I am a candidate for Mayor. I am running for mayor because I believe I can make River City a better place under my leadership*\n\n**Experience:**\n\n*It has been 1 year 9 months for me in SRP. I am whitelisted in 20 departments. That is:*\n\n- Liberty County Sheriffs Office: SH11 - Major\n- Liberty State Police: State Trooper\n- Department of Transportation: Lead Traffic Control Supervisor\n- Valley Transit: Junior Manager\n- Global Security: Manager\n- United Nations: Junior Division Director\n- Liberty County Wildlife Service: Senior Supervisor\n- Department Of Homeland Security:  First Sergeant - Border Patrol - Seaman\n- Springfield Food Hall: Senior Supervisor\n- Springfield Fire Department:  Senior Fire Fighter\n- Special Weapons And Tactics: Head Sergeant\n- Channel 5 News: Overseer\n- Wildlife Hunters: Director\n- United States Secret Service: Specialist\n- Fairview County Police Department: Junior Deputy\n- 75th Army Rangers: Ranger Specialist\n- G&W Agriculture: Farm Supervisor\n- Fish And Game Warden: Owner Assistant\n- ATV Off Road Sports: Recruit MX Racer\n\n**What I would do if elected as mayor:**\n\n*If I am elected as mayor, I would prioritise public development and the needs of citizens. I would listen to their needs, implement their needs and make sure that my citizens are striving and happy. I would develop infrastructure by making community facilities such as parks, basic services, and more.*\n\n**I did not choose to be a candidate just because it looks cool, I chose to be a candidate to become a leader and make River City a better place for everyone.**\n\n***Thank you. And I hope I earn your vote.***\n\n<@1122883616339402822> \nCandidate <:SRPGov:1442240177597710438>"
+    },
+    {
+      "photoUrl": "https://cdn.corenexis.com/f/dY4XrwlL.png",
+      "name": "gaming_jod1123",
+      "office": "Candidate for Senator 2 of River City Housing",
+      "statement": "gaming_jod1123\nCandidate for Senator 2 - River City Housing\nA FRESH START FOR RIVER CITY.\nA LEADER WHO ACTS.\nI am stepping up to run for Senator because our city needs bold solutions, active engagement, and representation that truly puts the community first.\nMy core commitments to you:\n * Open Governance. I will fight to ensure public funds are tracked transparently and decisions are made in plain sight.\n * Direct Accessibility. A representative who listens to your concerns and stays connected to the everyday reality of our district.\n * Community Safety. Modernizing local infrastructure and backing programs that protect our neighborhoods.\n * Economic Growth. Driving initiatives that help local businesses thrive and create dependable, well-paying jobs.\n * Future-Focused Education. Expanding resources for schools, youth programs, and career training opportunities.\nAction over promises. Results over politics. Leadership that listens.\nYOUR CITY. YOUR CHOICE. OUR PROGRESS.\nVOTE GAMING_JOD1123 FOR SENATOR."
+    },
+    {
+      "photoUrl": "https://cdn.corenexis.com/f/WUT3UGDL.png",
+      "name": "statepolice979",
+      "office": "Candidate for Senator 2 of River City Housing",
+      "statement": "Candidate for Senator 2 of River City Housing  \n\nPROVEN EXPERIENCE. ACTIVE REPRESENTATION. REAL RESULTS.   \n\nI am running to ensure River City Housing has a strong, reliable, and active voice on the Senate floor. A legislative seat is only as effective as the person holding it, and I am committed to delivering real representation for our community.   \n\nWhat I Bring to the Senate:\nReal Legislative Knowledge: Hands-on experience leading and presiding over both mock and real-world county-level legislative sessions. I know how parliamentary procedure works, how to structure proposals, and how to navigate votes efficiently.   \n\n\nDedicated Attendance: 100% commitment to showing up for every session, reviewing every piece of legislation, and casting informed votes on behalf of River City Housing.   \n\nCommunity-Driven Focus: Supporting policies that protect civilian rights, improve server roleplay quality, and keep government operations transparent and fair.\nDirect Access: An open door for any resident looking to bring ideas, feedback, or community concerns directly to the Senate.\n\nYOUR COMMUNITY. YOUR VOICE.\n\nVOTE BYRD (STATE) FOR SENATOR!"
+    },
+    {
+      "photoUrl": "https://cdn.corenexis.com/f/EsXU2mno.png",
+      "name": "Deancena9",
+      "office": "Mayor of River City",
+      "statement": "Hello Everyone! I am running for the role of Mayor of River City.\n\nMy Promises\n\n• Activity\n• Kindness\n• Great at planning\n• Professional.\n• Get's stuff done.\n\nDo you want someone who can do these and more? If so VOTE DEANCENA9 For Mayor of River City. I'm sure you don't want someone INACTIVE!\n\nONE CITY, ONE PROMISE, ONE MAYOR!\n\nVote for the Mayor you can trust!\n\nVote for Deancena9 for The Mayor of River city!!!\n\nI promise I will never let you down.\n\nSigned,\nDeancena9"
+    },
+    {
+      "photoUrl": "https://cdn.corenexis.com/f/wB7Lclzv.png",
+      "name": "spiderx15310",
+      "office": "Candidate for Representative - Springfield 2",
+      "statement": "# Candidate for Representative - Springfield 2\n# A REPRESENTATIVE WHO WORKS AND LISTENS\n\nGood day! My name is spiderx15310, some of y'all may know me some may not, so Ill just do a quick introduction. Im running for Representative - Springfield 2, and I am currently the Department Owner for NASA, so I already have some leadership skills.\n\nI'm running for Representative of Springfield 2 because I believe that I can help this District by being our voice. A few promises's I will make are: I will be as honest as possible, I will work as hard as I can for all of y'all, I will always be approachable, and I will hear out all of you.\n\nIn conclusion:\nVote for a representative who cares, who believes, and who works.\nVote for spiderx15310.\nThank you for your trust."
     }
   ],
   "campaignOpen": true
