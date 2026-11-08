@@ -108,7 +108,7 @@ window.SRP_DATA = {
       "area": "Industrial",
       "pick": 1,
       "candidates": [
-        "N/A",
+        "spunkycris09",
         "N/A"
       ],
       "map": "county"
@@ -120,7 +120,7 @@ window.SRP_DATA = {
       "pick": 1,
       "candidates": [
         "vipvishnukvk_17",
-        "N/A"
+        "johnathonisthebeast"
       ],
       "map": "county"
     },
@@ -264,7 +264,9 @@ window.SRP_DATA = {
     "starhamud": "#000000",
     "gaming_jod1123": "#8C3E03",
     "vipvishnukvk_17": "#B79148",
-    "Alfies609": "#367588"
+    "Alfies609": "#367588",
+    "spunkycris09": "#191970",
+    "johnathonisthebeast": ""
   },
   "electionSchedule": {
     "campaigningOpens": "2026-11-07 16:45",
