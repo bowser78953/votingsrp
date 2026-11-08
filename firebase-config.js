@@ -26,6 +26,7 @@ window.SRP_FIREBASE_READY = (async () => {
       collection: firestoreSdk.collection,
       doc: firestoreSdk.doc,
       getDoc: firestoreSdk.getDoc,
+      getCountFromServer: firestoreSdk.getCountFromServer,
       onSnapshot: firestoreSdk.onSnapshot,
       runTransaction: firestoreSdk.runTransaction,
       serverTimestamp: firestoreSdk.serverTimestamp,

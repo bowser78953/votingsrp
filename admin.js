@@ -19,6 +19,7 @@
   let stopAuth = null;
   let stopCounter = null;
   let counterGeneration = 0;
+  const counterRefreshMs = 30000;
 
   function stopRegistrationCounter() {
     counterGeneration++;
@@ -28,7 +29,6 @@
     stopCounter = null;
     $("registrationTotal").textContent = "Sign in to view";
     $("registrationCounterStatus").textContent = "A separate owner Google sign-in is required.";
-    $("registrationOwnerUid").classList.add("hidden");
     $("registrationOwnerSignIn").classList.remove("hidden");
     $("registrationOwnerSignOut").classList.add("hidden");
   }
@@ -48,30 +48,36 @@
         $("registrationTotal").textContent = "Sign in to view";
         $("registrationOwnerSignIn").classList.toggle("hidden", !!user);
         $("registrationOwnerSignOut").classList.toggle("hidden", !user);
-        $("registrationOwnerUid").classList.toggle("hidden", !user);
         if (!user) {
           $("registrationCounterStatus").textContent = "A separate owner Google sign-in is required.";
           return;
         }
-        $("registrationOwnerUid").textContent = "Google account Firebase UID: " + user.uid;
         $("registrationCounterStatus").textContent = "Checking access...";
         const registrations = services.collection(services.db, "elections",
           String(window.SRP_DATA.voteRound || 0), "registrations");
-        stopCounter = services.onSnapshot(registrations, { includeMetadataChanges: true }, snapshot => {
-          if (snapshot.metadata.fromCache) {
+        let active = true;
+        let timer = null;
+        stopCounter = () => {
+          active = false;
+          clearTimeout(timer);
+        };
+        const refreshCount = async () => {
+          try {
+            const snapshot = await services.getCountFromServer(registrations);
+            if (!active) return;
+            $("registrationTotal").textContent = String(snapshot.data().count);
+            $("registrationCounterStatus").textContent = "Count for the published election round. Refreshes every 30 seconds.";
+          } catch (error) {
+            if (!active) return;
             $("registrationTotal").textContent = "Unavailable";
-            $("registrationCounterStatus").textContent = "Waiting for a server connection; cached totals are not shown.";
-            return;
+            $("registrationCounterStatus").textContent = "Unable to load registrations: " +
+              (error.code === "permission-denied"
+                ? "This Google account is not authorized for the counter, or the Firestore rules have not been set up."
+                : error.message);
           }
-          $("registrationTotal").textContent = String(snapshot.size);
-          $("registrationCounterStatus").textContent = "Live count for the published election round.";
-        }, error => {
-          $("registrationTotal").textContent = "Unavailable";
-          $("registrationCounterStatus").textContent = "Unable to load registrations: " +
-            (error.code === "permission-denied"
-              ? "This Google account is not authorized for the counter, or the Firestore rules have not been set up."
-              : error.message);
-        });
+          if (active) timer = setTimeout(refreshCount, counterRefreshMs);
+        };
+        refreshCount();
       }, error => {
         $("registrationCounterStatus").textContent = "Google sign-in failed: " + error.message;
       });
