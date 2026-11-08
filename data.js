@@ -86,7 +86,7 @@ window.SRP_DATA = {
       "area": "River City Housing",
       "pick": 1,
       "candidates": [
-        "N/A",
+        "statepolice979",
         "N/A"
       ],
       "map": "county"
@@ -258,7 +258,8 @@ window.SRP_DATA = {
     "SonnyManny9": "#2E8B57",
     "kxkgy": "#8ad3ff",
     "Honeyking21": "#CC0808",
-    "Cernyb": "#ff7100"
+    "Cernyb": "#ff7100",
+    "statepolice979": "#0015BC"
   },
   "electionSchedule": {
     "campaigningOpens": "2026-11-07 16:45",
