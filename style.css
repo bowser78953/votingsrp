@@ -685,3 +685,68 @@ footer{margin-top:auto;padding:25px 20px;border-top:3px solid var(--gold);backgr
   .ballot-state-registration{padding:28px 22px}
   .ballot-state-registration .ballot-state-cta{width:auto}
 }
+
+/* Civic site refresh */
+:root{--blue:#285a7d;--blue2:#3e789a;--navy:#173650;--deep:#10283b;--gold:#e4bd70;--bg:#f4f3ef;--shadow:0 12px 35px rgba(20,46,61,.07)}
+body{background:radial-gradient(ellipse at 80% 10%,#e6eeed 0,transparent 36%),var(--bg)}
+header{background:#17364b;border-bottom:1px solid rgba(255,255,255,.09)}
+header img{width:52px;height:52px}
+header small{color:#e8c986}
+nav{background:rgba(16,40,59,.97)}
+nav a{font-size:.86rem}
+nav a.cta{background:#e4bd70;color:#172f40}
+.hero,.hero.small{background:radial-gradient(ellipse at 85% 10%,rgba(81,139,145,.24),transparent 42%),linear-gradient(115deg,#183d54,#10283b 72%)}
+.hero.small{padding:53px 24px 58px}
+.hero.small h2{letter-spacing:-.03em}
+.btn{border-radius:8px}
+.btn.gold{background:#e4bd70;color:#183345}
+.btn.gold:hover{background:#f0d195}
+.btn.blue{background:#285a7d}
+.btn.blue:hover{background:#1b4769}
+.card,.step{border:1px solid #e1e6e3;border-top:3px solid #7899a4;border-radius:14px;box-shadow:var(--shadow)}
+.card.gold{border-top-color:#c5a15d}
+.card:hover{transform:none;box-shadow:0 14px 36px rgba(20,46,61,.1)}
+.card h2{font-size:1.55rem}
+.countdown{background:#fff;border-color:#e3e7e4}
+.cd-title{color:#866b3d}
+.home-hero{padding:0;text-align:left}
+.home-hero::before{inset:auto -12% -280px 35%;height:500px;border-color:rgba(228,189,112,.15)}
+.home-hero-inner{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(290px,.78fr);align-items:center;gap:70px;width:min(100%,1120px);margin:auto;padding:76px 24px 82px}
+.home-hero-copy{max-width:620px}
+.home-hero .hero-kicker{margin:0 0 18px!important;color:#efd495!important}
+.home-hero h2{margin:0;font-size:clamp(3rem,4.6vw,4.35rem);line-height:1.06}
+.home-hero-copy>p:not(.hero-kicker){max-width:500px;margin:22px 0 26px;color:#d9e7e9;font-size:1.1rem}
+.home-hero-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px}
+.home-hero-actions .btn{margin:0}
+.home-hero-actions .btn span{margin-left:10px}
+.home-hero-panel{padding:27px 28px;border:1px solid rgba(219,232,225,.19);border-radius:15px;background:rgba(255,255,255,.075);box-shadow:0 16px 40px rgba(4,22,32,.16)}
+.home-hero-panel-kicker{color:#efd495;font-size:.67rem;font-weight:800;letter-spacing:.15em}
+.home-hero-panel h3{margin:12px 0 8px;color:#fff;font-family:Georgia,"Times New Roman",serif;font-size:1.55rem;line-height:1.2}
+.home-hero .home-hero-panel p{margin:0 0 18px;color:#cfdddf;font-size:.91rem;line-height:1.5}
+.home-hero-links{border-top:1px solid rgba(255,255,255,.15)}
+.home-hero-links a{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.13);color:#f3f8f6;font-size:.9rem;font-weight:650;text-decoration:none}
+.home-hero-links a:hover{color:#efd495}
+.home-hero-links span{color:#e8c986;font-size:.68rem;letter-spacing:.08em}
+.home-hero-links b{margin-left:auto;font-size:1.15rem;font-weight:400}
+.steps{gap:16px}
+.step{display:flex;flex-direction:column;min-height:210px;padding:24px;border-top:1px solid #e1e6e3}
+.step i{width:auto;height:auto;justify-content:flex-start;margin:0 0 15px;background:none;color:#a5803d;font-size:.74rem;letter-spacing:.12em}
+.step h3{font-family:Georgia,"Times New Roman",serif;font-size:1.25rem}
+.step p{flex:1}
+.step a{display:inline-block;margin-top:18px;color:#285a7d;font-size:.88rem;font-weight:750;text-decoration:none}
+.step a:hover{text-decoration:underline}
+.step a span{margin-left:4px}
+.home-election,.home-chambers{padding:32px}
+.home-race{background:#f6f9f8;border-color:#e0e9e5}
+.home-grid>.card{padding:30px}
+footer{border-top-color:#c4a161;background:#10283b}
+@media(max-width:700px){
+  .hero.small{padding:40px 20px 44px}
+  .home-hero{padding:0}
+  .home-hero-inner{grid-template-columns:1fr;gap:28px;padding:52px 20px 40px}
+  .home-hero h2{font-size:clamp(2.85rem,11vw,4rem)}
+  .home-hero-copy>p:not(.hero-kicker){margin:18px 0 23px;font-size:1rem}
+  .home-hero-panel{padding:22px}
+  .step{min-height:0;padding:20px}
+  .home-election,.home-chambers,.home-grid>.card{padding:23px 20px}
+}
