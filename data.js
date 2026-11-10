@@ -98,7 +98,7 @@ window.SRP_DATA = {
       "pick": 1,
       "candidates": [
         "minimonkey20121",
-        "N/A"
+        "ssplays_432"
       ],
       "map": "county"
     },
@@ -267,7 +267,8 @@ window.SRP_DATA = {
     "Alfies609": "#367588",
     "spunkycris09": "#191970",
     "johnathonisthebeast": "#C09C52",
-    "MegaBobstar": "#7e93ab"
+    "MegaBobstar": "#7e93ab",
+    "ssplays_432": ""
   },
   "electionSchedule": {
     "campaigningOpens": "2026-11-07 16:45",
