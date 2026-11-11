@@ -52,7 +52,7 @@ window.SRP_DATA = {
     }
   ],
   "registrationOpen": true,
-  "votingOpen": false,
+  "votingOpen": true,
   "siteOff": false,
   "showMap": true,
   "voteRound": 11,
