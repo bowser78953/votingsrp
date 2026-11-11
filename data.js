@@ -142,7 +142,7 @@ window.SRP_DATA = {
       "pick": 1,
       "candidates": [
         "spiderx15310",
-        "N/A"
+        "Jigghffh"
       ],
       "map": "district"
     },
@@ -152,7 +152,7 @@ window.SRP_DATA = {
       "area": "Fairview Congressional District 2",
       "pick": 1,
       "candidates": [
-        "N/A",
+        "ike07123",
         "N/A"
       ],
       "map": "district"
@@ -268,7 +268,9 @@ window.SRP_DATA = {
     "spunkycris09": "#191970",
     "johnathonisthebeast": "#C09C52",
     "MegaBobstar": "#7e93ab",
-    "ssplays_432": ""
+    "ssplays_432": "#B30404",
+    "ike07123": "",
+    "Jigghffh": ""
   },
   "electionSchedule": {
     "campaigningOpens": "2026-11-07 16:45",
