@@ -273,7 +273,7 @@ window.SRP_DATA = {
     "Jigghffh": "#3d0202",
     "hah_i42": "#156BD1",
     "TbhIamHimLikeFrrr": "",
-    "hamster_backe187": ""
+    "hamster_backe187": "#8D9093"
   },
   "electionSchedule": {
     "campaigningOpens": "2026-11-07 16:45",
