@@ -164,7 +164,7 @@ window.SRP_DATA = {
       "pick": 1,
       "candidates": [
         "Alfies609",
-        "N/A"
+        "hamster_backe187"
       ],
       "map": "district"
     },
@@ -272,7 +272,8 @@ window.SRP_DATA = {
     "ike07123": "#093CB8",
     "Jigghffh": "#3d0202",
     "hah_i42": "#156BD1",
-    "TbhIamHimLikeFrrr": ""
+    "TbhIamHimLikeFrrr": "",
+    "hamster_backe187": ""
   },
   "electionSchedule": {
     "campaigningOpens": "2026-11-07 16:45",
