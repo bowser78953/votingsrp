@@ -153,7 +153,7 @@ window.SRP_DATA = {
       "pick": 1,
       "candidates": [
         "ike07123",
-        "N/A"
+        "TbhIamHimLikeFrrr"
       ],
       "map": "district"
     },
@@ -185,7 +185,7 @@ window.SRP_DATA = {
       "area": "River City District 2",
       "pick": 1,
       "candidates": [
-        "N/A",
+        "hah_i42",
         "N/A"
       ],
       "map": "district"
@@ -269,8 +269,10 @@ window.SRP_DATA = {
     "johnathonisthebeast": "#C09C52",
     "MegaBobstar": "#7e93ab",
     "ssplays_432": "#B30404",
-    "ike07123": "",
-    "Jigghffh": ""
+    "ike07123": "#093CB8",
+    "Jigghffh": "#3d0202",
+    "hah_i42": "#156BD1",
+    "TbhIamHimLikeFrrr": ""
   },
   "electionSchedule": {
     "campaigningOpens": "2026-11-07 16:45",
@@ -355,6 +357,12 @@ window.SRP_DATA = {
       "name": "spiderx15310",
       "office": "Candidate for Representative - Springfield 2",
       "statement": "# Candidate for Representative - Springfield 2\n# A REPRESENTATIVE WHO WORKS AND LISTENS\n\nGood day! My name is spiderx15310, some of y'all may know me some may not, so Ill just do a quick introduction. Im running for Representative - Springfield 2, and I am currently the Department Owner for NASA, so I already have some leadership skills.\n\nI'm running for Representative of Springfield 2 because I believe that I can help this District by being our voice. A few promises's I will make are: I will be as honest as possible, I will work as hard as I can for all of y'all, I will always be approachable, and I will hear out all of you.\n\nIn conclusion:\nVote for a representative who cares, who believes, and who works.\nVote for spiderx15310.\nThank you for your trust."
+    },
+    {
+      "photoUrl": "https://cdn.corenexis.com/f/9e1mict4.png",
+      "name": "Jigghffh2_33",
+      "office": "Candidate for Representative - Springfield 2",
+      "statement": "Candidate for Springfield Representative of District 2.\nVOTE FOR A PERSON WHO CARES OF THE PEOPLE AND BILLS/RIGHTS\n\nSpringfield needs a better person to be rep to step up for the people when they need to be heard the most!\n\n\nMy promise to the civilians:\n\nA.) More Freedom, lower taxes, more care, a more cleaner town, and someone who will help our fellow brother's & sister's in blue/red/Any Emergency Force's.\n\nB.) I will push to push for lower taxes, that reduces unnecessary taxes and eases financial burdens for the people of Springfield could happier with more money in their paychecks.\n\nC.) I will put in bills to clean Springfield more, and take care of the town aswell an it's people! \n\nD.) I will listen to the people of Springfield and pass it on to people of the Government, we will come together and build a better tomorrow for the future of Springfield!\n\nE.) I will listen to the needs for freedom, I will listen to what our departments need and push for the bills that our people of Springfield need!\n\nF.) I will listen to your issue, and fix them as best as I can.\n\nG.) I will fight for the rights we want but don't have.\n\nH.) I will fight for the people of Springfield voices to be heard.\n\nI.)  I will push for bills that benefit our citizens, strengthen our departments, improve our community, and promote government accountability.\n\n\nMY PROMISE TO YOU:\nI am not running simply for a title. I am running to serve the people and give District 2 a stronger voice in government.\n\nI cannot promise that every issue will be solved overnight, but I can promise dedication, accountability, and a genuine effort to represent your interests.\nI will push for bills that we need, and that the people of Springfield need!\n\n\"BILLS WE NEED, FOR A BETTER FUTURE!\"\nVOTE JIGG, FOR SPRINGFIELD REPRESENTATIVE OF DISTRICT 2."
     }
   ],
   "campaignOpen": true
