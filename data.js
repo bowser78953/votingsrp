@@ -51,46 +51,13 @@ window.SRP_DATA = {
       "hash": "081b9096cd1a0c6f176319f326a147eba47710410e12cf1dab4bd7f93188901a"
     }
   ],
-  "registrationOpen": true,
-  "votingOpen": true,
-  "siteOff": false,
+  "registrationOpen": false,
+  "votingOpen": false,
+  "siteOff": true,
   "showMap": true,
   "voteRound": 11,
   "votingUrl": "",
   "ballot": [
-    {
-      "title": "Senator 2 - Springfield",
-      "office": "senate",
-      "area": "Springfield",
-      "pick": 1,
-      "candidates": [
-        "SonnyManny9",
-        "ERLC_2077"
-      ],
-      "map": "county"
-    },
-    {
-      "title": "Senator 2 - River City",
-      "office": "senate",
-      "area": "River City",
-      "pick": 1,
-      "candidates": [
-        "805_North",
-        "Cernyb"
-      ],
-      "map": "county"
-    },
-    {
-      "title": "Senator 2 - River City Housing",
-      "office": "senate",
-      "area": "River City Housing",
-      "pick": 1,
-      "candidates": [
-        "statepolice979",
-        "gaming_jod1123"
-      ],
-      "map": "county"
-    },
     {
       "title": "Senator 2 - Bayside",
       "office": "senate",
@@ -101,50 +68,6 @@ window.SRP_DATA = {
         "ssplays_432"
       ],
       "map": "county"
-    },
-    {
-      "title": "Senator 2 - Industrial",
-      "office": "senate",
-      "area": "Industrial",
-      "pick": 1,
-      "candidates": [
-        "spunkycris09",
-        "MegaBobstar"
-      ],
-      "map": "county"
-    },
-    {
-      "title": "Senator 2 - Agriculture",
-      "office": "senate",
-      "area": "Agriculture",
-      "pick": 1,
-      "candidates": [
-        "vipvishnukvk_17",
-        "johnathonisthebeast"
-      ],
-      "map": "county"
-    },
-    {
-      "title": "Senator 2 - Fairview Congressional",
-      "office": "senate",
-      "area": "Fairview Congressional",
-      "pick": 1,
-      "candidates": [
-        "Honeyking21",
-        "kxkgy"
-      ],
-      "map": "county"
-    },
-    {
-      "title": "Representative - Springfield District 2",
-      "office": "representative",
-      "area": "Springfield District 2",
-      "pick": 1,
-      "candidates": [
-        "spiderx15310",
-        "Jigghffh"
-      ],
-      "map": "district"
     },
     {
       "title": "Representative - Fairview Congressional District 2",
@@ -176,17 +99,6 @@ window.SRP_DATA = {
       "candidates": [
         "Godzilla_Iraq",
         "eaglesfly409"
-      ],
-      "map": "district"
-    },
-    {
-      "title": "Representative - River City District 2",
-      "office": "representative",
-      "area": "River City District 2",
-      "pick": 1,
-      "candidates": [
-        "hah_i42",
-        "N/A"
       ],
       "map": "district"
     },
@@ -233,17 +145,6 @@ window.SRP_DATA = {
         "N/A"
       ],
       "map": "district"
-    },
-    {
-      "title": "Mayor of River City",
-      "office": "mayor",
-      "area": "River City",
-      "pick": 1,
-      "candidates": [
-        "Deancena9",
-        "starhamud"
-      ],
-      "map": "county"
     }
   ],
   "ballotTitle": "2026 Congressional Elections",
